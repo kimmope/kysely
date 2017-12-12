@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="simpleBean1" class="com.eduix.spring.demo.beans.SimpleBean" />
+	
+	<alias name="simpleBean1" alias="simpleBean" />
+	
+	<bean id="simpleBean2" class="com.eduix.spring.demo.beans.SimpleBean" primary="true">
+		<property name="data">
+			<value>Simple2</value>
+		</property>
+	</bean>
+	
+	<bean id="simpleBean3" class="com.eduix.spring.demo.beans.SimpleBean">
+		<constructor-arg>
+			<value>Simple3</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="simpleBean4" class="com.eduix.spring.demo.beans.SimpleBean" scope="prototype">
+		<constructor-arg>
+			<value>Simple4</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="listBean" class="com.eduix.spring.demo.beans.ListBean" autowire-candidate="false">
+		<property name="data">
+			<list>
+				<value>one</value>
+				<value>two</value>
+				<value>three</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="nestedBean" class="com.eduix.spring.demo.beans.NestedBean">
+		<property name="nested">
+			<bean class="com.eduix.spring.demo.beans.SimpleBean">
+				<property name="data">
+					<value>Nested</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="initMethodBean" class="com.eduix.spring.demo.beans.InitMethodBean" init-method="initList" />
+	
+	<bean id="factoryMethodBean" class="com.eduix.spring.demo.beans.FactoryMethodBean" factory-method="createInstance">
+		<constructor-arg>
+			<value>Factory method</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="simpleBeanFactory" class="com.eduix.spring.demo.beans.SimpleBeanFactory" />
+	
+	<bean id="factoryCreated1" factory-bean="simpleBeanFactory" factory-method="createSimpleBean" />
+	
+	<bean id="factoryCreated2" factory-bean="simpleBeanFactory" factory-method="createSimpleBean" />
+	
+	<bean id="dependentBean1" class="com.eduix.spring.demo.beans.DependentBean">
+		<constructor-arg ref="simpleBean1" />
+		<constructor-arg ref="simpleBean2" />
+		<constructor-arg ref="simpleBean3" />
+	</bean>
+	
+	<bean id="dependentBean2" class="com.eduix.spring.demo.beans.DependentBean">
+		<property name="beanOne" ref="simpleBean1" />
+		<property name="beanTwo" ref="simpleBean2" />
+		<property name="beanThree" ref="simpleBean4" />
+	</bean>
+	
+	<bean id="autowireBean1" class="com.eduix.spring.demo.beans.AutowireBean" autowire="byName" />
+	
+	<bean id="autowireBean2" class="com.eduix.spring.demo.beans.AutowireBean" autowire="byType" />
+
+</beans>

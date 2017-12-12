@@ -1,0 +1,13 @@
+*~
+._*
+target
+.classpath
+.settings
+.project
+MANIFEST.MF
+.vagrant
+.DS_Store
+.metadata
+bin
+generated
+*.orig
