@@ -4,7 +4,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="simpleBean1" class="com.eduix.spring.demo.beans.SimpleBean" />
+	<bean id="simpleBean1" class="com.eduix.spring.demo.beans.SimpleBean">
+		<property name="data">
+			<value>Testidataa</value>
+		</property>
+	</bean>
+	
+	<bean id="simpleBean5" class="com.eduix.spring.demo.beans.SimpleBean">
+		<property name="data">
+			<value>Testidataa lisää</value>
+		</property>
+	</bean>	
 	
 	<alias name="simpleBean1" alias="simpleBean" />
 	

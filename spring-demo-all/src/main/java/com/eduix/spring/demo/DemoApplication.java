@@ -32,9 +32,7 @@ public class DemoApplication {
 		}
 		
 		dump(context.getBean("simpleBean1"));
-		
 		dump(context.getBean("simpleBean"));
-		
 		dump(context.getBean("simpleBean2"));
 		
 		try {
@@ -49,19 +47,26 @@ public class DemoApplication {
 		dump(context.getBean("simpleBean4", "Simple instance 1"));
 		
 		dump(context.getBean("simpleBean4"));
+		/* Prototype which is used for creating new ones. E.g. ActionBeanit 
+		Creates always new one when created.*/
 		
 		dump(context.getBean("listBean"));
+		/* Bean jossa on lista. Tähän ei ole määrätty edes tyyppiä. Alustetaan SpringApplicationContext.xml:ssä */		
 		
 		dump(context.getBean("nestedBean"));
+		/* Nested bean jonka sisällä on simple bean. Alustetaan SpringApplicationContext.xml:ssä */
 		
 		dump(context.getBean("initMethodBean"));
+		/* Beanin voi myös alustaa kustomoidusti omalla metodilla. InitMethodBean-file. Kun esimerkiksi palvelu alustaa omia tietojaan */		
 		
 		dump(context.getBean("factoryMethodBean"));
+		/* Luodaan eri tavalla. */
 		
 		dump(context.getBean("factoryCreated1"));
 		
 		dump(context.getBean("factoryCreated2"));
 		
+		/* Kaksi eri tapaa luoda dependentBean. Tavoilla ei tässä juuri eroa. SimpleBean 4 on prototyyppi. */
 		DependentBean dep1 = context.getBean("dependentBean1", DependentBean.class);
 		dump(dep1);
 		System.out.println(dep1.getData());
@@ -72,6 +77,8 @@ public class DemoApplication {
 		System.out.println(dep2.getData());
 		System.out.println();
 		
+		
+		/* Riippuvuus list ja simple beaniin. Tarjotaan setterit ja getterit. Etsii attribuutin nimen mukaan beanin listalta. Jos on autowire by type niin etsii tyypin. Jos on useampia niin valitaan useampia. */
 		dump(context.getBean("autowireBean1"));
 		
 		dump(context.getBean("autowireBean2"));

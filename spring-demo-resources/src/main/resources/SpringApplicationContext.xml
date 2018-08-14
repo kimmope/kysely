@@ -9,5 +9,7 @@
 	</bean>
 	
 	<bean id="resourceBean2" class="com.eduix.spring.demo.beans.ResourceBean2" />
+	
+	<bean id="resourceBean3" class="com.eduix.spring.demo.beans.ResourceBean3" />
 
 </beans>
