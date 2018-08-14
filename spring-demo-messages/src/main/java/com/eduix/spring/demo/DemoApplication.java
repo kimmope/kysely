@@ -23,7 +23,5 @@ public class DemoApplication {
 		someBean.doSomething();
 		
 		((ConfigurableApplicationContext) context).close();
-		
 	}
-
 }

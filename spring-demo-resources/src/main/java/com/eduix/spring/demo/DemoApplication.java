@@ -26,6 +26,9 @@ public class DemoApplication {
 		ResourceBean2 resourceBean2 = context.getBean(ResourceBean2.class);
 		resourceBean2.print();
 		
+		ResourceBean3 resourceBean3 = context.getBean(ResourceBean3.class);
+		resourceBean3.print();
+		
 		((ConfigurableApplicationContext) context).close();
 		
 	}

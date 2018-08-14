@@ -20,10 +20,9 @@ public class DemoApplication {
 		ApplicationContext context = new ClassPathXmlApplicationContext("SpringApplicationContext.xml");
 		
 		SomeBean someBean = context.getBean(SomeBean.class);
-		System.out.println("String = " + someBean.getStringProperty() + ", Int=" + someBean.getIntProperty());
+		System.out.println("String = " + someBean.getStringProperty() + ", Int=" + someBean.getIntProperty() + ", Boolean = " + someBean.getBooleanProperty());
 		
 		((ConfigurableApplicationContext) context).close();
 		
 	}
-
 }

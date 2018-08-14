@@ -20,15 +20,16 @@ public class SomeBean {
 	}
 	
 	public void doSomething() {
-		String message = messageSource.getMessage("message", null, null);
+		String message = messageSource.getMessage("message", null, new Locale(""));
 		System.out.println(message);
-		message = messageSource.getMessage("unknown", null, "This is the default", null);
+		message = messageSource.getMessage("unknown", null, "This is default from SomeBean.java", null);
 		System.out.println(message);
 		message = messageSource.getMessage("message", null, new Locale("en"));
 		System.out.println(message);
+		message = messageSource.getMessage("message", null, new Locale("fi"));
+		System.out.println(message);		
 		
 		String error = messageSource.getMessage("error", new Object[] {this.getClass().getName(), "forced error"}, null);
 		System.out.println(error);
 	}
-
 }

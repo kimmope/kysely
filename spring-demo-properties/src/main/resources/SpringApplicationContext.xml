@@ -16,6 +16,9 @@
 		<property name="intProperty">
 			<value>${demo.another.property}</value>
 		</property>
+		<property name="booleanProperty">
+			<value>${demo.third.property}</value>
+		</property>		
 	</bean>
 
 </beans>

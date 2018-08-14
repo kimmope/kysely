@@ -11,6 +11,7 @@ public class SomeBean {
 	
 	private String stringProperty;
 	private Integer intProperty;
+	private Boolean booleanProperty;
 	
 	public String getStringProperty() {
 		return stringProperty;
@@ -24,7 +25,10 @@ public class SomeBean {
 	public void setIntProperty(Integer intProperty) {
 		this.intProperty = intProperty;
 	}
-	
-	
-
+	public Boolean getBooleanProperty() {
+		return booleanProperty;
+	}
+	public void setBooleanProperty(Boolean booleanProperty) {
+		this.booleanProperty = booleanProperty;
+	}	
 }
