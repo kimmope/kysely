@@ -27,7 +27,9 @@ public class SomeBean {
 		message = messageSource.getMessage("message", null, new Locale("en"));
 		System.out.println(message);
 		message = messageSource.getMessage("message", null, new Locale("fi"));
-		System.out.println(message);		
+		System.out.println(message);
+		message = messageSource.getMessage("message", null, new Locale("sw"));
+		System.out.println(message);			
 		
 		String error = messageSource.getMessage("error", new Object[] {this.getClass().getName(), "forced error"}, null);
 		System.out.println(error);

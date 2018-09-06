@@ -21,7 +21,7 @@ public class DemoApplication {
 		
 		ServiceBean service = context.getBean(ServiceBean.class);
 		
-		System.out.println(service.getData());
+		System.out.println(service.getData("from DemoApplication"));
 		
 		((ConfigurableApplicationContext) context).close();
 		

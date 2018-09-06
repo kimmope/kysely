@@ -24,8 +24,8 @@ public class ServiceBean {
 		this.dao = dao;
 	}
 	
-	public String getData() {
-		log.info("Getting demo data from service");
+	public String getData(String test) {
+		log.info("Getting demo data from service " + test);
 		return dao.getData();
 	}
 

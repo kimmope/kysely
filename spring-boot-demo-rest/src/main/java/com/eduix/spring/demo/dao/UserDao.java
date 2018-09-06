@@ -1,8 +1,7 @@
-/*
- * Copyright (c) 2017 Eduix Oy
- * All rights reserved
- */
 package com.eduix.spring.demo.dao;
+
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,15 +15,24 @@ import org.springframework.stereotype.Repository;
 
 import com.eduix.spring.demo.domain.DemoUser;
 
-/**
- * @author Jarkko Leponiemi <jarkko.leponiemi@eduix.fi>
- */
 @Repository
 public class UserDao {
 
+// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
+// LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	private static RowMapper<DemoUser> ROW_MAPPER = new RowMapper<DemoUser>() {
+		public DemoUser mapRow(ResultSet resultSet, int row) throws SQLException {
+			return new DemoUser(
+					resultSet.getString("username"), 
+					resultSet.getString("lastname"),
+					resultSet.getString("firstname"));
+		}
+	};	
+	
 	public List<DemoUser> getUsers() {
 		return jdbcTemplate.query("SELECT * FROM users ORDER BY lastname, firstname", ROW_MAPPER);
 	}
@@ -35,21 +43,29 @@ public class UserDao {
 		} catch (DataAccessException e) {
 			return null;
 		}
-	}
+	}	
 	
 	public void addUser(DemoUser user) {
 		jdbcTemplate.update("INSERT INTO users VALUES (?, ?, ?)", user.getUsername(), user.getFirstname(), user.getLastname());
 	}
 
-	private static RowMapper<DemoUser> ROW_MAPPER = new RowMapper<DemoUser>() {
+	
+/** TRAINING CODE: ------------------ */	
+	public void editUser(DemoUser user) {
+		jdbcTemplate.update("UPDATE users SET username=?, firstname=?, lastname=? WHERE username=?", user.getUsername(), user.getFirstname(), user.getLastname(), user.getUsername());
+	}	
 
-		public DemoUser mapRow(ResultSet resultSet, int row) throws SQLException {
-			return new DemoUser(
-					resultSet.getString("username"), 
-					resultSet.getString("lastname"),
-					resultSet.getString("firstname"));
-		}
+	public void deleteUser(String id) {
+		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
+	}	
 
-	};
-
+	
+/** OWN PROJECT: ------------------ */	
+//	public Question getQuestion(int qid) {
+//		try {
+//			return jdbcTemplate.query("SELECT * FROM question WHERE qid=?",Question, qid);
+//		} catch (DataAccessException e) {
+//			return null;
+//		}
+//	}	
 }
