@@ -1,12 +1,5 @@
-/*
- * Copyright (c) 2017 Eduix Oy
- * All rights reserved
- */
 package com.eduix.spring.demo.domain;
 
-/**
- * @author Jarkko Leponiemi <jarkko.leponiemi@eduix.fi>
- */
 public class DemoUser {
 
 	private String username;

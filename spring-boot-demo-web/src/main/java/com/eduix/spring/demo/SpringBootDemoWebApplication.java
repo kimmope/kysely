@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2017 Eduix Oy
- * All rights reserved
- */
 package com.eduix.spring.demo;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,14 +7,11 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * @author Jarkko Leponiemi <jarkko.leponiemi@eduix.fi>
- */
-@SpringBootApplication
+@SpringBootApplication														// Same as @Configuration (for class that defines beans), @EnableAutoConfiguration (Configures default configurations such as database connection), @ConponentScan (scans the package where the where the application is located)
 public class SpringBootDemoWebApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootDemoWebApplication.class, args);
+		SpringApplication.run(SpringBootDemoWebApplication.class, args);	// Calls run
 	}
 	
 	@Bean
