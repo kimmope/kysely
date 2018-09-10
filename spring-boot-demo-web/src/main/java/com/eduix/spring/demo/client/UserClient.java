@@ -51,7 +51,7 @@ public class UserClient {
 //		restTemplate.postForObject("/answer", answer ,Answer.class);		
 //	}
 //	
-	public Question getQuestion(int qid) {
+	public Question getQuestion(int qid) {		// Rakentaa question-sivun kysymyksen id:n perusteella
 		Question question = restTemplate.getForObject("/"+qid, Question.class);
 		return question;
 	}	

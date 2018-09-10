@@ -86,7 +86,15 @@ public class UserController {
 		Question question = userClient.getQuestion(qid);
 		model.addAttribute("question", question);
 		return "question";
-	}	
+	}
+
+//	@PostMapping("/adduserform")
+//	public String answerForm(DemoUser demouser) {
+//		userClient.addUser(demouser);
+//		return "redirect:/userspage";
+//	}
+	
+	
 //	
 //	@RequestMapping("/answered")						// tämä lohko ei tarvitse userclientiä eikä restiä
 //	public String makeQuestionPage() {					// tällä lohkolla tehdään vanhan kysymyksen esityssivu (ei toiminnallisuutta)
