@@ -15,8 +15,8 @@ public class SpringBootDemoWebApplication {
 	}
 	
 	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder builder,
-			@Value("${user.service.rest.uri}") String userServiceUri) {
-		return builder.rootUri(userServiceUri).build();
+	public RestTemplate restTemplate(RestTemplateBuilder builder,			// Tekee beanin jota rest-puoli käyttää
+			@Value("${user.service.rest.uri}") String userServiceUri) {		// user.service.rest.uri hakee application.propertiesista localhostin urin
+		return builder.rootUri(userServiceUri).build();						// palauttaa sisäisellä builderilla muokatun urin 
 	}
 }

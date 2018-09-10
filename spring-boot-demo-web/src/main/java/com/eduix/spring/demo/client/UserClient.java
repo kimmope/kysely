@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Question;
+
 @Component
 public class UserClient {
 
@@ -49,8 +51,8 @@ public class UserClient {
 //		restTemplate.postForObject("/answer", answer ,Answer.class);		
 //	}
 //	
-//	public Question getQuestion(int qid) {
-//		Question question = restTemplate.getForObject("/"+qid, Question.class);
-//		return question;
-//	}	
+	public Question getQuestion(int qid) {
+		Question question = restTemplate.getForObject("/"+qid, Question.class);
+		return question;
+	}	
 }

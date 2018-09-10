@@ -1,10 +1,11 @@
 <html>
 	<head>
+		<link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />
 		<title>User information</title>
 	</head>
 	<body>
 		<div class="container">
-			<h1>Bootstrap Modal</h1>
+			<h1>Options</h1>
 			<table>
 				<thead>
 					<tr><th>Username</th><th>Firstname</th><th>Lastname</th></tr>

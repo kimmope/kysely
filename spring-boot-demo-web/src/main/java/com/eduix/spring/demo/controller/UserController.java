@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.eduix.spring.demo.client.UserClient;
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Question;
+
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
 
@@ -40,7 +42,6 @@ public class UserController {
 		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
 	}
 
-/** TRAINING CODE: ------------------ */
 	@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
 	public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
 		DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla 
@@ -58,7 +59,8 @@ public class UserController {
 		userClient.addUser(demouser);					// kutsutaan userClientin adduser-funktiota demouser-parametrille
 		return "redirect:/userspage";					// kun palataan userclientista mennään uuteen osoitteeseen, tässä: localhost:62000/userspage.
 	}
-
+	
+/** TRAINING CODE: ------------------ */
 	@GetMapping("/edituser/{username}")
 	public String getEditUser(Model model, @PathVariable("username") String username) {
 		DemoUser user = userClient.getUser(username);
@@ -79,12 +81,12 @@ public class UserController {
 	}
 
 /** OWN PROJECT: ------------------ */	
-//	@GetMapping("/{qid}")
-//	public String getQuestion(Model model, @PathVariable("qid") int qid) {
-//		Question question = userClient.getQuestion(qid);
-//		model.addAttribute("question", question);
-//		return "question";
-//	}	
+	@GetMapping("/question/{qid}")
+	public String getQuestion(Model model, @PathVariable("qid") int qid) {
+		Question question = userClient.getQuestion(qid);
+		model.addAttribute("question", question);
+		return "question";
+	}	
 //	
 //	@RequestMapping("/answered")						// tämä lohko ei tarvitse userclientiä eikä restiä
 //	public String makeQuestionPage() {					// tällä lohkolla tehdään vanhan kysymyksen esityssivu (ei toiminnallisuutta)

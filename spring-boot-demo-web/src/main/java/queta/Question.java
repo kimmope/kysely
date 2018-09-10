@@ -26,7 +26,7 @@ public class Question {
 		return question;
 	}
 
-	public void setAnswer(String question) {
+	public void setQuestion(String question) {
 		this.question = question;
 	}
 

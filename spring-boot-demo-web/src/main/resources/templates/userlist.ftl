@@ -23,5 +23,7 @@
 		<br>
 		<a href="adduser">Add record</a>
 		<p>Test section:</p>
+		<a href="/question/${question.qid}">Next question</a>
+		<br>
 	</body>
 </html>
