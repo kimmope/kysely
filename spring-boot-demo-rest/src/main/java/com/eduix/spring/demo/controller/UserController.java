@@ -19,12 +19,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.eduix.spring.demo.dao.UserDao;
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Question;
+
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
-
 // DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
-	
 	@Autowired
 	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
 	
@@ -66,13 +66,13 @@ public class UserController {
 		return ResponseEntity.created(location).build();
 	}
 	
-// Own project
-//	@GetMapping("/{qid}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-//	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
-//		Question question = dao.getQuestion(qid);
-//		if (question == null) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		return ResponseEntity.ok(question);
-//	}	
+//Own project
+	@GetMapping("/{qid}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
+		Question question = dao.getQuestionById(qid);
+		if (question == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(question);
+	}	
 }

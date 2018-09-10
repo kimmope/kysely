@@ -9,11 +9,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.eduix.spring.demo.domain.DemoUser;
+
+import Rowmappers.QuestionRowMapper;
+//import Rowmappers.QuestionRowMapper;
+import queta.Question;
 
 @Repository
 public class UserDao {
@@ -32,6 +37,8 @@ public class UserDao {
 					resultSet.getString("firstname"));
 		}
 	};	
+		
+// ROWMAPPER INFO: https://www.mkyong.com/spring/spring-jdbctemplate-querying-examples/
 	
 	public List<DemoUser> getUsers() {
 		return jdbcTemplate.query("SELECT * FROM users ORDER BY lastname, firstname", ROW_MAPPER);
@@ -49,7 +56,6 @@ public class UserDao {
 		jdbcTemplate.update("INSERT INTO users VALUES (?, ?, ?)", user.getUsername(), user.getFirstname(), user.getLastname());
 	}
 
-	
 /** TRAINING CODE: ------------------ */	
 	public void editUser(DemoUser user) {
 		jdbcTemplate.update("UPDATE users SET username=?, firstname=?, lastname=? WHERE username=?", user.getUsername(), user.getFirstname(), user.getLastname(), user.getUsername());
@@ -59,13 +65,20 @@ public class UserDao {
 		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
 	}	
 
-	
 /** OWN PROJECT: ------------------ */	
-//	public Question getQuestion(int qid) {
+//  BeanPropertyRowMapper sample	
+//	public Question getQuestionById(int qid) {
 //		try {
-//			return jdbcTemplate.query("SELECT * FROM question WHERE qid=?",Question, qid);
+//			String sql = "SELECT * FROM questions WHERE qid=?";
+//			Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new BeanPropertyRowMapper<>(Question.class));
+//			return question;
 //		} catch (DataAccessException e) {
 //			return null;
 //		}
-//	}	
+//	}
+	public Question getQuestionById(int qid){		 
+		String sql = "SELECT * FROM questions WHERE qid = ?";	 
+		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
+		return question;
+	}
 }
