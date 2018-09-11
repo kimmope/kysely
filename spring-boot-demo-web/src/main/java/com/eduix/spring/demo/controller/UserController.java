@@ -90,20 +90,11 @@ public class UserController {
 		return "question";
 	}
 	@PostMapping("/answerForm")
-	public String answerForm(Answer answer) {
+	public String answerForm(Model model, Answer answer) {
 		log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 		userClient.addUserAnswer(answer);
+		model.addAttribute("answer", answer);
 		return "answerStats";
 	}
-}	
-	
-//	@RequestMapping("/answered")						// tämä lohko ei tarvitse userclientiä eikä restiä
-//	public String makeQuestionPage() {					// tällä lohkolla tehdään vanhan kysymyksen esityssivu (ei toiminnallisuutta)
-//		return "answered";
-//	}
-//	
-//	@PostMapping("/answerForm")							// tällä lohkolla tehdään vastauksen lähetys answerForm:illa question-sivun sisältä
-//	public String addAnswer(Answer answer) {
-//		userClient.addAnswer(answer);
-//		return "answered";
-//	}
+
+}

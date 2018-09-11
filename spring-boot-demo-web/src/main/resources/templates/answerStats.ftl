@@ -8,10 +8,11 @@
 			<h1>Answer statistics</h1>
 			Your answer was:
 			<br>
-			${uidqid.answer}
+			${answer.answer}
+			<br>
 			Average answer was:
 			<br>
-			${qid.ave}
+			${answer.qid}
 			<br>
 			<a href="/userspage">Next question</a>
 		</div>

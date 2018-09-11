@@ -6,7 +6,7 @@
 	<body>
 		<span id="question">${question.question}</span>
 		<form action="/answerForm" method="POST">
-			<input type="hidden" name="uid" value="7">
+			<input type="hidden" name="uid" value="8">
 			<input type="hidden" name="qid" value="1">	
 			<input type="text" name="answer">
 			<br>
