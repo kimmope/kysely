@@ -94,7 +94,8 @@ public class UserController {
 		log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 		userClient.addUserAnswer(answer);
 		model.addAttribute("answer", answer);
+		Question question = userClient.getQuestion(answer.getQid());
+		model.addAttribute("question", question);
 		return "answerStats";
 	}
-
 }

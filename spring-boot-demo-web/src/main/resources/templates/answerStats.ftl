@@ -5,16 +5,17 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Answer statistics</h1>
+			Question was:
+			<h1>${question.question}</h1>
 			Your answer was:
 			<br>
 			${answer.answer}
 			<br>
 			Average answer was:
 			<br>
-			${answer.qid}
+			${question.average}
 			<br>
-			<a href="/userspage">Next question</a>
+			<a href="/nextQuestion">Next question</a>
 		</div>
 	</body>
 </html>
