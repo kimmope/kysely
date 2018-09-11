@@ -1,3 +1,0 @@
-Täällä on lisää esimerkkitekstiä.
-Tavoitteena on saada tämä teksti näkyviin konsolissa.
-Mitenkähän on?

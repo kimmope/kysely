@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.client;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+//
+import org.apache.commons.logging.Log;
+//
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,12 +14,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Answer;
 import queta.Question;
 
 @Component
 public class UserClient {
 
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserClient.class);
+// DEBUG LOGGER:	
+	private static final Log log = LogFactory.getLog(UserClient.class);
 // LOG TO PUT INSIDE CLASS:	log.info("HERE DEBUG TEXT");
 	
 	@Autowired						// Spring dependency injectionin luoma automaattinen yhteys allaolevaan constructoriin, kenttään tai setteriin
@@ -46,13 +50,14 @@ public class UserClient {
 		restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
 	}
 	
-/** OWN PROJECT: ------------------ */	
-//	public void addAnswer(Answer answer) {
-//		restTemplate.postForObject("/answer", answer ,Answer.class);		
-//	}
-//	
+// OWN PROJECT:
 	public Question getQuestion(int qid) {		// Rakentaa question-sivun kysymyksen id:n perusteella
 		Question question = restTemplate.getForObject("/"+qid, Question.class);
 		return question;
 	}	
+	public void addUserAnswer(Answer answer) {
+		log.info("!******** Web user client answer.getAnswer(): "+answer.getAnswer());
+		restTemplate.postForObject("/answer", answer ,Answer.class);	// luodaan /answer-osoite ja kutsutaan restiä
+	}
+
 }

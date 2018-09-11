@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.dao;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+//
+import org.apache.commons.logging.Log;
+//
+import org.apache.commons.logging.LogFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,13 +19,15 @@ import org.springframework.stereotype.Repository;
 import com.eduix.spring.demo.domain.DemoUser;
 
 import Rowmappers.QuestionRowMapper;
+import queta.Answer;
 //import Rowmappers.QuestionRowMapper;
 import queta.Question;
 
 @Repository
 public class UserDao {
 
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
+// DEBUG LOGGER:	
+	private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
 	
 	@Autowired
@@ -65,20 +69,26 @@ public class UserDao {
 		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
 	}	
 
-/** OWN PROJECT: ------------------ */	
-//  BeanPropertyRowMapper sample	
-//	public Question getQuestionById(int qid) {
-//		try {
-//			String sql = "SELECT * FROM questions WHERE qid=?";
-//			Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new BeanPropertyRowMapper<>(Question.class));
-//			return question;
-//		} catch (DataAccessException e) {
-//			return null;
-//		}
-//	}
-	public Question getQuestionById(int qid){		 
+// OWN PROJECT:	
+	public Question getQuestionById(int qid){		 			// create database query for creating question for question-page++
 		String sql = "SELECT * FROM questions WHERE qid = ?";	 
 		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
 		return question;
 	}
+	public void addAnswer(Answer answer) {
+		log.info("!******** REST Dao answer.getUid()+answer.getQid()+answer.getAnswer()(): "+answer.getUid()+" "+answer.getQid()+" "+answer.getAnswer());
+		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
+
+	}
 }
+
+//BeanPropertyRowMapper sample	
+//public Question getQuestionById(int qid) {
+//	try {
+//		String sql = "SELECT * FROM questions WHERE qid=?";
+//		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new BeanPropertyRowMapper<>(Question.class));
+//		return question;
+//	} catch (DataAccessException e) {
+//		return null;
+//	}
+//}

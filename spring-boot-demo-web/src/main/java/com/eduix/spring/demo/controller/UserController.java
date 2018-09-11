@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.controller;				// Default-package
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+//
+import org.apache.commons.logging.Log;
+//
+import org.apache.commons.logging.LogFactory;
 
 import java.net.ConnectException;						// Imported libraries
 import java.util.List;
@@ -19,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.eduix.spring.demo.client.UserClient;
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Answer;
 import queta.Question;
 
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
 
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class);
+// DEBUG LOGGER:	
+	private static final Log log = LogFactory.getLog(UserController.class);
 // LOG TO PUT INSIDE CLASS:	 log.info("HERE DEBUG TEXT");
 	
 	@Autowired											// marks a constructor, field, or setter method to be autowired by Spring dependency injection. Here connection to UserClient-class.
@@ -53,7 +57,6 @@ public class UserController {
 	public String adduser() {							// parametriton adduser-funktio joka palauttaa stringin
 		return "adduser";								// Palauttaa string-tyyppisen adduser-ftl-sivun
 	}
-	
 	@PostMapping("/adduserform")						// vähentää seuraavan funktiokutsun koskemaan ainoastaan adduserform-formista lähetettyä post-kutsua
 	public String addUserForm(DemoUser demouser) {		// stringin palauttava funktio jonka parametrina demouser-olio
 		userClient.addUser(demouser);					// kutsutaan userClientin adduser-funktiota demouser-parametrille
@@ -67,7 +70,6 @@ public class UserController {
 		model.addAttribute("user", user);
 		return "edituser";
 	}	
-
 	@PostMapping("/edituserform")
 	public String editUserForm(DemoUser demouser) {
 		userClient.editUser(demouser);
@@ -87,15 +89,14 @@ public class UserController {
 		model.addAttribute("question", question);
 		return "question";
 	}
-
-//	@PostMapping("/adduserform")
-//	public String answerForm(DemoUser demouser) {
-//		userClient.addUser(demouser);
-//		return "redirect:/userspage";
-//	}
+	@PostMapping("/answerForm")
+	public String answerForm(Answer answer) {
+		log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
+		userClient.addUserAnswer(answer);
+		return "answerStats";
+	}
+}	
 	
-	
-//	
 //	@RequestMapping("/answered")						// tämä lohko ei tarvitse userclientiä eikä restiä
 //	public String makeQuestionPage() {					// tällä lohkolla tehdään vanhan kysymyksen esityssivu (ei toiminnallisuutta)
 //		return "answered";
@@ -105,6 +106,4 @@ public class UserController {
 //	public String addAnswer(Answer answer) {
 //		userClient.addAnswer(answer);
 //		return "answered";
-//	}	
-}
-	
+//	}

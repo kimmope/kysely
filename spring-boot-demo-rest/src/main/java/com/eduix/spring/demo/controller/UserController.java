@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.controller;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+//
+import org.apache.commons.logging.Log;
+//
+import org.apache.commons.logging.LogFactory;
 
 import java.net.URI;
 import java.util.List;
@@ -19,11 +21,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.eduix.spring.demo.dao.UserDao;
 import com.eduix.spring.demo.domain.DemoUser;
 
+import queta.Answer;
 import queta.Question;
 
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
+// DEBUG LOGGER:	
+	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
 	@Autowired
 	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
@@ -53,26 +57,27 @@ public class UserController {
 	
 /** TRAINING CODE: ------------------ */
 	@DeleteMapping("/nakkivene/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable String id) {
+	public void deleteUser(@PathVariable String id) {
 		dao.deleteUser(id);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
-		return ResponseEntity.created(location).build();
 	}
 	
 	@PostMapping("/edituser")
-	public ResponseEntity<?> editUser(@RequestBody DemoUser user) {
+	public void editUser(@RequestBody DemoUser user) {
 		dao.editUser(user);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}").buildAndExpand(user.getUsername()).toUri();
-		return ResponseEntity.created(location).build();
 	}
 	
 //Own project
-	@GetMapping("/{qid}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+	@GetMapping("/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
 		Question question = dao.getQuestionById(qid);
 		if (question == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(question);
-	}	
+	}
+	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
+	public void addAnswer(@RequestBody Answer answer){
+		log.info("!******** REST user controller answer.getAnswer(): "+answer.getAnswer());
+		dao.addAnswer(answer);
+	}
 }

@@ -5,7 +5,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Options</h1>
+			<h1>User stats</h1>
 			<table>
 				<thead>
 					<tr><th>Username</th><th>Firstname</th><th>Lastname</th></tr>
