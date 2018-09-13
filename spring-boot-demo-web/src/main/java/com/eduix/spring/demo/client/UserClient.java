@@ -51,8 +51,17 @@ public class UserClient {
 	}
 	
 // OWN PROJECT:
+	// TEST
+	public Question getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
+		log.info("!******** Web user client uid: "+uid);
+		Question question = restTemplate.getForObject("/"+uid, Question.class);
+		return question;
+	}		
+	// TEST
+	
 	public Question getQuestion(int qid) {		// Rakentaa question-sivun kysymyksen id:n perusteella
-		Question question = restTemplate.getForObject("/"+qid, Question.class);
+		log.info("!******** Web user client qid: "+qid);
+		Question question = restTemplate.getForObject("/getQuestionData/"+qid, Question.class);	// Oli aiemmin pelkkä /
 		return question;
 	}	
 	public void addUserAnswer(Answer answer) {

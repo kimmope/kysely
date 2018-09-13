@@ -1,8 +1,8 @@
 package com.eduix.spring.demo.controller;				// Default-package
 
-//
+// 
 import org.apache.commons.logging.Log;
-//
+// 
 import org.apache.commons.logging.LogFactory;
 
 import java.net.ConnectException;						// Imported libraries
@@ -29,7 +29,7 @@ public class UserController {
 
 // DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserController.class);
-// LOG TO PUT INSIDE CLASS:	 log.info("HERE DEBUG TEXT");
+// LOG TO PUT INSIDE CLASS:	 log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 	
 	@Autowired											// marks a constructor, field, or setter method to be autowired by Spring dependency injection. Here connection to UserClient-class.
 	private UserClient userClient;
@@ -82,16 +82,36 @@ public class UserController {
 		return "redirect:/userspage";					// palatessa siirrytään uudelle sivulle (reloadataan) userspage
 	}
 
-/** OWN PROJECT: ------------------ */	
+// OWN PROJECT:
+//TEST
+//	@PostMapping("/question")
+//	public String getNotAskedQuestion(Model model, Answer answer) {
+//		log.info("!******** Web user controller uid: "+answer.getUid());
+//		Question question = userClient.getNotAskedQuestion(answer.getUid());
+//		model.addAttribute("question", question);
+//		return "question";
+//	}
+	
+	@GetMapping("/newQuestion/{uid}")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
+	public String getNotAskedQuestion(Model model, @PathVariable("uid") int uid) {
+		log.info("!******** Web user controller uid: "+uid);
+		Question question = userClient.getNotAskedQuestion(uid);
+		model.addAttribute("question", question);
+		model.addAttribute("uid", uid);
+		return "question";
+	}	
+//TEST
+	
 	@GetMapping("/question/{qid}")
 	public String getQuestion(Model model, @PathVariable("qid") int qid) {
+		log.info("!******** Web user controller qid: "+qid);
 		Question question = userClient.getQuestion(qid);
 		model.addAttribute("question", question);
 		return "question";
 	}
+	
 	@PostMapping("/answerForm")
 	public String answerForm(Model model, Answer answer) {
-		log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 		userClient.addUserAnswer(answer);
 		model.addAttribute("answer", answer);
 		Question question = userClient.getQuestion(answer.getQid());

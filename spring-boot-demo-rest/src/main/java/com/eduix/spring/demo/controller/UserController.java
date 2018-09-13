@@ -67,17 +67,31 @@ public class UserController {
 	}
 	
 //Own project
-	@GetMapping("/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
+// TEST
+	@GetMapping("/{uid}")						
+	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
+		log.info("!******** REST user controller uid: "+uid);		
+		Question question = dao.getNotAskedQuestion(uid);
+		if (question == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(question);
+	}	
+//TEST
+	
+	@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
+		log.info("!******** REST user controller qid: "+qid);		
 		Question question = dao.getQuestionById(qid);
 		if (question == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(question);
 	}
+	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
 	public void addAnswer(@RequestBody Answer answer){
-		log.info("!******** REST user controller answer.getAnswer(): "+answer.getAnswer());
+//		log.info("!******** REST user controller answer.getAnswer(): "+answer.getAnswer());
 		dao.addAnswer(answer);
 	}
 }

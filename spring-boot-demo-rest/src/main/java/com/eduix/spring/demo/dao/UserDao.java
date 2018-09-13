@@ -1,8 +1,8 @@
 package com.eduix.spring.demo.dao;
 
-//
+// 
 import org.apache.commons.logging.Log;
-//
+// 
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.ResultSet;
@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-//import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,7 +27,7 @@ public class UserDao {
 
 // DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
-// LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
+// LOG TO PUT INSIDE CLASS:	log.info("!******** REST Dao answer.getUid()+answer.getQid()+answer.getAnswer()(): "+answer.getUid()+" "+answer.getQid()+" "+answer.getAnswer());
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -69,16 +68,26 @@ public class UserDao {
 		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
 	}	
 
-// OWN PROJECT:	
+// OWN PROJECT:
+// TEST
+	public Question getNotAskedQuestion(int uid){		 			// create database query for creating question for question-page
+		String notAsked = "SELECT qid FROM user_answers WHERE NOT uid = ? LIMIT 1";	// Query for which question is not asked yet from user (distinct question id from where no user id)
+		String qid = (String)jdbcTemplate.queryForObject(notAsked, new Object[]{uid}, String.class); // Saving query-result to object-variable
+log.info("!******** REST Dao uid = " + uid + " qid = " + qid +" not asked = " + notAsked);
+		String sql = "SELECT * FROM questions WHERE qid = ?";				// Select question where qid is notAsked
+		log.info("!******** REST Dao uid = " + uid + " qid = " + qid +" not asked = " + notAsked);
+		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
+		return question;
+	}
+// TEST
 	public Question getQuestionById(int qid){		 			// create database query for creating question for question-page++
-		String sql = "SELECT * FROM questions WHERE qid = ?";	 
+log.info("!******** REST Dao qid = "+qid);
+		String sql = "SELECT * FROM questions WHERE qid = ?";	 // kysymysmerkkiin haetaan ilmeisesti arvo seuraavan rivin new Object[]{qid}lla?
 		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
 		return question;
 	}
 	public void addAnswer(Answer answer) {
-		log.info("!******** REST Dao answer.getUid()+answer.getQid()+answer.getAnswer()(): "+answer.getUid()+" "+answer.getQid()+" "+answer.getAnswer());
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
-		
 	}
 }
 

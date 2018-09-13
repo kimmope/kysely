@@ -15,7 +15,12 @@
 			<br>
 			${question.average}
 			<br>
-			<a href="/nextQuestion">Next question</a>
+			<a href="/question">Next question</a>
+			<br>
+			<form>
+				<input type="hidden" name="uid" value="${answer.uid}>
+				<input type="submit" value="Next question">
+			</form>
 		</div>
 	</body>
 </html>
