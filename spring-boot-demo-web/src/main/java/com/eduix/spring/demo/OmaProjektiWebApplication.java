@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication														// Same as @Configuration (for class that defines beans), @EnableAutoConfiguration (Configures default configurations such as database connection), @ConponentScan (scans the package where the where the application is located)
-public class SpringBootDemoWebApplication {
+public class OmaProjektiWebApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootDemoWebApplication.class, args);	// Calls run
+		SpringApplication.run(OmaProjektiWebApplication.class, args);	// Calls run
 	}
 	
 	@Bean
