@@ -7,7 +7,8 @@
 	<body>
 		<span id="question">${question.question}</span>
 		<form action="/answerForm" method="POST">
-			<input type="hidden" name="qid" value="${question.qid}">
+			<input type="hidden" name="uid" value="${uid}">
+			<input type="hidden" name="qid" value="${question.qid}">			
 			<input type="text" name="answer">
 			<br>
 			<input type="submit" value="Vastaa">

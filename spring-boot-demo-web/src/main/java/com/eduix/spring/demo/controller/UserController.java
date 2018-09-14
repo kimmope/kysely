@@ -99,7 +99,9 @@ public class UserController {
 		model.addAttribute("question", question);
 		model.addAttribute("uid", uid);
 		return "question";
-	}	
+	}
+	
+	
 //TEST
 	
 	@GetMapping("/question/{qid}")

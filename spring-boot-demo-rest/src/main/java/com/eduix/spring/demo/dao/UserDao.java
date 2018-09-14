@@ -70,24 +70,25 @@ public class UserDao {
 
 // OWN PROJECT:
 // TEST
-	public Question getNotAskedQuestion(int uid){		 			// create database query for creating question for question-page
-		String notAsked = "SELECT qid FROM user_answers WHERE NOT uid = ? LIMIT 1";	// Query for which question is not asked yet from user (distinct question id from where no user id)
+	public Question getNotAskedQuestion(int uid){	// create database queries for creating not-asked question for question-page
+		String notAsked = "SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1";	// Query for which question is not asked yet from user
 		String qid = (String)jdbcTemplate.queryForObject(notAsked, new Object[]{uid}, String.class); // Saving query-result to object-variable
-log.info("!******** REST Dao uid = " + uid + " qid = " + qid +" not asked = " + notAsked);
-		String sql = "SELECT * FROM questions WHERE qid = ?";				// Select question where qid is notAsked
+		log.info("!******** REST Dao uid = " + uid + " qid = " + qid +" not asked = " + notAsked);
+		String sql = "SELECT * FROM questions WHERE qid = ?";				// Select question which qid is not asked
 		log.info("!******** REST Dao uid = " + uid + " qid = " + qid +" not asked = " + notAsked);
 		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
 		return question;
 	}
 // TEST
 	public Question getQuestionById(int qid){		 			// create database query for creating question for question-page++
-log.info("!******** REST Dao qid = "+qid);
+		log.info("!******** REST Dao qid = "+qid);
 		String sql = "SELECT * FROM questions WHERE qid = ?";	 // kysymysmerkkiin haetaan ilmeisesti arvo seuraavan rivin new Object[]{qid}lla?
 		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, new QuestionRowMapper());			
 		return question;
 	}
 	public void addAnswer(Answer answer) {
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
+		jdbcTemplate.update("UPDATE useres SET amount_answers = amount_answers + ?",1);
 	}
 }
 
