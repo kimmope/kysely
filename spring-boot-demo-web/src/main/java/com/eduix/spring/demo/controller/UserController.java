@@ -9,6 +9,7 @@ import java.net.ConnectException;						// Imported libraries
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.RestClientException;
 
 import com.eduix.spring.demo.client.UserClient;
 import com.eduix.spring.demo.domain.DemoUser;
 
 import queta.Answer;
 import queta.Question;
+import queta.User;
 
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
@@ -33,6 +37,16 @@ public class UserController {
 	
 	@Autowired											// marks a constructor, field, or setter method to be autowired by Spring dependency injection. Here connection to UserClient-class.
 	private UserClient userClient;
+
+	@ExceptionHandler({ConnectException.class})			// Poikkeuskäsittelijä yhteysvirheeseen, parametrina handlerin luokka joka laukaisee käsittelijän  
+	public String connectionError() {					
+		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
+	}	
+	
+//	@ResponseStatus(value=HttpStatus.NOT_FOUND)
+//	public userNotFoundException extends RuntimeException{
+//		
+//	}
 	
 	@GetMapping("/userspage")							// kun tässä mainitulle "userspage"-sivulle (voi olla mikä vaan) tullaan lähetetään get_kutsu, tämä annotaatio lähettää sen allaolevalle funktiolle
 	public String getUsers(Model model) {				// parametrina annetaan MVC:n java model-object
@@ -41,17 +55,37 @@ public class UserController {
 		return "userlist";								// palauttaa userlist- nimisen ftl-tiedoston
 	}
 
-	@ExceptionHandler({ConnectException.class})			// Poikkeuskäsittelijä yhteysvirheeseen, parametrina handlerin luokka joka laukaisee käsittelijän  
-	public String connectionError() {					
-		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
-	}
-
 	@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
 	public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
-		DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla 
-		model.addAttribute("user", user);				// lisätään modeliin user-olio
-		return "user";									// palautetaan user-niminen ftl-tiedosto
+		try {
+			DemoUser user = userClient.getUser(username);
+			model.addAttribute("user", user);
+			return "user";
+		}
+		catch(RestClientException e){
+			return "noSuchUser";
+		}
+//		DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla
+//		if (user == null) {
+//			return "noSuchUser";
+//		}
+//		else {
+//			model.addAttribute("user", user);			// lisätään modeliin user-olio
+//			return "user";	
+//		}
 	}
+
+//	@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
+//	public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
+//		DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla
+//		if (user == null) {
+//			return "noSuchUser";
+//		}
+//		else {
+//			model.addAttribute("user", user);			// lisätään modeliin user-olio
+//			return "user";	
+//		}
+//	}	
 	
 	@RequestMapping("/adduser")							// luo perustietopolun ja kutsuu seuraavaa funktiota. Kaikki http-kutsut /-polulla ohjataan home-metodiin
 	public String adduser() {							// parametriton adduser-funktio joka palauttaa stringin
@@ -82,34 +116,34 @@ public class UserController {
 		return "redirect:/userspage";					// palatessa siirrytään uudelle sivulle (reloadataan) userspage
 	}
 
-// OWN PROJECT:
-//TEST
-//	@PostMapping("/question")
-//	public String getNotAskedQuestion(Model model, Answer answer) {
-//		log.info("!******** Web user controller uid: "+answer.getUid());
-//		Question question = userClient.getNotAskedQuestion(answer.getUid());
-//		model.addAttribute("question", question);
-//		return "question";
-//	}
+/** OWN PROJECT  -------------------- */
 	
-	@GetMapping("/newQuestion/{uid}")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
-	public String getNotAskedQuestion(Model model, @PathVariable("uid") int uid) {
-		log.info("!******** Web user controller uid: "+uid);
-		Question question = userClient.getNotAskedQuestion(uid);
-		model.addAttribute("question", question);
-		model.addAttribute("uid", uid);
-		return "question";
+	@RequestMapping("/login")
+	public String checkUser() {
+		return "login";
 	}
 	
+	@PostMapping("/loginForm")
+	public String checkUserForm(Model model, User user) {	// Model tulee taikuudesta, user loginformista
+		log.info("!******** Web UserController checkUserForm user.getUsername() 1: " + user.getUsername());
+		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
+		model.addAttribute("user",checkedUser);
+		int uid = checkedUser.getUid();
+		log.info("!******** Web UserController checkUserForm uid 2 : " + uid);
+		return "redirect:/newQuestion/"+uid;
+	}
 	
-//TEST
-	
-	@GetMapping("/question/{qid}")
-	public String getQuestion(Model model, @PathVariable("qid") int qid) {
-		log.info("!******** Web user controller qid: "+qid);
-		Question question = userClient.getQuestion(qid);
+	@GetMapping("/newQuestion/{uid}")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
+	public String getNotAskedQuestion(Model model, @PathVariable("uid") int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
+		Question question = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
 		model.addAttribute("question", question);
-		return "question";
+		model.addAttribute("uid", uid);
+		if(question.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
+			return "noMoreQuestions";
+		}
+		else {
+			return "question";			// Jos on kysymätön kysymys, esitetään se
+		}
 	}
 	
 	@PostMapping("/answerForm")
@@ -118,6 +152,17 @@ public class UserController {
 		model.addAttribute("answer", answer);
 		Question question = userClient.getQuestion(answer.getQid());
 		model.addAttribute("question", question);
+		Question nextQuestion = userClient.getNotAskedQuestion(answer.getUid());
+		model.addAttribute("nextQuestion", nextQuestion);		
 		return "answerStats";
 	}
+	
+//	@PostMapping("/options")
+//	public String options(Model model, Answer answer) {
+//		userClient.getOldUserAnswers(answer);
+//		model.addAttribute("answer", answer);
+//		Question question = userClient.getQuestion(answer.getQid());
+//		model.addAttribute("question", question);
+//		return "answerStats";
+//	}
 }

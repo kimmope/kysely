@@ -1,25 +1,30 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />
-		<title>Answer statistics</title>
-	</head>
+	<#include "head.ftl">	
 	<body>
 		<div class="container">
+			<br>
+			<a href="/options/${answer.uid}" id="options">Options</a>
+			<br>
 			Question was:
-			<h1>${question.question}</h1>
+			<br>
+			<h3>${question.question}</h3>
+			<br>
 			Your answer was:
 			<br>
-			${answer.answer}
+			<h1>${answer.answer}</h1>
 			<br>
 			Average answer was:
 			<br>
-			${question.average}
+			<h2>${question.average}</h2>
 			<br>
-			<a href="/newQuestion/${answer.uid}">Next question</a>
+			<#if nextQuestion.qid != 0>
+				<a href="/newQuestion/${answer.uid}">Next question</a>
+			<#else>
+				<h1>Vastasit viimeiseen kysymykseen. Tervetuloa uudelleen ensi viikolla!</h1>
+			</#if>
 			<br>
-			<form>
+			<form><#-- For storing the uid-data. IS THIS REALLY USED???--> 
 				<input type="hidden" name="uid" value="${answer.uid}>
-				<input type="submit" value="Next question">
 			</form>
 		</div>
 	</body>

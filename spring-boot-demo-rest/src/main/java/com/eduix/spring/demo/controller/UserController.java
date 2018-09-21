@@ -1,14 +1,16 @@
 package com.eduix.spring.demo.controller;
 
-//
+//	
 import org.apache.commons.logging.Log;
-//
+//	
 import org.apache.commons.logging.LogFactory;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +25,15 @@ import com.eduix.spring.demo.domain.DemoUser;
 
 import queta.Answer;
 import queta.Question;
+import queta.User;
 
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
+	
 // DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
-// LOG TO PUT INSIDE CLASS: log.info("HERE DEBUG TEXT");
+// LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
+	
 	@Autowired
 	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
 	
@@ -39,13 +44,23 @@ public class UserController {
 	
 	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-		DemoUser user = dao.getUser(username);			
-		if (user == null) {
-			return ResponseEntity.notFound().build();	// Jos useria ei löydy, palautetaan ResponseEntityn builder notFound-statuksella (Http error 404)
+		try {
+			return ResponseEntity.ok(dao.getUser(username));
 		}
-		return ResponseEntity.ok(user);					// Jos user löytyy, se palautetaan Ok-statuksella
+		catch(DataAccessException e){
+			return ResponseEntity.notFound().build();
+		}
 	}
 
+//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
+//		DemoUser user = dao.getUser(username);			
+//		if (user == null) {
+//			return ResponseEntity.notFound().build();	// Jos useria ei löydy, palautetaan ResponseEntityn builder notFound-statuksella (Http error 404)
+//		}
+//		return ResponseEntity.ok(user);					// Jos user löytyy, se palautetaan Ok-statuksella
+//	}	
+	
 	@PostMapping("/user")
 	public ResponseEntity<?> addUser(@RequestBody DemoUser user) { // addUser-funktio palauttaa ResponseEntityn määrittelemättömän olion. Parametrina on DemoUser-olio user joka yhdistetään @RequestBodylla @PostMappingista saapuvaan http-responseen
 		dao.addUser(user);								// kutsutaan dao-luokan addUser-funktiota user-parametrilla
@@ -66,32 +81,40 @@ public class UserController {
 		dao.editUser(user);
 	}
 	
-//Own project
-// TEST
+//OWN PROJECT
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-		log.info("!******** REST user controller uid: "+uid);		
+		log.info("!******** REST UserController getNotAskedQuestion uid 1 : " + uid);
 		Question question = dao.getNotAskedQuestion(uid);
-		if (question == null) {
-			return ResponseEntity.notFound().build();
-		}
 		return ResponseEntity.ok(question);
 	}	
-//TEST
 	
 	@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
-		log.info("!******** REST user controller qid: "+qid);		
 		Question question = dao.getQuestionById(qid);
-		if (question == null) {
-			return ResponseEntity.notFound().build();
-		}
 		return ResponseEntity.ok(question);
 	}
 	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
 	public void addAnswer(@RequestBody Answer answer){
-//		log.info("!******** REST user controller answer.getAnswer(): "+answer.getAnswer());
 		dao.addAnswer(answer);
 	}
+	
+	@PostMapping("/checkUser")	// Kuuntelee /checkUser-pagea ja siirtää sille tulevan kutsun allaolevalle funktiolle
+	public ResponseEntity<?> checkUser(@RequestBody String username) { 
+		User user = new User();
+		log.info("!******** REST UserController checkUser 1 : "+username);
+		try {
+			log.info("!******** REST UserController checkUser 2");
+			user = dao.checkUser(username);
+			log.info("!******** REST UserController checkUser 3");
+		} 
+		catch (RuntimeException e) {
+			log.info("!******** REST UserController checkUser 4 before createNewUser");
+			user = dao.createNewUser(username);
+			log.info("!******** REST UserController checkUser 5 after createNewUser");
+		}
+		log.info("!******** REST UserController checkUser5 before return");
+		return ResponseEntity.ok(user);
+	}		
 }

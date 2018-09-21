@@ -4,6 +4,7 @@ public class Question {
 	private int qid;
 	private String question;
 	private int amountOfAnswers;
+	private int sumOfAnswers;
 	private double average;
 	private int factualAnswer;
 
@@ -37,6 +38,14 @@ public class Question {
 	public void setAmountOfAnswers(int amountOfAnswers) {
 		this.amountOfAnswers = amountOfAnswers;
 	}	
+
+	public int getSumOfAnswers() {
+		return sumOfAnswers;
+	}
+
+	public void setSumOfAnswers(int sumOfAnswers) {
+		this.sumOfAnswers = sumOfAnswers;
+	}
 
 	public double getAverage() {
 		return average;

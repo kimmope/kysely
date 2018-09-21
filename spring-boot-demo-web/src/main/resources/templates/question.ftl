@@ -1,9 +1,5 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />	
-		<title>Question</title>
-	</head>
-	
+	<#include "head.ftl">	
 	<body>
 		<span id="question">${question.question}</span>
 		<form action="/answerForm" method="POST">
@@ -13,7 +9,7 @@
 			<br>
 			<input type="submit" value="Vastaa">
 		</form>
-		<br><br>
+		<br>
 		<br><span id="qid">Debug question.qid: ${question.qid}</span>
 		<br><span id="qid">Debug answer.uid: ${uid}</span>
 	</body>
