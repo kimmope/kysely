@@ -55,6 +55,7 @@ public class UserController {
 		return "userlist";								// palauttaa userlist- nimisen ftl-tiedoston
 	}
 
+	// Tässä testailtiin testi kuinka palautetaan tietokannasta erroreita 
 	@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
 	public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
 		try {

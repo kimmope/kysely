@@ -20,7 +20,7 @@
 			<#if nextQuestion.qid != 0>
 				<a href="/newQuestion/${answer.uid}">Next question</a>
 			<#else>
-				<h1>Vastasit viimeiseen kysymykseen. Tervetuloa uudelleen ensi viikolla!</h1>
+				<h2>Vastasit viimeiseen kysymykseen. Tervetuloa uudelleen ensi viikolla!</h2>
 			</#if>
 			<br>
 			<form><#-- For storing the uid-data. IS THIS REALLY USED???--> 
