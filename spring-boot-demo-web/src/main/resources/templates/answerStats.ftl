@@ -3,7 +3,7 @@
 	<body>
 		<div class="container">
 			<br>
-			<a href="/options/${answer.uid}" id="options">Options</a>
+			<a href="/pastAnswers/${answer.uid}" id="pastAnswers">Past answers</a>
 			<br>
 			Question was:
 			<br>

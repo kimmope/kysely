@@ -9,16 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+//import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import com.eduix.spring.demo.domain.DemoUser;
 import Rowmappers.UserRowMapper;
-import Rowmappers.QuestionRowMapper;
+//import Rowmappers.QuestionRowMapper;
 import queta.Answer;
-import queta.OldQetA;
+import queta.PastQandA;
 import queta.Question;
 import queta.User;
 
@@ -30,20 +30,20 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 // ROWMAPPER INFO: https://www.mkyong.com/spring/spring-jdbctemplate-querying-examples/
-	private static RowMapper<DemoUser> ROW_MAPPER = new RowMapper<DemoUser>() {			// Creates new RowMapper-list-object for returning the list of queried DemoUsers
-		public DemoUser mapRow(ResultSet resultSet, int row) throws SQLException {
-			return new DemoUser(
-				resultSet.getString("username"),
-				resultSet.getString("lastname"),
-				resultSet.getString("firstname"));
-		}
-	};
-	public List<DemoUser> getUsers() {
-		return jdbcTemplate.query("SELECT * FROM users ORDER BY lastname, firstname", ROW_MAPPER);	// Tekee queryn mukaisen listan demousereista
-	}
-	public DemoUser getUser(String username) {
-		return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", ROW_MAPPER, username);	// Tekee ROW_MAPPER-listan yhdestä rivistä olion
-	}
+//	private static RowMapper<DemoUser> ROW_MAPPER = new RowMapper<DemoUser>() {			// Creates new RowMapper-list-object for returning the list of queried DemoUsers
+//		public DemoUser mapRow(ResultSet resultSet, int row) throws SQLException {
+//			return new DemoUser(
+//				resultSet.getString("username"),
+//				resultSet.getString("lastname"),
+//				resultSet.getString("firstname"));
+//		}
+//	};
+//	public List<DemoUser> getUsers() {
+//		return jdbcTemplate.query("SELECT * FROM users ORDER BY lastname, firstname", ROW_MAPPER);	// Tekee queryn mukaisen listan demousereista
+//	}
+//	public DemoUser getUser(String username) {
+//		return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", ROW_MAPPER, username);	// Tekee ROW_MAPPER-listan yhdestä rivistä olion
+//	}
 //	public DemoUser getUser(String username) {
 //		try {
 //			return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", ROW_MAPPER, username);	// Tekee ROW_MAPPER-listan yhdestä rivistä olion
@@ -95,6 +95,7 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		jdbcTemplate.update("UPDATE questions SET amount_answs = amount_answs + 1 WHERE qid = ?",answer.getQid());
 	}
 // CHECK IF USER EXISTS OR CREATE NEW IF IT DOESNT
+	
 	public User checkUser(String username) {
 		log.info("!******** REST Dao checkUser username: " + username);
 		try {
@@ -110,22 +111,41 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		log.info("!******** REST Dao createNewUser2");
 		return jdbcTemplate.queryForObject("SELECT * FROM useres WHERE username=?", new UserRowMapper(), username);
 	}
-	
 
+	private static RowMapper<User> ROW_MAPPER_3 = new RowMapper<User>(){
+		public User mapRow(ResultSet resultSet, int row) throws SQLException {
+			return new User(
+			resultSet.getInt("uid"),
+			resultSet.getString("username"),
+			resultSet.getInt("amount_answers"),
+			resultSet.getInt("score"));
+		}
+	};
+	
+	public User getUser(int uid) {
+		return jdbcTemplate.queryForObject("SELECT * FROM useres WHERE uid=?", ROW_MAPPER_3, uid);
+	}	
+	
 //	public List<OldQetA> getUsersOldAnswers(int uid){
 //		String sql = "SELECT * FROM user_answers WHERE uid = ?";
 //		List<OldQetA> oldQetAs = getJdbcTemplate().query(sql, new BeanPropertyRowMapper(OldQetA.class),uid);
 //		return oldQetAs;
 //	}
 	
-
 // IF OLD QUESTIONS FOR THE USER EXIST RETURN THEM IN LIST OR ELSE RETURN NULL
-//	public List<Question> getOldQuestions(int uid) {
-//		try {
-//			return jdbcTemplate.query("SELECT * FROM user_answers WHERE uid = ? ORDER BY time_of_answ",questionRowMapper,uid);
-//		} catch (DataAccessException e) {
-//			return null;
-//		}		
-//	}
+// TESTING PAGE-SPECIFIC OBJECT CREATED FROM DATA OF DIFFERENT DATABASES
+	private static RowMapper<PastQandA> ROW_MAPPER_4 = new RowMapper<PastQandA>() {			// Creates new RowMapper-list-object for returning the list of queried DemoUsers
+		public PastQandA mapRow(ResultSet resultSet, int row) throws SQLException {
+			return new PastQandA(
+				resultSet.getInt("uid"),
+				resultSet.getInt("qid"),					
+				resultSet.getString("question"),
+				resultSet.getTimestamp("time_of_answ"),				
+				resultSet.getString("answer"));
+		}
+	};	
+	public List<PastQandA> getPastQandAs(int uid) {
+		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid);
+	}
 }
 // BeanPropertyRowMapper ei toiminut koska getJdbcTemplatea ei tunnistettu

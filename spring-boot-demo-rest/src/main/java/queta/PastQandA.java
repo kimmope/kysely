@@ -1,16 +1,16 @@
 package queta;
 import java.sql.Timestamp;
 
-public class OldQetA {
+public class PastQandA {
 	private int uid;
 	private int qid;
 	private String question;
 	private Timestamp time_of_answ;
 	private String answer;
 	
-	public OldQetA() {}
+	public PastQandA() {}
 	
-	public OldQetA(int uid, int qid, String question, Timestamp time_of_answ, String answer) {
+	public PastQandA(int uid, int qid, String question, Timestamp time_of_answ, String answer) {
 		super();
 		this.uid = uid;
 		this.qid = qid;

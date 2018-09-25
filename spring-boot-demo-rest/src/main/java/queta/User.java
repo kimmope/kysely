@@ -7,7 +7,14 @@ public class User {
 	private int score;
 	
 	public User(){
+	}
 		
+	public User(int uid, String username, int amount_answers, int score) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.amount_answers = amount_answers;
+		this.score = score;
 	}
 
 	public int getUid() {

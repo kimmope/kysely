@@ -1,12 +1,10 @@
 package com.eduix.spring.demo.controller;
 
-//	
-import org.apache.commons.logging.Log;
-//	
-import org.apache.commons.logging.LogFactory;
+//	import org.apache.commons.logging.Log;
+//	import org.apache.commons.logging.LogFactory;
 
 import java.net.URI;
-import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,33 +22,33 @@ import com.eduix.spring.demo.dao.UserDao;
 import com.eduix.spring.demo.domain.DemoUser;
 
 import queta.Answer;
+import queta.PastQandA;
 import queta.Question;
 import queta.User;
 
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
 	
-// DEBUG LOGGER:	
-	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
+// DEBUG LOGGER:		private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
 	
 	@Autowired
 	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
 	
-	@GetMapping("/userspage") 							// kun "userspage"lle tulee get-kutsu niin GetMapping-annotaatio lähettää sen allaolevalle funktiolle 
-	public List<DemoUser> getUsers() {
-		return dao.getUsers();							// palauttaa UserDao-luokan dao-objektin getUsers-funktion tuloksen
-	}
-	
-	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-		try {
-			return ResponseEntity.ok(dao.getUser(username));
-		}
-		catch(DataAccessException e){
-			return ResponseEntity.notFound().build();
-		}
-	}
+//	@GetMapping("/userspage") 							// kun "userspage"lle tulee get-kutsu niin GetMapping-annotaatio lähettää sen allaolevalle funktiolle 
+//	public List<DemoUser> getUsers() {
+//		return dao.getUsers();							// palauttaa UserDao-luokan dao-objektin getUsers-funktion tuloksen
+//	}
+//	
+//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
+//		try {
+//			return ResponseEntity.ok(dao.getUser(username));
+//		}
+//		catch(DataAccessException e){
+//			return ResponseEntity.notFound().build();
+//		}
+//	}
 
 //	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
 //	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
@@ -84,7 +82,6 @@ public class UserController {
 //OWN PROJECT
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-		log.info("!******** REST UserController getNotAskedQuestion uid 1 : " + uid);
 		Question question = dao.getNotAskedQuestion(uid);
 		return ResponseEntity.ok(question);
 	}	
@@ -103,18 +100,37 @@ public class UserController {
 	@PostMapping("/checkUser")	// Kuuntelee /checkUser-pagea ja siirtää sille tulevan kutsun allaolevalle funktiolle
 	public ResponseEntity<?> checkUser(@RequestBody String username) { 
 		User user = new User();
-		log.info("!******** REST UserController checkUser 1 : "+username);
 		try {
-			log.info("!******** REST UserController checkUser 2");
-			user = dao.checkUser(username);
-			log.info("!******** REST UserController checkUser 3");
+			user = dao.checkUser(username); // Testataan onko useria
 		} 
 		catch (RuntimeException e) {
-			log.info("!******** REST UserController checkUser 4 before createNewUser");
-			user = dao.createNewUser(username);
-			log.info("!******** REST UserController checkUser 5 after createNewUser");
+			user = dao.createNewUser(username);	// Jos useria ei ole, niin tehdään sellainen
 		}
-		log.info("!******** REST UserController checkUser5 before return");
 		return ResponseEntity.ok(user);
+	}
+	
+	@GetMapping("/user/{uid}")						
+	public ResponseEntity<User> getUser(@PathVariable("uid") int uid) {
+		return ResponseEntity.ok(dao.getUser(uid));
 	}		
+
+	@GetMapping("/answerHistory/{uid}")
+	public ResponseEntity<List<PastQandA>> getPastQandAs(@PathVariable("uid") int uid) {
+		try {
+			return ResponseEntity.ok(dao.getPastQandAs(uid));
+		} 
+		catch (DataAccessException e) {
+			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA
+		}
+	}
+	
+//	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
+//	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
+//		try {
+//			return dao.getPastQandA(uid);
+//		} 
+//		catch (RuntimeException e) {
+//			return null;
+//		}
+//	}	
 }

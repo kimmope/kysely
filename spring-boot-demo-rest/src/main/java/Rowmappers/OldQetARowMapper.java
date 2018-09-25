@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-import queta.OldQetA;
+import queta.PastQandA;
 
-public class OldQetARowMapper implements RowMapper<OldQetA>  {
-	public OldQetA mapRow(ResultSet rs, int row) throws SQLException {
-		OldQetA oldQetA = new OldQetA();
+public class OldQetARowMapper implements RowMapper<PastQandA>  {
+	public PastQandA mapRow(ResultSet rs, int row) throws SQLException {
+		PastQandA oldQetA = new PastQandA();
 		oldQetA.setUid(rs.getInt("uid"));
 		oldQetA.setUid(rs.getInt("qid"));
 		oldQetA.setQuestion(rs.getString("question"));
