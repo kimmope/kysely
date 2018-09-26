@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.client;
 
-//	import org.apache.commons.logging.Log;
-//	import org.apache.commons.logging.LogFactory;
+//	
+import org.apache.commons.logging.Log;
+//	
+import org.apache.commons.logging.LogFactory;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,8 @@ import queta.User;
 @Component
 public class UserClient {
 
-// DEBUG LOGGER:		private static final Log log = LogFactory.getLog(UserClient.class);
+// DEBUG LOGGER:		
+	private static final Log log = LogFactory.getLog(UserClient.class);
 // LOG TO PUT INSIDE CLASS:	log.info("!******** Web user client uid: "+uid);
 	
 	@Autowired						// Spring dependency injectionin luoma automaattinen yhteys allaolevaan constructoriin, kenttään tai setteriin
@@ -65,12 +68,19 @@ public class UserClient {
 	}
 	
 	public User getUser(int uid) {
+		log.info("!******** Web UserClient getUser uid: " + uid);
 		return restTemplate.getForObject("/user/" + uid, User.class);
 	}	
 	
 	public List<PastQandA> getPastQandAs(int uid) {	
-		PastQandA[] pastQandAs = restTemplate.getForObject("/answerHistory/{uid}", PastQandA[].class); // TUTKI MITÄ TAPAHTUU JOS TÄHÄN TULEE NULL
+		log.info("!******** Web UserClient getPastQandAs uid: " + uid);
+		PastQandA[] pastQandAs = restTemplate.getForObject("/answerHistory/" + uid, PastQandA[].class); // TUTKI MITÄ TAPAHTUU JOS TÄHÄN TULEE NULL
 		return Arrays.asList(pastQandAs);
+	}
+
+	public PastQandA getPastQandA(int uid, int qid) {	
+		log.info("!******** Web UserClient getPastQandA uid,qid: " + uid + ", " + qid);
+		return restTemplate.getForObject("/historicAnswer/" + uid + "/" + qid, PastQandA.class);
 	}	
 }
 //TESTI PALAUTUSARVOLLE	

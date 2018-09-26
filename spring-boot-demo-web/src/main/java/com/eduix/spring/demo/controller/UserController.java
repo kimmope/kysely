@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.controller;				// Default-package
 
-// import org.apache.commons.logging.Log;
-// import org.apache.commons.logging.LogFactory;
+// 
+import org.apache.commons.logging.Log;
+// 
+import org.apache.commons.logging.LogFactory;
 
 import java.net.ConnectException;						// Imported libraries
 import java.util.List;
@@ -25,7 +27,8 @@ import queta.User;
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
 
-// DEBUG LOGGER:		private static final Log log = LogFactory.getLog(UserController.class);
+// DEBUG LOGGER:		
+	private static final Log log = LogFactory.getLog(UserController.class);
 // LOG TO PUT INSIDE CLASS:	 log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 	
 	@Autowired											// marks a constructor, field, or setter method to be autowired by Spring dependency injection. Here connection to UserClient-class.
@@ -130,13 +133,12 @@ public class UserController {
 		Question question = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
 		model.addAttribute("question", question);
 		model.addAttribute("uid", uid);
-//		if(question.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
-//			return "noMoreQuestions";
-//		}
-//		else {
-//			return "question";			// Jos on kysymätön kysymys, esitetään se
-//		}
-		return "question";
+		if(question.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
+			return "answerStats";
+		}
+		else {
+			return "question";			// Jos on kysymätön kysymys, esitetään se
+		}
 	}
 	
 	@PostMapping("/answerForm")
@@ -149,15 +151,25 @@ public class UserController {
 		model.addAttribute("nextQuestion", nextQuestion);		
 		return "answerStats";
 	}
-
+	
 	@GetMapping("/pastAnswers/{uid}")
-	public String history(Model model, int uid) {
+	public String history(Model model, @PathVariable("uid") int uid) {
+		log.info("!******** Web UserController history: "+uid);
 		List<PastQandA> pastQandAs = userClient.getPastQandAs(uid);
 		model.addAttribute("pastQandAs", pastQandAs);	// VARMISTA ETTÄ NULL-VASTAUS KÄSITELLÄÄN OIKEIN
 		User user = userClient.getUser(uid);
 		model.addAttribute("user", user);
 		return "history";
 	}
+	
+	@GetMapping("/oldAnswer/{uid}/{qid}")
+	public String oldAnswer(Model model, @PathVariable("uid") int uid, @PathVariable("qid") int qid){
+		log.info("!******** Web UserController oldAnswer: " + uid);
+		PastQandA pastQandA = userClient.getPastQandA(uid,qid);	// Toimiiko function overloading userclientissä
+		model.addAttribute("pastQandA",pastQandA);
+		return "pastQuestion";
+	}
+}	
 	
 //	@PostMapping("/options")
 //	public String options(Model model, Answer answer) {
@@ -167,4 +179,3 @@ public class UserController {
 //		model.addAttribute("question", question);
 //		return "answerStats";
 //	}
-}

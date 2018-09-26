@@ -75,7 +75,7 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),'noNewQuestions')";	// Query for which question is not asked yet from user
 		String qid = (String)jdbcTemplate.queryForObject(notAsked, String.class, uid); // Saving query-result to object-variable
 		if (qid.equals("noNewQuestions")) {	// Checking if there are any questions left which user has not answered
-			question.setQid(0);
+			question.setQid(0);				// Asettaa tyhjän olion qid:ksi nollan. Tämä tulkitaan webin usercontrollerissa.
 		}
 		else {
 			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	// Select question which qid is not asked
@@ -108,7 +108,6 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 	public User createNewUser(String username) {
 		log.info("!******** REST Dao createNewUser1");
 		jdbcTemplate.update("INSERT INTO useres(username,amount_answers,score) VALUES (?, ?, ?)",username,0,0);
-		log.info("!******** REST Dao createNewUser2");
 		return jdbcTemplate.queryForObject("SELECT * FROM useres WHERE username=?", new UserRowMapper(), username);
 	}
 
@@ -145,7 +144,10 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		}
 	};	
 	public List<PastQandA> getPastQandAs(int uid) {
-		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid);
+		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid);	// List queryllä 
 	}
+	public PastQandA getPastQandA(int uid, int qid) {
+		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
+	}	
 }
 // BeanPropertyRowMapper ei toiminut koska getJdbcTemplatea ei tunnistettu

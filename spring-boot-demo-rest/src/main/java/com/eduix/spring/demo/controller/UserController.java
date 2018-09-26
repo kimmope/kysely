@@ -1,7 +1,9 @@
 package com.eduix.spring.demo.controller;
 
-//	import org.apache.commons.logging.Log;
-//	import org.apache.commons.logging.LogFactory;
+//	
+import org.apache.commons.logging.Log;
+//	
+import org.apache.commons.logging.LogFactory;
 
 import java.net.URI;
 //import java.sql.SQLException;
@@ -29,7 +31,8 @@ import queta.User;
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
 	
-// DEBUG LOGGER:		private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
+// DEBUG LOGGER:		
+	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
 	
 	@Autowired
@@ -109,13 +112,14 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 	
-	@GetMapping("/user/{uid}")						
+	@GetMapping("/user/{uid}")				
 	public ResponseEntity<User> getUser(@PathVariable("uid") int uid) {
 		return ResponseEntity.ok(dao.getUser(uid));
 	}		
 
 	@GetMapping("/answerHistory/{uid}")
 	public ResponseEntity<List<PastQandA>> getPastQandAs(@PathVariable("uid") int uid) {
+		log.info("!******** REST UserController getPastQandAs uid: " + uid);
 		try {
 			return ResponseEntity.ok(dao.getPastQandAs(uid));
 		} 
@@ -124,6 +128,16 @@ public class UserController {
 		}
 	}
 	
+	@GetMapping("/historicAnswer/{uid}/{qid}")
+	public ResponseEntity<PastQandA> getPastQandA(@PathVariable("uid") int uid, @PathVariable("qid") int qid) {
+		log.info("!******** REST UserController getPastQandA uid: " + uid);
+		try {
+			return ResponseEntity.ok(dao.getPastQandA(uid,qid));
+		} 
+		catch (DataAccessException e) {
+			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA
+		}
+	}
 //	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
 //	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
 //		try {

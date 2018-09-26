@@ -1,9 +1,27 @@
+.historic {
+    background-color: #CCC;
+    color: #444;
+}
+
+#pastAnswers{
+	float:right;
+}
+
 #csstest{
 	color: #F00;
 }
+
 #jstest{
 	transition: opacity 0.5s;
 }
-#options{
+
+#pastAmntOAnsws{
 	float:right;
+}
+
+.chart{
+	height:300px;
+	width:600px;
+	border: 1px solid #888;
+	border-radius: 5px;
 }
