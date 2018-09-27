@@ -38,50 +38,6 @@ public class UserController {
 	@Autowired
 	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
 	
-//	@GetMapping("/userspage") 							// kun "userspage"lle tulee get-kutsu niin GetMapping-annotaatio lähettää sen allaolevalle funktiolle 
-//	public List<DemoUser> getUsers() {
-//		return dao.getUsers();							// palauttaa UserDao-luokan dao-objektin getUsers-funktion tuloksen
-//	}
-//	
-//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-//		try {
-//			return ResponseEntity.ok(dao.getUser(username));
-//		}
-//		catch(DataAccessException e){
-//			return ResponseEntity.notFound().build();
-//		}
-//	}
-
-//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-//		DemoUser user = dao.getUser(username);			
-//		if (user == null) {
-//			return ResponseEntity.notFound().build();	// Jos useria ei löydy, palautetaan ResponseEntityn builder notFound-statuksella (Http error 404)
-//		}
-//		return ResponseEntity.ok(user);					// Jos user löytyy, se palautetaan Ok-statuksella
-//	}	
-	
-	@PostMapping("/user")
-	public ResponseEntity<?> addUser(@RequestBody DemoUser user) { // addUser-funktio palauttaa ResponseEntityn määrittelemättömän olion. Parametrina on DemoUser-olio user joka yhdistetään @RequestBodylla @PostMappingista saapuvaan http-responseen
-		dao.addUser(user);								// kutsutaan dao-luokan addUser-funktiota user-parametrilla
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest()	// Luodaan URI-luokan olio location. ServletUriComponentsBuilder on UriComponentsBuilder lisättynä staattisilla tehdasmetodeilla. Se luo linkin perustuen fromCurrentRequestiin.
-													.path("/{username}")	// määritetään osa polkua
-													.buildAndExpand(user.getUsername()).toUri(); // peritty UriComponentsBuilderilta, yhdistää build()in ja UriComponents.expand(Map)in. Palauttaa URI-komponentit lisätyillä arvoilla
-		return ResponseEntity.created(location).build();	// palauttaa uuden urin created-statuksella
-	}
-	
-/** TRAINING CODE: ------------------ */
-	@DeleteMapping("/nakkivene/{id}")
-	public void deleteUser(@PathVariable String id) {
-		dao.deleteUser(id);
-	}
-	
-	@PostMapping("/edituser")
-	public void editUser(@RequestBody DemoUser user) {
-		dao.editUser(user);
-	}
-	
 //OWN PROJECT
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
@@ -147,4 +103,48 @@ public class UserController {
 //			return null;
 //		}
 //	}	
+	
+//	@GetMapping("/userspage") 							// kun "userspage"lle tulee get-kutsu niin GetMapping-annotaatio lähettää sen allaolevalle funktiolle 
+//	public List<DemoUser> getUsers() {
+//		return dao.getUsers();							// palauttaa UserDao-luokan dao-objektin getUsers-funktion tuloksen
+//	}
+//	
+//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
+//		try {
+//			return ResponseEntity.ok(dao.getUser(username));
+//		}
+//		catch(DataAccessException e){
+//			return ResponseEntity.notFound().build();
+//		}
+//	}
+
+//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
+//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
+//		DemoUser user = dao.getUser(username);			
+//		if (user == null) {
+//			return ResponseEntity.notFound().build();	// Jos useria ei löydy, palautetaan ResponseEntityn builder notFound-statuksella (Http error 404)
+//		}
+//		return ResponseEntity.ok(user);					// Jos user löytyy, se palautetaan Ok-statuksella
+//	}	
+	
+//	@PostMapping("/user")
+//	public ResponseEntity<?> addUser(@RequestBody DemoUser user) { // addUser-funktio palauttaa ResponseEntityn määrittelemättömän olion. Parametrina on DemoUser-olio user joka yhdistetään @RequestBodylla @PostMappingista saapuvaan http-responseen
+//		dao.addUser(user);								// kutsutaan dao-luokan addUser-funktiota user-parametrilla
+//		URI location = ServletUriComponentsBuilder.fromCurrentRequest()	// Luodaan URI-luokan olio location. ServletUriComponentsBuilder on UriComponentsBuilder lisättynä staattisilla tehdasmetodeilla. Se luo linkin perustuen fromCurrentRequestiin.
+//													.path("/{username}")	// määritetään osa polkua
+//													.buildAndExpand(user.getUsername()).toUri(); // peritty UriComponentsBuilderilta, yhdistää build()in ja UriComponents.expand(Map)in. Palauttaa URI-komponentit lisätyillä arvoilla
+//		return ResponseEntity.created(location).build();	// palauttaa uuden urin created-statuksella
+//	}
+//	
+///** TRAINING CODE: ------------------ */
+//	@DeleteMapping("/nakkivene/{id}")
+//	public void deleteUser(@PathVariable String id) {
+//		dao.deleteUser(id);
+//	}
+//	
+//	@PostMapping("/edituser")
+//	public void editUser(@RequestBody DemoUser user) {
+//		dao.editUser(user);
+//	}
 }

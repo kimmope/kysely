@@ -25,28 +25,6 @@ public class UserClient {
 	@Autowired						// Spring dependency injectionin luoma automaattinen yhteys allaolevaan constructoriin, kenttään tai setteriin
 	RestTemplate restTemplate;		// keskeinen spring-luokka clientin http-kytkentöihin. alusta (template) sisältää metodeja kuten delete, get, post...
 
-//	public List<DemoUser> getUsers() {	// DemoUser-olioita sisältävän listan palauttava getUsers-metodi joka ei saa parametreja
-//		DemoUser[] demousers = restTemplate.getForObject("/userspage", DemoUser[].class);	// hakee getillä parametrin 1.stä urlista, mahdollinen vastaus muutetaan DemoUser[].class-tyyppiseksi  
-//		return Arrays.asList(demousers);	// palauttaa usersit-list viewinä (johon tehtävät muutokset palautuvat alkuperäiseen arrayhyn)
-//	}
-//
-//	public DemoUser getUser(String username) { //Demouser-olion palauttava funktio joka saa parametrinaan usernamen
-//		return restTemplate.getForObject("/user/"+username, DemoUser.class);
-//	}
-
-/** TRAINING CODE: ------------------ */
-	public void addUser(DemoUser demouser) {
-		restTemplate.postForObject("/user", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
-	}
-
-	public void editUser(DemoUser demouser) {
-		restTemplate.postForObject("/edituser", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
-	}	
-	
-	public void deleteUser(String id) {
-		restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
-	}
-	
 // OWN PROJECT:
 	public Question getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
 		Question question = restTemplate.getForObject("/"+uid, Question.class);
@@ -93,3 +71,25 @@ public class UserClient {
 //			return null;
 //		}
 //	}	
+
+//public List<DemoUser> getUsers() {	// DemoUser-olioita sisältävän listan palauttava getUsers-metodi joka ei saa parametreja
+//DemoUser[] demousers = restTemplate.getForObject("/userspage", DemoUser[].class);	// hakee getillä parametrin 1.stä urlista, mahdollinen vastaus muutetaan DemoUser[].class-tyyppiseksi  
+//return Arrays.asList(demousers);	// palauttaa usersit-list viewinä (johon tehtävät muutokset palautuvat alkuperäiseen arrayhyn)
+//}
+//
+//public DemoUser getUser(String username) { //Demouser-olion palauttava funktio joka saa parametrinaan usernamen
+//return restTemplate.getForObject("/user/"+username, DemoUser.class);
+//}
+
+///** TRAINING CODE: ------------------ */
+//public void addUser(DemoUser demouser) {
+//restTemplate.postForObject("/user", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
+//}
+//
+//public void editUser(DemoUser demouser) {
+//restTemplate.postForObject("/edituser", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
+//}	
+//
+//public void deleteUser(String id) {
+//restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
+//}

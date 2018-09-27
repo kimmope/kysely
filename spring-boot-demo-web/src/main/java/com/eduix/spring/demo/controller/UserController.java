@@ -40,7 +40,7 @@ public class UserController {
 	public String connectionError() {					
 		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
 	}	
-	
+
 	@RequestMapping("/login")
 	public String checkUser() {
 		return "login";
@@ -52,7 +52,7 @@ public class UserController {
 		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		model.addAttribute("question", unansweredQuestion);
+		model.addAttribute("unansweredQuestion", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
 			return "answerStats";
 		}
@@ -63,12 +63,12 @@ public class UserController {
 
 	@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
 	public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
-		Question question = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		model.addAttribute("question", question);
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
+		model.addAttribute("unansweredQuestion", unansweredQuestion);
 		// Tee käyttökohtainen olio johon luet myös seuraavan uidn niin saa yhden rivin pois
 		model.addAttribute("uid", uid);
 		// JOS POST EI RATKAISE BACK-NAPPULAN CRASHAUSONGELMAA NIIN JOS MAHDOLLISTA NIIN TARKASTA TÄSSÄ ONKO SIVULLETULIJAN UID/QID JO VASTATTU
-		if(question.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
+		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
 			return "answerStats";
 		}
 		else {
@@ -80,11 +80,12 @@ public class UserController {
 	public String answerForm(Model model, Answer answer) {
 		userClient.addUserAnswer(answer);											// Send the user-answer to database
 		model.addAttribute("answer", answer);
-		Question question = userClient.getQuestion(answer.getQid());
-		model.addAttribute("question", question);
-		Question nextQuestion = userClient.getNotAskedQuestion(answer.getUid());
-		model.addAttribute("nextQuestion", nextQuestion);		
-		return "answerStats";
+		model.addAttribute("uid", answer.getUid());
+		Question oldQuestion = userClient.getQuestion(answer.getQid());
+		model.addAttribute("oldQuestion", oldQuestion);
+		Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());
+		model.addAttribute("unansweredQuestion", unansweredQuestion);		
+		return "redirect:/answerStats";
 	}
 	
 	@GetMapping("/pastAnswers/{uid}")
