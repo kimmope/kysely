@@ -18,7 +18,10 @@
 			<h2>${question.average}</h2>
 			<br>
 			<#if nextQuestion.qid != 0>
-				<a href="/newQuestion/${answer.uid}">Next question</a>
+				<form action="/newQuestion" method="POST">
+					<input type="hidden" name="uid" value="${answer.uid}">
+					<input type="submit" value="Seuraava kysymys">
+				</form>
 			<#else>
 				<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 			</#if>

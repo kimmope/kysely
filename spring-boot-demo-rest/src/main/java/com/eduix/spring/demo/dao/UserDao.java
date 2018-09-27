@@ -61,8 +61,11 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 	public void deleteUser(String id) {
 		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
 	}	
+	
 // OWN PROJECT:
+	
 // GET NEW QUESTION
+	
 	private static RowMapper<Question> QUESTION_ROW_MAPPER = new RowMapper<Question>(){	// Builds query-results into lists
 		public Question mapRow(ResultSet resultSet, int rowNum) throws SQLException {	// 
 			return new Question(
@@ -73,7 +76,7 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 	public Question getNotAskedQuestion(int uid){	// create database queries for creating not-asked question for question-page
 		Question question = new Question();
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),'noNewQuestions')";	// Query for which question is not asked yet from user
-		String qid = (String)jdbcTemplate.queryForObject(notAsked, String.class, uid); // Saving query-result to object-variable
+		String qid = (String)jdbcTemplate.queryForObject(notAsked, String.class, uid); // Saving query-result to object-variable instead of list
 		if (qid.equals("noNewQuestions")) {	// Checking if there are any questions left which user has not answered
 			question.setQid(0);				// Asettaa tyhjän olion qid:ksi nollan. Tämä tulkitaan webin usercontrollerissa.
 		}
@@ -82,6 +85,7 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		}
 		return question;
 	}
+	
 // GET QUESTION ID
 	public Question getQuestionById(int qid){		 			// create database query for creating question for question-page
 		String sql = "SELECT * FROM questions WHERE qid = ?";	 // kysymysmerkkiin haetaan arvo seuraavan rivin new Object[]{qid}lla
@@ -90,6 +94,7 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 	}
 // ADD USER'S ANSWER TO DATABASE	
 	public void addAnswer(Answer answer) {
+		log.info("!******** REST Dao checkUser username: " + answer.getUid() + answer.getQid() + answer.getAnswer());
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
 		jdbcTemplate.update("UPDATE useres SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = useres.uid) WHERE uid = ?",answer.getUid());
 		jdbcTemplate.update("UPDATE questions SET amount_answs = amount_answs + 1 WHERE qid = ?",answer.getQid());

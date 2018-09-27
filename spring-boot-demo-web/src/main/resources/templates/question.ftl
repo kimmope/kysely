@@ -2,7 +2,7 @@
 	<#include "head.ftl">	
 	<body>
 		<span id="question">${question.question}</span>
-		<form action="/answerForm" method="POST">
+		<form action="/answer" method="POST">
 			<input type="hidden" name="uid" value="${uid}">
 			<input type="hidden" name="qid" value="${question.qid}">			
 			<input type="text" name="answer">

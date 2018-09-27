@@ -1,7 +1,7 @@
 <html>
 	<#include "head.ftl">	
 	<body>
-		<form action="/loginForm" method="POST">
+		<form action="/firstQuestion" method="POST">
 			Username:
 			<br>
 			<input type="text" name="username">
