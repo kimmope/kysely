@@ -36,7 +36,7 @@ public class UserController {
 // LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
 	
 	@Autowired
-	private UserDao dao; 								// Luodaan Database Access Object nimeltä "dao"
+	private UserDao dao; 								// Esitellään Database Access Object nimeltä "dao"
 	
 //OWN PROJECT
 	@GetMapping("/{uid}")						

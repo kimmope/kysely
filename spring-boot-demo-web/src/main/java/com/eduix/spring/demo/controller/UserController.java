@@ -85,24 +85,29 @@ public class UserController {
 		model.addAttribute("oldQuestion", oldQuestion);
 		Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());
 		model.addAttribute("unansweredQuestion", unansweredQuestion);		
-		return "redirect:/answerStats";
+		return "answerStats";
 	}
 	
-	@GetMapping("/pastAnswers/{uid}")
-	public String history(Model model, @PathVariable("uid") int uid) {
+	@PostMapping("/pastAnswers")
+	public String history(Model model, @RequestParam int uid) {
 		log.info("!******** Web UserController history: "+uid);
 		List<PastQandA> pastQandAs = userClient.getPastQandAs(uid);
 		model.addAttribute("pastQandAs", pastQandAs);	// VARMISTA ETTÄ NULL-VASTAUS KÄSITELLÄÄN OIKEIN
 		User user = userClient.getUser(uid);
 		model.addAttribute("user", user);
+		model.addAttribute("uid", uid); 				// TÄMÄ PITI JÄTTÄÄ KOSKA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);
+		model.addAttribute("unansweredQuestion", unansweredQuestion);		
 		return "history";
 	}
 	
-	@GetMapping("/oldAnswer/{uid}/{qid}")
-	public String oldAnswer(Model model, @PathVariable("uid") int uid, @PathVariable("qid") int qid){
+	@PostMapping("/oldAnswer")
+	public String oldAnswer(Model model, @RequestParam int uid, @RequestParam int qid){
 		log.info("!******** Web UserController oldAnswer: " + uid);
 		PastQandA pastQandA = userClient.getPastQandA(uid,qid);	// Toimiiko function overloading userclientissä
 		model.addAttribute("pastQandA",pastQandA);
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);
+		model.addAttribute("unansweredQuestion", unansweredQuestion);			
 		return "pastQuestion";
 	}
 }	

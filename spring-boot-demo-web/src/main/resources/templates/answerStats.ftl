@@ -2,9 +2,10 @@
 	<#include "head.ftl">	
 	<body>
 		<div class="container">
-			<br>
-			<a href="/pastAnswers/${uid}" id="pastAnswers">Past answers</a>
-			<br>
+			<form action="/pastAnswers" method="POST" id="pastAmntOAnsws">
+				<input type="hidden" name="uid" value="${answer.uid}">
+				<input type="submit" value="Aikaisemmat vastaukset">
+			</form>
 			<#if unansweredQuestion.qid != 0>			
 				Question was:
 				<br>
