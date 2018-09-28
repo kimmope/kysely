@@ -6,7 +6,6 @@
 				<input type="hidden" name="uid" value="${answer.uid}">
 				<input type="submit" value="Aikaisemmat vastaukset">
 			</form>
-			<#if unansweredQuestion.qid != 0>			
 				Question was:
 				<br>
 				<h3>${oldQuestion.question}</h3>
@@ -19,6 +18,7 @@
 				<br>
 				<h2>${oldQuestion.average}</h2>
 				<br>
+			<#if unansweredQuestion.qid != 0>	
 				<form action="/newQuestion" method="POST">
 					<input type="hidden" name="uid" value="${answer.uid}">
 					<input type="submit" value="Seuraava kysymys">

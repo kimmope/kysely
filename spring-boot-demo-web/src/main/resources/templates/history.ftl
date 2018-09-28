@@ -24,7 +24,6 @@
 								<input type="hidden" name="qid" value="${pastQandA.qid}">
 								<input type="submit" id="questionButton" value="${pastQandA.question}">
 							</form>						
-						<#--<a href="/oldAnswer/${pastQandA.uid}/${pastQandA.qid}">${pastQandA.question}</a>-->
 						</td>
 						<td id="answerDate">${pastQandA.time_of_answ}</td>
 					</tr>

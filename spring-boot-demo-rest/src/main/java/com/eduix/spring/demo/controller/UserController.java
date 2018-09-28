@@ -1,42 +1,43 @@
 package com.eduix.spring.demo.controller;
 
-//	
-import org.apache.commons.logging.Log;
-//	
-import org.apache.commons.logging.LogFactory;
-
-import java.net.URI;
-//import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.eduix.spring.demo.dao.UserDao;
-import com.eduix.spring.demo.domain.DemoUser;
-
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
+//import java.net.URI;
+//import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+//import com.eduix.spring.demo.domain.DemoUser;
+//import java.sql.SQLException;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 @RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
 	
-// DEBUG LOGGER:		
-	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
+// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
 	
 	@Autowired
 	private UserDao dao; 								// Esitellään Database Access Object nimeltä "dao"
+	
+//	@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)			// Tässä yritetään estää RESTin kaatuminen formin resubmittauksessa, mutta ei toimi kuten WEBissä
+//	public String resubmitError() {					
+//		return null;
+//	}			
 	
 //OWN PROJECT
 	@GetMapping("/{uid}")						
@@ -50,6 +51,7 @@ public class UserController {
 		Question question = dao.getQuestionById(qid);
 		return ResponseEntity.ok(question);
 	}
+	
 	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
 	public void addAnswer(@RequestBody Answer answer){
@@ -75,7 +77,6 @@ public class UserController {
 
 	@GetMapping("/answerHistory/{uid}")
 	public ResponseEntity<List<PastQandA>> getPastQandAs(@PathVariable("uid") int uid) {
-		log.info("!******** REST UserController getPastQandAs uid: " + uid);
 		try {
 			return ResponseEntity.ok(dao.getPastQandAs(uid));
 		} 
@@ -86,7 +87,6 @@ public class UserController {
 	
 	@GetMapping("/historicAnswer/{uid}/{qid}")
 	public ResponseEntity<PastQandA> getPastQandA(@PathVariable("uid") int uid, @PathVariable("qid") int qid) {
-		log.info("!******** REST UserController getPastQandA uid: " + uid);
 		try {
 			return ResponseEntity.ok(dao.getPastQandA(uid,qid));
 		} 
@@ -94,6 +94,8 @@ public class UserController {
 			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA
 		}
 	}
+	
+	
 //	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
 //	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
 //		try {

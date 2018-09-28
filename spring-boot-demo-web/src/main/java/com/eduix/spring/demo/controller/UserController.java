@@ -1,24 +1,23 @@
 package com.eduix.spring.demo.controller;				// Default-package
 
-// 
-import org.apache.commons.logging.Log;
-// 
-import org.apache.commons.logging.LogFactory;
-
 import java.net.ConnectException;						// Imported libraries
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.eduix.spring.demo.client.UserClient;
+//
+import org.apache.commons.logging.Log;
+//
+import org.apache.commons.logging.LogFactory;
 //import com.eduix.spring.demo.domain.DemoUser;
 
 import queta.Answer;
@@ -29,7 +28,7 @@ import queta.User;
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
 
-// DEBUG LOGGER:		
+// DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserController.class);
 // LOG TO PUT INSIDE CLASS:	 log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
 	
@@ -41,6 +40,16 @@ public class UserController {
 		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
 	}	
 
+//	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)	// Testiä formin resubmittauksen estämiseen
+//	public String resubmitError() {					
+//		return "resubmitError";						
+//	}		
+	
+//	@ExceptionHandler(HttpServerErrorException.class)	// Ohjaa formin resubmittausvirheen webissä, mutta REST kaatuu
+//	public String resubmitError() {					
+//		return "resubmitError";						
+//	}		
+	
 	@RequestMapping("/login")
 	public String checkUser() {
 		return "login";
@@ -72,41 +81,39 @@ public class UserController {
 			return "answerStats";
 		}
 		else {
-			return "question";			// Jos on kysymätön kysymys, esitetään se
+			return "question";							// Jos on kysymätön kysymys, esitetään se
 		}
 	}
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
-		userClient.addUserAnswer(answer);											// Send the user-answer to database
+		userClient.checkIfAlreadyAnswered()
+		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
 		model.addAttribute("answer", answer);
-		model.addAttribute("uid", answer.getUid());
 		Question oldQuestion = userClient.getQuestion(answer.getQid());
 		model.addAttribute("oldQuestion", oldQuestion);
-		Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());
+		Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
 		model.addAttribute("unansweredQuestion", unansweredQuestion);		
 		return "answerStats";
 	}
 	
 	@PostMapping("/pastAnswers")
 	public String history(Model model, @RequestParam int uid) {
-		log.info("!******** Web UserController history: "+uid);
 		List<PastQandA> pastQandAs = userClient.getPastQandAs(uid);
 		model.addAttribute("pastQandAs", pastQandAs);	// VARMISTA ETTÄ NULL-VASTAUS KÄSITELLÄÄN OIKEIN
 		User user = userClient.getUser(uid);
 		model.addAttribute("user", user);
-		model.addAttribute("uid", uid); 				// TÄMÄ PITI JÄTTÄÄ KOSKA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
-		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);
+		model.addAttribute("uid", uid); 				// TÄMÄ PITI TEHDÄ KOSKA FORMISSA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
 		model.addAttribute("unansweredQuestion", unansweredQuestion);		
 		return "history";
 	}
 	
 	@PostMapping("/oldAnswer")
 	public String oldAnswer(Model model, @RequestParam int uid, @RequestParam int qid){
-		log.info("!******** Web UserController oldAnswer: " + uid);
 		PastQandA pastQandA = userClient.getPastQandA(uid,qid);	// Toimiiko function overloading userclientissä
 		model.addAttribute("pastQandA",pastQandA);
-		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
 		model.addAttribute("unansweredQuestion", unansweredQuestion);			
 		return "pastQuestion";
 	}
