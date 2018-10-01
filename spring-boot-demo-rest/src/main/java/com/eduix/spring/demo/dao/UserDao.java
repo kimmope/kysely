@@ -1,7 +1,7 @@
 package com.eduix.spring.demo.dao;
 
-// import org.apache.commons.logging.Log;
-// import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +12,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import com.mysql.jdbc.PreparedStatement;
+
 import Rowmappers.UserRowMapper;
 import queta.Answer;
 import queta.PastQandA;
@@ -24,7 +27,8 @@ import queta.User;
 @Repository
 public class UserDao {	// DAO = DATA ACCESS OBJECT
 
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
+// DEBUG LOGGER:	
+private static final Log log = LogFactory.getLog(UserDao.class); // Change part "UserDao" according to used class name
 // LOG TO PUT INSIDE CLASS:	log.info("!******** REST Dao answer.getUid()+answer.getQid()+answer.getAnswer()(): "+answer.getUid()+" "+answer.getQid()+" "+answer.getAnswer());
 
 	@Autowired
@@ -55,25 +59,6 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		return question;
 	}
 
-// TEST OF CHECKING IF USER HAS ALREADY ANSWERED THE QUESTION
-	public boolean checkIfAnswered(int uid, int qid) {
-		return 
-	}
-	
-	
-//// ADD USER'S ANSWER DATA TO DATABASES	
-//	public void addAnswer(Answer answer) { 
-//		try {
-//			jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
-//			jdbcTemplate.update("UPDATE users SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
-//			jdbcTemplate.update("UPDATE questions SET amount_answs = amount_answs + 1 WHERE qid = ?",answer.getQid());			
-//		}
-//		catch(DataIntegrityViolationException e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
-			
-	
 // ADD USER'S ANSWER DATA TO DATABASES	
 	public void addAnswer(Answer answer) {
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
@@ -169,4 +154,30 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 //	public void deleteUser(String id) {
 //		jdbcTemplate.update("DELETE FROM users WHERE username=?",id);
 //	}	
+
+// FIGHT AGAINST RESUBMISSION OF THE FORM
+//	public boolean checkIfAnswered(int uid, int qid) {
+//		try{
+//			jdbcTemplate.queryForObject("SELECT * FROM user_answers WHERE uid = ? AND QID = ?",boolean.class, uid,qid);
+//			log.info("!******** REST Dao2 true, is already answered");
+//			return true;
+//		}
+//		catch(EmptyResultDataAccessException e){
+//			log.info("!******** REST Dao2 false, not yet answered");
+//			return false;
+//		}
+//	}
+	
+////ADD USER'S ANSWER DATA TO DATABASES	
+//	public void addAnswer(Answer answer) { 
+//		try {
+//			jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
+//			jdbcTemplate.update("UPDATE users SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
+//			jdbcTemplate.update("UPDATE questions SET amount_answs = amount_answs + 1 WHERE qid = ?",answer.getQid());			
+//		}
+//		catch(DataIntegrityViolationException e) {	// EI LÖYTYNYT HYVÄÄ TAPAA PALAUTTAA TÄTÄ TIETOA WEB-CONTROLLERIIN
+//			throw new RuntimeException(e);
+//		}
+//	}
+	
 	

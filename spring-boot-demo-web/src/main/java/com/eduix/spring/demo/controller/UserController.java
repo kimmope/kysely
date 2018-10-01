@@ -30,7 +30,7 @@ public class UserController {
 
 // DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserController.class);
-// LOG TO PUT INSIDE CLASS:	 log.info("!******** Web user controller answer.getAnswer(): "+answer.getAnswer());
+// LOG TO PUT INSIDE CLASS:	 log.info("!******** Web UserController answer.getAnswer(): "+answer.getAnswer());
 	
 	@Autowired											// marks a constructor, field, or setter method to be autowired by Spring dependency injection. Here connection to UserClient-class.
 	private UserClient userClient;
@@ -39,34 +39,25 @@ public class UserController {
 	public String connectionError() {					
 		return "connectionError";						// Palauttaa stringin jonka niminen ftl-file pitää löytyä templateista joka taas näytetään käyttäjälle
 	}	
-
-//	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)	// Testiä formin resubmittauksen estämiseen
-//	public String resubmitError() {					
-//		return "resubmitError";						
-//	}		
-	
-//	@ExceptionHandler(HttpServerErrorException.class)	// Ohjaa formin resubmittausvirheen webissä, mutta REST kaatuu
-//	public String resubmitError() {					
-//		return "resubmitError";						
-//	}		
 	
 	@RequestMapping("/login")
 	public String checkUser() {
 		return "login";
 	}
-	
-// TEST FOR SEPARATE QUESTION PAGE AFTER LOGIN DUE TO INABILITY OF SENDING FORM-DATA FROM FUNCTION
-	@PostMapping("/firstQuestion")
-	public String checkUserForm(Model model, User user) {				// Model tulee taikuudesta, user loginformista
+
+// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY TO THIS VIRTUAL PAGE DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
+	@PostMapping("/firstQuestionForm")
+	public String checkUserForm(Model model, User user) {
 		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
 		model.addAttribute("unansweredQuestion", unansweredQuestion);
-		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
+		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
+			log.info("!******** Web user first question if unansweredQuestions");
 			return "answerStats";
 		}
-		else {
-			return "question";			// Jos on kysymätön kysymys, esitetään se
+		else {	// Jos on kysymätön kysymys, esitetään se
+			return "question";
 		}
 	}	
 
@@ -87,7 +78,6 @@ public class UserController {
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
-		userClient.checkIfAlreadyAnswered(answer.getUid(),answer.getQid());	// Estetään formin resubmittaus tarkastamalla onko käyttäjä jo vastannut kyseiseen kysymykseen
 		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
 		model.addAttribute("answer", answer);
 		Question oldQuestion = userClient.getQuestion(answer.getQid());
@@ -118,6 +108,16 @@ public class UserController {
 		return "pastQuestion";
 	}
 }	
+
+//@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)	// Testiä formin resubmittauksen estämiseen
+//public String resubmitError() {					
+//	return "resubmitError";						
+//}		
+
+//@ExceptionHandler(HttpServerErrorException.class)	// Ohjaa formin resubmittausvirheen webissä, mutta REST kaatuu
+//public String resubmitError() {					
+//	return "resubmitError";						
+//}	
 
 //BACKUP
 //@PostMapping("/loginForm")
@@ -227,3 +227,31 @@ public class UserController {
 //	userClient.deleteUser(Id);						// kutsutaan userClientin deleteUseria Id:llä joka juuri noudettiin userspagelta
 //	return "redirect:/userspage";					// palatessa siirrytään uudelle sivulle (reloadataan) userspage
 //}
+
+// FIGHT AGAINST RESUBMISSION OF THE FORM
+//@PostMapping("/firstQuestionForm")
+//public String checkUserForm(Model model, User user) {
+//	User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
+//	model.addAttribute("uid", checkedUser.getUid());		
+//	Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
+//	model.addAttribute("unansweredQuestion", unansweredQuestion);
+//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
+//		log.info("!******** Web user first question if unansweredQuestions");
+//		return "answerStats";
+//	}
+//	else {	// Jos on kysymätön kysymys, esitetään se
+//		log.info("!******** Web UserController there is unansweredQuestion: "+unansweredQuestion.getQid());
+//		if(userClient.checkIfAlreadyAnswered(checkedUser.getUid(), unansweredQuestion.getQid())){ // Jos yrittää uudelleenlähettää formia
+//			log.info("!******** Web UserController there is resubmitError: "+checkedUser.getUid()+" "+unansweredQuestion.getQid());
+//			return "resubmitError";
+//		}
+//		else {
+//			log.info("!******** Web UserController there is no resubmitError: "+checkedUser.getUid()+" "+unansweredQuestion.getQid());
+//			return "question";
+//		}
+//	}
+//}	
+
+
+
+

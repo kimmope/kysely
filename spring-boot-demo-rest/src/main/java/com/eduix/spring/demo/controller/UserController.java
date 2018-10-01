@@ -22,13 +22,14 @@ import queta.User;
 //import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 //import com.eduix.spring.demo.domain.DemoUser;
 //import java.sql.SQLException;
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @RestController		//No need to put @ResponseBody for every function. Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
 	
-// DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
+// DEBUG LOGGER:	
+	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
 // LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
 	
 	@Autowired
@@ -50,11 +51,6 @@ public class UserController {
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
 		Question question = dao.getQuestionById(qid);
 		return ResponseEntity.ok(question);
-	}
-	
-	@GetMapping("/checkIfAnswered/{uid}/{qid}")
-	public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
-		return dao.checkIfAnswered(uid,qid);
 	}
 	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
@@ -84,7 +80,7 @@ public class UserController {
 		try {
 			return ResponseEntity.ok(dao.getPastQandAs(uid));
 		} 
-		catch (DataAccessException e) {
+		catch (DataAccessException e) { // TÄTÄ EI KÄSITELLÄ KOSKA USER EI IKINÄ PÄÄSE TILANTEESEEN JOSSA EI OLISI YHTÄÄN VASTAUSTA
 			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA. Tällä voi palauttaa vain listankin!!!
 		}
 	}
@@ -98,7 +94,7 @@ public class UserController {
 			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA. Tällä voi palauttaa vain olionkin! Ei tarvita responseentityä.
 		}
 	}
-	
+}
 	
 //	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
 //	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
@@ -153,4 +149,13 @@ public class UserController {
 //	public void editUser(@RequestBody DemoUser user) {
 //		dao.editUser(user);
 //	}
-}
+
+// FIGHT AGAINST RESUBMISSION OF THE FORM
+//@GetMapping("/checkIfAnswered/{uid}/{qid}")
+//public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
+//	log.info("!******** REST user controller uid: "+uid);
+//	return dao.checkIfAnswered(uid,qid);
+//}
+
+
+

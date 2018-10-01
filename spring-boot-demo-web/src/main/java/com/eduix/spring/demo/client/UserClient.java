@@ -36,10 +36,6 @@ public class UserClient {
 		return question;
 	}
 	
-	public boolean checkIfAlreadyAnswered(int uid, int qid) {
-		return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
-	}
-	
 	public void addUserAnswer(Answer answer) {
 		restTemplate.postForObject("/answer", answer ,Answer.class);	// luodaan /answer-osoite ja kutsutaan restiä
 	}
@@ -94,3 +90,16 @@ public class UserClient {
 //public void deleteUser(String id) {
 //restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
 //}
+
+//FIGHT AGAINST RESUBMISSION OF THE FORM
+//public boolean checkIfAlreadyAnswered(int uid, int qid) {
+//	log.info("!******** Web UserClient uid: "+uid);
+//	return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
+//}
+
+
+
+
+
+
+
