@@ -25,7 +25,7 @@ import queta.User;
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
 
-@RestController											// Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
+@RestController		//No need to put @ResponseBody for every function. Hints for readers and for Sprint about special quality of the class. Renders the classe's resulting string back to caller.
 public class UserController {
 	
 // DEBUG LOGGER:	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
@@ -52,14 +52,18 @@ public class UserController {
 		return ResponseEntity.ok(question);
 	}
 	
+	@GetMapping("/checkIfAnswered/{uid}/{qid}")
+	public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
+		return dao.checkIfAnswered(uid,qid);
+	}
 	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
 	public void addAnswer(@RequestBody Answer answer){
 		dao.addAnswer(answer);
 	}
 	
-	@PostMapping("/checkUser")	// Kuuntelee /checkUser-pagea ja siirtää sille tulevan kutsun allaolevalle funktiolle
-	public ResponseEntity<?> checkUser(@RequestBody String username) { 
+	@PostMapping("/checkUser")	// Kuuntelee /checkUser-pagea ja siirtää sille tulevan kutsun allaolevalle funktiolle. Jos lähettää raakadataa niin <, consumes={application/json"}> 
+	public ResponseEntity<?> checkUser(@RequestBody String username) { // @RequestBodyä ei tarvita kuin raakadatan lähetykseen
 		User user = new User();
 		try {
 			user = dao.checkUser(username); // Testataan onko useria
@@ -81,7 +85,7 @@ public class UserController {
 			return ResponseEntity.ok(dao.getPastQandAs(uid));
 		} 
 		catch (DataAccessException e) {
-			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA
+			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA. Tällä voi palauttaa vain listankin!!!
 		}
 	}
 	
@@ -91,7 +95,7 @@ public class UserController {
 			return ResponseEntity.ok(dao.getPastQandA(uid,qid));
 		} 
 		catch (DataAccessException e) {
-			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA
+			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA. Tällä voi palauttaa vain olionkin! Ei tarvita responseentityä.
 		}
 	}
 	

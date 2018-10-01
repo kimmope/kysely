@@ -87,7 +87,7 @@ public class UserController {
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
-		userClient.checkIfAlreadyAnswered()
+		userClient.checkIfAlreadyAnswered(answer.getUid(),answer.getQid());	// Estetään formin resubmittaus tarkastamalla onko käyttäjä jo vastannut kyseiseen kysymykseen
 		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
 		model.addAttribute("answer", answer);
 		Question oldQuestion = userClient.getQuestion(answer.getQid());

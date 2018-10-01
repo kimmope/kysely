@@ -54,6 +54,12 @@ public class UserDao {	// DAO = DATA ACCESS OBJECT
 		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, QUESTION_ROW_MAPPER);	
 		return question;
 	}
+
+// TEST OF CHECKING IF USER HAS ALREADY ANSWERED THE QUESTION
+	public boolean checkIfAnswered(int uid, int qid) {
+		return 
+	}
+	
 	
 //// ADD USER'S ANSWER DATA TO DATABASES	
 //	public void addAnswer(Answer answer) { 

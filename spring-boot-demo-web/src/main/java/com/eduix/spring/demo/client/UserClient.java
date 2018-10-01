@@ -36,8 +36,11 @@ public class UserClient {
 		return question;
 	}
 	
+	public boolean checkIfAlreadyAnswered(int uid, int qid) {
+		return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
+	}
+	
 	public void addUserAnswer(Answer answer) {
-		log.info("!******** Web UserClient answer.getUid(): " + answer.getUid());
 		restTemplate.postForObject("/answer", answer ,Answer.class);	// luodaan /answer-osoite ja kutsutaan restiä
 	}
 
