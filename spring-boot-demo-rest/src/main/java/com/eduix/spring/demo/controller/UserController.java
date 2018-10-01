@@ -94,6 +94,13 @@ public class UserController {
 			return ResponseEntity.notFound().build(); // TUTKI MITEN TÄMÄ PALAUTUS KÄSITELLÄÄN WEBIN USER CLIENTISSA. Tällä voi palauttaa vain olionkin! Ei tarvita responseentityä.
 		}
 	}
+	
+// PREVENTING RESUBMISSION OF THE FORM
+	@GetMapping("/checkIfAnswered/{uid}/{qid}")
+	public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
+		return dao.checkIfAnswered(uid,qid);
+	}	
+	
 }
 	
 //	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
@@ -155,7 +162,7 @@ public class UserController {
 //public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
 //	log.info("!******** REST user controller uid: "+uid);
 //	return dao.checkIfAnswered(uid,qid);
-//}
+//}	
 
 
 

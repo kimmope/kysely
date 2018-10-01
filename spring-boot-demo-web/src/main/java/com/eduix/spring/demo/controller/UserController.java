@@ -78,13 +78,27 @@ public class UserController {
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
-		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
-		model.addAttribute("answer", answer);
-		Question oldQuestion = userClient.getQuestion(answer.getQid());
-		model.addAttribute("oldQuestion", oldQuestion);
-		Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
-		model.addAttribute("unansweredQuestion", unansweredQuestion);		
-		return "answerStats";
+		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent resubmission of the form
+			boolean resubmitError = true;
+			model.addAttribute("resubmitError",resubmitError);
+			model.addAttribute("answer", answer);
+			Question oldQuestion = userClient.getQuestion(answer.getQid());
+			model.addAttribute("oldQuestion", oldQuestion);
+			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+			model.addAttribute("unansweredQuestion", unansweredQuestion);		
+			return "answerStats";
+		}
+		else {
+			boolean resubmitError = false;
+			model.addAttribute("resubmitError",resubmitError);
+			userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
+			model.addAttribute("answer", answer);
+			Question oldQuestion = userClient.getQuestion(answer.getQid());
+			model.addAttribute("oldQuestion", oldQuestion);
+			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+			model.addAttribute("unansweredQuestion", unansweredQuestion);		
+			return "answerStats";
+		}
 	}
 	
 	@PostMapping("/pastAnswers")

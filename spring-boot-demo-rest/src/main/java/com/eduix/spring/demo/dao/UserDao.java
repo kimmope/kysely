@@ -111,8 +111,21 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	}
 	public PastQandA getPastQandA(int uid, int qid) {		// Hae yksi kysymys-vastauspari
 		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
-	}	
+	}
+	
+// PREVENTING RESUBMISSION OF THE FORM
+	public boolean checkIfAnswered(int uid, int qid) {
+		try{
+			jdbcTemplate.queryForObject("SELECT answer FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
+			return true;
+		}
+		catch(EmptyResultDataAccessException e){
+			return false;
+		}
+	}
+	
 }
+
 
 // BeanPropertyRowMapper ei toiminut koska getJdbcTemplatea ei tunnistettu
 //public List<OldQetA> getUsersOldAnswers(int uid){
@@ -120,7 +133,6 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 //List<OldQetA> oldQetAs = getJdbcTemplate().query(sql, new BeanPropertyRowMapper(OldQetA.class),uid);
 //return oldQetAs;
 //}
-
 
 //ROWMAPPER INFO: https://www.mkyong.com/spring/spring-jdbctemplate-querying-examples/
 //	private static RowMapper<DemoUser> ROW_MAPPER = new RowMapper<DemoUser>() {			// Creates new RowMapper-list-object for returning the list of queried DemoUsers
@@ -167,7 +179,10 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 //			return false;
 //		}
 //	}
-	
+// THIS WORKED
+//String placeHolder = (String)jdbcTemplate.queryForObject("SELECT answer FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
+
+
 ////ADD USER'S ANSWER DATA TO DATABASES	
 //	public void addAnswer(Answer answer) { 
 //		try {

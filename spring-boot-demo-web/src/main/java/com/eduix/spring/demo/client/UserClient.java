@@ -57,6 +57,12 @@ public class UserClient {
 	public PastQandA getPastQandA(int uid, int qid) {	
 		return restTemplate.getForObject("/historicAnswer/" + uid + "/" + qid, PastQandA.class);
 	}	
+	
+//	PREVENT RESUBMISSION OF THE FORM
+	public boolean checkIfAlreadyAnswered(int uid, int qid) {
+		return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
+	}	
+	
 }
 //TESTI PALAUTUSARVOLLE	
 //	public DemoUser getUser(String username) {
@@ -91,11 +97,7 @@ public class UserClient {
 //restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
 //}
 
-//FIGHT AGAINST RESUBMISSION OF THE FORM
-//public boolean checkIfAlreadyAnswered(int uid, int qid) {
-//	log.info("!******** Web UserClient uid: "+uid);
-//	return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
-//}
+
 
 
 
