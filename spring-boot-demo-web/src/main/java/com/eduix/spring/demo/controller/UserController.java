@@ -51,7 +51,7 @@ public class UserController {
 		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		model.addAttribute("unansweredQuestion", unansweredQuestion);
+		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
 			log.info("!******** Web user first question if unansweredQuestions");
 			return "answerStats";
@@ -64,10 +64,9 @@ public class UserController {
 	@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
 	public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		model.addAttribute("unansweredQuestion", unansweredQuestion);
+		model.addAttribute("uQ", unansweredQuestion);
 		// Tee käyttökohtainen olio johon luet myös seuraavan uidn niin saa yhden rivin pois
 		model.addAttribute("uid", uid);
-		// JOS POST EI RATKAISE BACK-NAPPULAN CRASHAUSONGELMAA NIIN JOS MAHDOLLISTA NIIN TARKASTA TÄSSÄ ONKO SIVULLETULIJAN UID/QID JO VASTATTU
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
 			return "answerStats";
 		}
@@ -107,7 +106,7 @@ public class UserController {
 		model.addAttribute("pastQandAs", pastQandAs);	// VARMISTA ETTÄ NULL-VASTAUS KÄSITELLÄÄN OIKEIN
 		User user = userClient.getUser(uid);
 		model.addAttribute("user", user);
-		model.addAttribute("uid", uid); 				// TÄMÄ PITI TEHDÄ KOSKA FORMISSA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
+		model.addAttribute("uid", uid);	// TÄMÄ PITI TEHDÄ KOSKA FORMISSA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
 		model.addAttribute("unansweredQuestion", unansweredQuestion);		
 		return "history";
