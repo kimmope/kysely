@@ -14,7 +14,7 @@
 				<br>
 				<h1>${answer.answer}</h1>
 				<br>
-				Average answer was:
+				Vastauksien keskiarvo on:
 				<br>
 				<h2>${oldQuestion.average}</h2>
 				<br>
