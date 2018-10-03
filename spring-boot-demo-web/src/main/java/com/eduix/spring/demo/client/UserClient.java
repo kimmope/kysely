@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
+import queta.Question2;
 import queta.User;
 //import com.eduix.spring.demo.domain.DemoUser;
 //
@@ -26,10 +27,16 @@ public class UserClient {
 	RestTemplate restTemplate;		// keskeinen spring-luokka clientin http-kytkentöihin. alusta (template) sisältää metodeja kuten delete, get, post...
 
 // OWN PROJECT:
-	public Question getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
-		Question question = restTemplate.getForObject("/"+uid, Question.class);
-		return question;
-	}		
+
+	public Question2 getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
+		Question2 question2 = restTemplate.getForObject("/"+uid, Question2.class);
+		return question2;
+	}	
+	
+//	public Question getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
+//		Question question = restTemplate.getForObject("/"+uid, Question.class);
+//		return question;
+//	}	
 	
 	public Question getQuestion(int qid) {				// Hakee vastatun kysymyksen statsit answerStats-sivulle 
 		Question question = restTemplate.getForObject("/getQuestionData/"+qid, Question.class);	// Oli aiemmin pelkkä /

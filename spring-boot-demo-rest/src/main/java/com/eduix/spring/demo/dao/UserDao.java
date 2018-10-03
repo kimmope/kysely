@@ -15,10 +15,12 @@ import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.PreparedStatement;
 
+import Rowmappers.QuestionRowMapper;
 import Rowmappers.UserRowMapper;
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
+import queta.Question2;
 import queta.User;
 //import org.springframework.dao.DataAccessException;
 //import com.eduix.spring.demo.domain.DemoUser;
@@ -42,18 +44,30 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 				resultSet.getString("question"));
 		}
 	};
-	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
-		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
+	
+	public Question2 getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
+		Question2 question2 = new Question2(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
 		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
 		if (qid != 0) {								// Checking if there are any questions left which user has not answered
-			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	// Select question which qid is not asked
+			question2 = jdbcTemplate.queryForObject("SELECT q.*, u.uid FROM questions q INNER JOIN users u ON q.qid=u.qid WHERE q.qid = ?", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
 		}
-		return question;
-	}
+		return question2;
+	}	
+	
+//	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
+//		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
+//		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
+//		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
+//		if (qid != 0) {								// Checking if there are any questions left which user has not answered
+//			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	// Select question which qid is not asked
+//		}
+//		return question;
+//	}
+	
 // GET QUESTION BY ITS ID
 	public Question getQuestionById(int qid){		 				// create database query for creating question for question-page
-		Question question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	
+		Question question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER, qid);	
 		return question;
 	}	
 

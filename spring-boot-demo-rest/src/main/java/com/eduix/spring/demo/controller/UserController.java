@@ -16,6 +16,7 @@ import com.eduix.spring.demo.dao.UserDao;
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
+import queta.Question2;
 import queta.User;
 //import java.net.URI;
 //import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,11 +42,18 @@ public class UserController {
 //	}			
 	
 //OWN PROJECT
+
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-		Question question = dao.getNotAskedQuestion(uid);
-		return ResponseEntity.ok(question);
-	}	
+		Question2 question2 = dao.getNotAskedQuestion(uid);
+		return ResponseEntity.ok(question2);
+	}		
+	
+//	@GetMapping("/{uid}")						
+//	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
+//		Question question = dao.getNotAskedQuestion(uid);
+//		return ResponseEntity.ok(question);
+//	}
 	
 	@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
