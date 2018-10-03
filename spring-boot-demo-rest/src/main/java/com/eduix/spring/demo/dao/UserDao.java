@@ -39,25 +39,23 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		public Question mapRow(ResultSet resultSet, int rowNum) throws SQLException {	// 
 			return new Question(
 				resultSet.getInt("qid"),
-				resultSet.getString("question")
-			);
+				resultSet.getString("question"));
 		}
 	};
-	public Question getNotAskedQuestion(int uid){					// Create database queries for creating not-asked question for question-page
-		Question question = new Question(0,"");						// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
+	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
+		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
 		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
-		if (qid != 0) {							// Checking if there are any questions left which user has not answered
+		if (qid != 0) {								// Checking if there are any questions left which user has not answered
 			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	// Select question which qid is not asked
 		}
 		return question;
 	}
 // GET QUESTION BY ITS ID
 	public Question getQuestionById(int qid){		 				// create database query for creating question for question-page
-		String sql = "SELECT * FROM questions WHERE qid = ?";	 	// kysymysmerkkiin haetaan arvo seuraavan rivin new Object[]{qid}lla
-		Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, QUESTION_ROW_MAPPER);	
+		Question question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	
 		return question;
-	}
+	}	
 
 // ADD USER'S ANSWER DATA TO DATABASES	
 	public void addAnswer(Answer answer) {
@@ -194,5 +192,11 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 //			throw new RuntimeException(e);
 //		}
 //	}
-	
+
+// TOIMI
+//public Question getQuestionById(int qid){		 				// create database query for creating question for question-page
+//String sql = "SELECT * FROM questions WHERE qid = ?";	 	// kysymysmerkkiin haetaan arvo seuraavan rivin new Object[]{qid}lla
+//Question question = (Question)jdbcTemplate.queryForObject(sql, new Object[]{qid}, QUESTION_ROW_MAPPER);	
+//return question;
+//}
 	
