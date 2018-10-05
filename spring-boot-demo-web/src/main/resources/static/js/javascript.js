@@ -1,7 +1,5 @@
 window.addEventListener("load", function() {
-    var f = document.getElementById('jstest');
-    setInterval(function() {
-        f.style.opacity = (f.style.opacity == '0' ? '1' : '0');
-    }, 1000);
-
+	document.getElementById("testi").innerHTML="Toimiiko tää";	
+	var testi = "${uQ.amount}";
+	document.getElementById("input-tools").innerHTML="Toimiiko: " + testi;
 }, false);

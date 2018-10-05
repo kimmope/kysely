@@ -2,7 +2,6 @@ package com.eduix.spring.demo.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,19 +11,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import com.mysql.jdbc.PreparedStatement;
-
 import Rowmappers.QuestionRowMapper;
 import Rowmappers.UserRowMapper;
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
-import queta.Question2;
 import queta.User;
 //import org.springframework.dao.DataAccessException;
-//import com.eduix.spring.demo.domain.DemoUser;
-//import Rowmappers.QuestionRowMapper;
 
 @Repository
 public class UserDao {	// DAO = DATA ACCESS OBJECT
@@ -36,38 +29,20 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-// GET NEW QUESTION
-	private static RowMapper<Question> QUESTION_ROW_MAPPER = new RowMapper<Question>(){	// Builds query-results into lists
-		public Question mapRow(ResultSet resultSet, int rowNum) throws SQLException {	// 
-			return new Question(
-				resultSet.getInt("qid"),
-				resultSet.getString("question"));
-		}
-	};
-	
-	public Question2 getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
-		Question2 question2 = new Question2(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
+	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
+		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
 		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
 		if (qid != 0) {								// Checking if there are any questions left which user has not answered
-			question2 = jdbcTemplate.queryForObject("SELECT q.*, u.uid FROM questions q INNER JOIN users u ON q.qid=u.qid WHERE q.qid = ?", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
+			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
 		}
-		return question2;
-	}	
-	
-//	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
-//		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
-//		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
-//		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
-//		if (qid != 0) {								// Checking if there are any questions left which user has not answered
-//			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER,qid);	// Select question which qid is not asked
-//		}
-//		return question;
-//	}
+		return question;
+	}
 	
 // GET QUESTION BY ITS ID
 	public Question getQuestionById(int qid){		 				// create database query for creating question for question-page
-		Question question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QUESTION_ROW_MAPPER, qid);	
+		log.info("!******** REST Dao getQuestionById 1 qid : " + qid);
+		Question question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QuestionRowMapper.questionRowMapper, qid);	
 		return question;
 	}	
 
@@ -138,6 +113,29 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	
 }
 
+//GET NEW QUESTION OLD WORKING
+//	private static RowMapper<Question> QUESTION_ROW_MAPPER = new RowMapper<Question>(){	// Builds query-results into lists
+//		public Question mapRow(ResultSet resultSet, int rowNum) throws SQLException {	// 
+//			return new Question(
+//				resultSet.getInt("qid"),
+//				resultSet.getString("question"));
+//		}
+//	};
+
+// EN KEKSINYT MITEN OLIOON SAA TIETOA MUUALTA KUIN KANNASTA, MUUTENKIN ALKOI VAIKUTTAMAAN HANKALALTA
+// PALATTIIN KANTAKOHTAISIIN OLIOIHIN KUNNES YHDISTELMÄT / MUUSTA MATERIAALISTA KOOSTETTAVAT TULEVAT VÄLTTÄMÄTTÖMIKSI
+//public Question2 getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
+//	log.info("!******** REST Dao 1 uid : " + uid);
+//	String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
+//	int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
+//	log.info("!******** REST Dao 2 qid : " + qid);
+//	if (qid != 0) {								// Checking if there are any questions left which user has not answered
+//		return jdbcTemplate.queryForObject("SELECT u.uid, q.qid, q.question, q.amount_answs, q.sum_answers, q.average, q.true_answer, q.type, q.amount, q.maxlength, q.min, q.max, q.step, q.def_val, q.value_1, q.value_2, q.value_3, q.value_4, q.value_5 FROM questions q INNER JOIN user_answers u ON q.qid=u.qid WHERE q.qid = ? LIMIT 1", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
+//	} else {
+//		log.info("!******** REST Dao 3 qid : " + qid);
+//		return new Question2(0,"");			
+//	}
+//}	
 
 // BeanPropertyRowMapper ei toiminut koska getJdbcTemplatea ei tunnistettu
 //public List<OldQetA> getUsersOldAnswers(int uid){

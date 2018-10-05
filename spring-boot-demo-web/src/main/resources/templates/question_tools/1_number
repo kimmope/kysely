@@ -1,1 +1,0 @@
-<input type="number" name="answer" maxlength="${uQ.maxlength}" min="${uQ.min}" max="${uQ.max}" step="${uQ.step}" value="${uQ.def_val}">

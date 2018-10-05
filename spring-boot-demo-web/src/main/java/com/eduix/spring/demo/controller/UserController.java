@@ -45,7 +45,7 @@ public class UserController {
 		return "login";
 	}
 
-// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY TO THIS VIRTUAL PAGE DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
+	// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
 	@PostMapping("/firstQuestionForm")
 	public String checkUserForm(Model model, User user) {
 		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
@@ -63,10 +63,9 @@ public class UserController {
 
 	@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
 	public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
+		model.addAttribute("uid", uid);
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
 		model.addAttribute("uQ", unansweredQuestion);
-		// Tee käyttökohtainen olio johon luet myös seuraavan uidn niin saa yhden rivin pois
-		model.addAttribute("uid", uid);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
 			return "answerStats";
 		}
@@ -78,23 +77,30 @@ public class UserController {
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
 		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent resubmission of the form
+			log.info("!******** WUCon. /answer 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			boolean resubmitError = true;
 			model.addAttribute("resubmitError",resubmitError);
 			model.addAttribute("answer", answer);
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
+			log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+			log.info("!******** WUCon. /answer 3 resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
 			return "answerStats";
 		}
 		else {
+			log.info("!******** WUCon. /answer 1 no resubmit error");
 			boolean resubmitError = false;
 			model.addAttribute("resubmitError",resubmitError);
 			userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
 			model.addAttribute("answer", answer);
+			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
+			log.info("!******** WUCon. /answer 3 no resubmit error oldQuestion.qid: " + oldQuestion.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+			log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
 			return "answerStats";
 		}
@@ -121,6 +127,67 @@ public class UserController {
 		return "pastQuestion";
 	}
 }	
+// EN SAANUT PELAAMAAN MONIDATAOLIOTA
+//@PostMapping("/firstQuestionForm")
+//public String checkUserForm(Model model, User user) {
+//	log.info("!******** WUContr. /firstQuestionForm checkUserForm 0 username: " + user.getUsername());
+//	User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
+//	log.info("!******** WUContr. /firstQuestionForm checkUserForm 1 uid: " + checkedUser.getUid());
+//	Question2 unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
+//	model.addAttribute("uQ", unansweredQuestion);
+//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
+//		log.info("!******** WUContr. /firstQuestionForm 2, no unanswered questions");
+//		return "answerStats";
+//	}
+//	else {	// Jos on kysymätön kysymys, esitetään se
+//		log.info("!******** WUContr. /firstQuestionForm 2, unanswered question qid: " + unansweredQuestion.getQid());
+//		return "question";
+//	}
+//}	
+//@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
+//public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
+//	log.info("!******** Web UserController newQuestion 1 uid: " + uid);
+//	Question2 unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
+//	model.addAttribute("uQ", unansweredQuestion);
+//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
+//		log.info("!******** WUContr. /newQuestion 2, no unansweredQuestion qid: " + unansweredQuestion.getQid());
+//		return "answerStats";
+//	}
+//	else {
+//		log.info("!******** WUContr. /newQuestion 2, unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
+//		return "question";							// Jos on kysymätön kysymys, esitetään se
+//	}
+//}	
+//@PostMapping("/answer")
+//public String answerForm(Model model, Answer answer) {
+//	if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent resubmission of the form
+//		log.info("!******** WUCon. /answer 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
+//		boolean resubmitError = true;
+//		model.addAttribute("resubmitError",resubmitError);
+//		model.addAttribute("answer", answer);
+//		Question2 oldQuestion = userClient.getQuestion(answer.getQid());
+//		log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
+//		model.addAttribute("oldQuestion", oldQuestion);
+//		Question2 unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+//		log.info("!******** WUCon. /answer 3 resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
+//		model.addAttribute("unansweredQuestion", unansweredQuestion);		
+//		return "answerStats";
+//	}
+//	else {
+//		log.info("!******** WUCon. /answer 1 no resubmit error");
+//		boolean resubmitError = false;
+//		model.addAttribute("resubmitError",resubmitError);
+//		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
+//		model.addAttribute("answer", answer);
+//		log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
+//		Question2 oldQuestion = userClient.getQuestion(answer.getQid());
+//		log.info("!******** WUCon. /answer 3 no resubmit error oldQuestion.qid: " + oldQuestion.getQid());
+//		model.addAttribute("oldQuestion", oldQuestion);
+//		Question2 unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
+//		log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
+//		model.addAttribute("unansweredQuestion", unansweredQuestion);		
+//		return "answerStats";
+//	}	
 
 //@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)	// Testiä formin resubmittauksen estämiseen
 //public String resubmitError() {					

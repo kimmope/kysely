@@ -16,7 +16,6 @@ import com.eduix.spring.demo.dao.UserDao;
 import queta.Answer;
 import queta.PastQandA;
 import queta.Question;
-import queta.Question2;
 import queta.User;
 //import java.net.URI;
 //import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,29 +30,19 @@ public class UserController {
 	
 // DEBUG LOGGER:	
 	private static final Log log = LogFactory.getLog(UserController.class); // Change part "UserController" according to used class name
-// LOG TO PUT INSIDE CLASS: log.info("!******** REST user controller qid: "+qid);
+// LOG TO PUT INSIDE CLASS: log.info("!******** REST UserController qid: "+qid);
 	
 	@Autowired
 	private UserDao dao; 								// Esitellään Database Access Object nimeltä "dao"
 	
-//	@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)			// Tässä yritetään estää RESTin kaatuminen formin resubmittauksessa, mutta ei toimi kuten WEBissä
-//	public String resubmitError() {					
-//		return null;
-//	}			
-	
 //OWN PROJECT
-
+	
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-		Question2 question2 = dao.getNotAskedQuestion(uid);
-		return ResponseEntity.ok(question2);
-	}		
-	
-//	@GetMapping("/{uid}")						
-//	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-//		Question question = dao.getNotAskedQuestion(uid);
-//		return ResponseEntity.ok(question);
-//	}
+		log.info("!******** RUC getNotAskedQuestion uid: " + uid);
+		Question question = dao.getNotAskedQuestion(uid);
+		return ResponseEntity.ok(question);
+	}
 	
 	@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
 	public ResponseEntity<Question> getQuestion(@PathVariable("qid") int qid) {
@@ -110,7 +99,27 @@ public class UserController {
 	}	
 	
 }
-	
+
+//@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)			// Tässä yritetään estää RESTin kaatuminen formin resubmittauksessa, mutta ei toimi kuten WEBissä
+//public String resubmitError() {					
+//	return null;
+//}	
+
+// EN SAANUT TOIMIMAAN MONIKANTA/MUUDATAOLIOTA
+//@GetMapping("/{uid}")						
+//public ResponseEntity<Question2> getNotAskedQuestion(@PathVariable("uid") int uid) {
+//	log.info("!******** RUC getNotAskedQuestion uid: " + uid);
+//	Question2 question2 = dao.getNotAskedQuestion(uid);
+//	return ResponseEntity.ok(question2);
+//}	
+//@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
+//public ResponseEntity<Question2> getQuestion(@PathVariable("qid") int qid) {
+//	log.info("!******** RUC getQuestion qid: " + qid);
+//	Question2 question = dao.getQuestionById(qid);
+//	return ResponseEntity.ok(question);
+//}	
+
+
 //	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
 //	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
 //		try {

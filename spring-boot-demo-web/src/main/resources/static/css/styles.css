@@ -7,14 +7,6 @@
 	float:right;
 }
 
-#csstest{
-	color: #F00;
-}
-
-#jstest{
-	transition: opacity 0.5s;
-}
-
 #pastAmntOAnsws{
 	float:right;
 }
@@ -49,3 +41,39 @@
 }
 
 #questionButton:hover {background-color: #e7e7e7;}
+
+.input-number, .input-radio, .input-range{
+	display:inline;
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+}
+
+.input-label-top, .input-label-bottom, .input-label-min-val, .input-label-max-val{
+    margin: auto;
+    width: 20%;
+    border: 3px solid red;
+    padding: 10px;
+}
+
+.input-label-top{
+	display:block;
+}
+
+.input-label-bottom{
+	display:block;
+}
+
+.input-label-min-val{
+	display:inline;
+}
+
+.input-label-max-val{
+	display:inline;	
+}
+
+
+
+
+

@@ -13,7 +13,7 @@ public class Question {
 	private int min;
 	private int max;
 	private int step;
-	private String value;
+	private String def_val;
 	private String value_1;
 	private String value_2;
 	private String value_3;
@@ -21,12 +21,51 @@ public class Question {
 	private String value_5;
 
 	public Question() {}
+
+	public Question(int qid, String question, int amount_answs, int sum_answers, double average,
+			int true_answer, int type, int amount, int maxlength, int min, int max, int step, String def_val,
+			String value_1, String value_2, String value_3, String value_4, String value_5) {
+		this.qid = qid;
+		this.question = question;
+		this.amount_answs = amount_answs;
+		this.sum_answers = sum_answers;
+		this.average = average;
+		this.true_answer = true_answer;
+		this.type = type;
+		this.amount = amount;
+		this.maxlength = maxlength;
+		this.min = min;
+		this.max = max;
+		this.step = step;
+		this.def_val = def_val;
+		this.value_1 = value_1;
+		this.value_2 = value_2;
+		this.value_3 = value_3;
+		this.value_4 = value_4;
+		this.value_5 = value_5;
+	}	
 	
 	public Question(int qid, String question) {
 		this.qid = qid;
 		this.question = question;
 	}
 
+	public int getQid() {
+		return qid;
+	}
+
+	public void setQid(int qid) {
+		this.qid = qid;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}	
+	
 	public int getAmount_answs() {
 		return amount_answs;
 	}
@@ -43,6 +82,14 @@ public class Question {
 		this.sum_answers = sum_answers;
 	}
 
+	public double getAverage() {
+		return average;
+	}
+
+	public void setAverage(double average) {
+		this.average = average;
+	}
+	
 	public int getTrue_answer() {
 		return true_answer;
 	}
@@ -99,12 +146,12 @@ public class Question {
 		this.step = step;
 	}
 
-	public String getValue() {
-		return value;
+	public String getDef_val() {
+		return def_val;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setDef_val(String def_val) {
+		this.def_val = def_val;
 	}
 
 	public String getValue_1() {
@@ -146,52 +193,5 @@ public class Question {
 	public void setValue_5(String value_5) {
 		this.value_5 = value_5;
 	}
-
-	public int getQid() {
-		return qid;
-	}
-
-	public void setQid(int qid) {
-		this.qid = qid;
-	}
-
-	public String getQuestion() {
-		return question;
-	}
-
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-
-	public int getAmountAnsws() {
-		return amount_answs;
-	}
-
-	public void setAmountAnsws(int amountOfAnswers) {
-		this.amount_answs = amountOfAnswers;
-	}	
-
-	public int getSumAnswers() {
-		return sum_answers;
-	}
-
-	public void setSumAnswers(int sumOfAnswers) {
-		this.sum_answers = sumOfAnswers;
-	}
-
-	public double getAverage() {
-		return average;
-	}
-
-	public void setAverage(double average) {
-		this.average = average;
-	}
 	
-	public int getTrueAnswer() {
-		return true_answer;
-	}
-
-	public void setTrueAnswer(int factualAnswer) {
-		this.true_answer = factualAnswer;
-	}
 }

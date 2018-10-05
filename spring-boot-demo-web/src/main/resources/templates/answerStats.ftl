@@ -24,7 +24,7 @@
 							<input type="hidden" name="uid" value="${answer.uid}">
 							<input type="submit" value="Seuraava kysymys">
 						</form>
-					<#else>
+					<#elseif unansweredQuestion.qid == 0>
 						<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 					</#if>
 				<#else>	<#-- Jos käyttäjä on jo vastannut kysymykseen (form resubmission) -->
@@ -34,7 +34,8 @@
 							<input type="hidden" name="uid" value="${answer.uid}">
 							<input type="submit" value="Seuraava kysymys">
 						</form>
-					<#else>
+					<#elseif unansweredQuestion.qid == 0>
+						<h2>Olet jo vastannut tähän kysymykseen.</h2>
 						<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 					</#if>
 				</#if>
