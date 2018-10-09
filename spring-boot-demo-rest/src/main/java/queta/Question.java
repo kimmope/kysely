@@ -3,51 +3,80 @@ package queta;
 public class Question {
 	private int qid;
 	private String question;
-	private int amount_answs;
-	private int sum_answers;
+	private int amountAnswrs;
+	private int sumAnswers;
 	private double average;
-	private int true_answer;
+	private int trueAnswer;
 	private int type;
 	private int amount;
-	private int maxlength;
+	private int maxLength;
 	private int min;
+	private String minTitle;
 	private int max;
+	private String maxTitle;
 	private int step;
-	private String def_val;
-	private String value_1;
-	private String value_2;
-	private String value_3;
-	private String value_4;
-	private String value_5;
-
+	private String defVal1;
+	private String defVal2;
+	private String defVal3;
+	private String defVal4;
+	private String defVal5;
+	private String colHead1;
+	private String colHead2;
+	private String colHead3;
+	private String colHead4;
+	private String colHead5;
+	private String rowHead1;
+	private String rowHead2;
+	private String rowHead3;
+	private String rowHead4;
+	private String rowHead5;
+	private String message;
+	private String info;
+	
 	public Question() {}
-
-	public Question(int qid, String question, int amount_answs, int sum_answers, double average,
-			int true_answer, int type, int amount, int maxlength, int min, int max, int step, String def_val,
-			String value_1, String value_2, String value_3, String value_4, String value_5) {
+	
+	public Question(int qid, String question) {	// ONKO TÄMÄ KÄYTÖSSÄ?
 		this.qid = qid;
 		this.question = question;
-		this.amount_answs = amount_answs;
-		this.sum_answers = sum_answers;
-		this.average = average;
-		this.true_answer = true_answer;
-		this.type = type;
-		this.amount = amount;
-		this.maxlength = maxlength;
-		this.min = min;
-		this.max = max;
-		this.step = step;
-		this.def_val = def_val;
-		this.value_1 = value_1;
-		this.value_2 = value_2;
-		this.value_3 = value_3;
-		this.value_4 = value_4;
-		this.value_5 = value_5;
 	}	
 	
-	public Question(int qid, String question) {
+	public Question(int qid, String question, int amountAnswrs, int sumAnswers, double average, int trueAnswer,
+			int type, int amount, int maxLength, int min, String minTitle, int max, String maxTitle, int step,
+			String defVal1, String defVal2, String defVal3, String defVal4, String defVal5, String colHead1,
+			String colHead2, String colHead3, String colHead4, String colHead5, String rowHead1, String rowHead2,
+			String rowHead3, String rowHead4, String rowHead5, String message, String info) {
+		super();
 		this.qid = qid;
 		this.question = question;
+		this.amountAnswrs = amountAnswrs;
+		this.sumAnswers = sumAnswers;
+		this.average = average;
+		this.trueAnswer = trueAnswer;
+		this.type = type;
+		this.amount = amount;
+		this.maxLength = maxLength;
+		this.min = min;
+		this.minTitle = minTitle;
+		this.max = max;
+		this.maxTitle = maxTitle;
+		this.step = step;
+		this.defVal1 = defVal1;
+		this.defVal2 = defVal2;
+		this.defVal3 = defVal3;
+		this.defVal4 = defVal4;
+		this.defVal5 = defVal5;
+		this.colHead1 = colHead1;
+		this.colHead2 = colHead2;
+		this.colHead3 = colHead3;
+		this.colHead4 = colHead4;
+		this.colHead5 = colHead5;
+		this.rowHead1 = rowHead1;
+		this.rowHead2 = rowHead2;
+		this.rowHead3 = rowHead3;
+		this.rowHead4 = rowHead4;
+		this.rowHead5 = rowHead5;
+		this.message = message;
+		this.info = info;
 	}
 
 	public int getQid() {
@@ -64,22 +93,22 @@ public class Question {
 
 	public void setQuestion(String question) {
 		this.question = question;
-	}	
-	
-	public int getAmount_answs() {
-		return amount_answs;
 	}
 
-	public void setAmount_answs(int amount_answs) {
-		this.amount_answs = amount_answs;
+	public int getAmountAnswrs() {
+		return amountAnswrs;
 	}
 
-	public int getSum_answers() {
-		return sum_answers;
+	public void setAmountAnswrs(int amountAnswrs) {
+		this.amountAnswrs = amountAnswrs;
 	}
 
-	public void setSum_answers(int sum_answers) {
-		this.sum_answers = sum_answers;
+	public int getSumAnswers() {
+		return sumAnswers;
+	}
+
+	public void setSumAnswers(int sumAnswers) {
+		this.sumAnswers = sumAnswers;
 	}
 
 	public double getAverage() {
@@ -89,13 +118,13 @@ public class Question {
 	public void setAverage(double average) {
 		this.average = average;
 	}
-	
-	public int getTrue_answer() {
-		return true_answer;
+
+	public int getTrueAnswer() {
+		return trueAnswer;
 	}
 
-	public void setTrue_answer(int true_answer) {
-		this.true_answer = true_answer;
+	public void setTrueAnswer(int trueAnswer) {
+		this.trueAnswer = trueAnswer;
 	}
 
 	public int getType() {
@@ -114,12 +143,12 @@ public class Question {
 		this.amount = amount;
 	}
 
-	public int getMaxlength() {
-		return maxlength;
+	public int getMaxLength() {
+		return maxLength;
 	}
 
-	public void setMaxlength(int maxlength) {
-		this.maxlength = maxlength;
+	public void setMaxLength(int maxLength) {
+		this.maxLength = maxLength;
 	}
 
 	public int getMin() {
@@ -130,12 +159,28 @@ public class Question {
 		this.min = min;
 	}
 
+	public String getMinTitle() {
+		return minTitle;
+	}
+
+	public void setMinTitle(String minTitle) {
+		this.minTitle = minTitle;
+	}
+
 	public int getMax() {
 		return max;
 	}
 
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+	public String getMaxTitle() {
+		return maxTitle;
+	}
+
+	public void setMaxTitle(String maxTitle) {
+		this.maxTitle = maxTitle;
 	}
 
 	public int getStep() {
@@ -146,52 +191,140 @@ public class Question {
 		this.step = step;
 	}
 
-	public String getDef_val() {
-		return def_val;
+	public String getDefVal1() {
+		return defVal1;
 	}
 
-	public void setDef_val(String def_val) {
-		this.def_val = def_val;
+	public void setDefVal1(String defVal1) {
+		this.defVal1 = defVal1;
 	}
 
-	public String getValue_1() {
-		return value_1;
+	public String getDefVal2() {
+		return defVal2;
 	}
 
-	public void setValue_1(String value_1) {
-		this.value_1 = value_1;
+	public void setDefVal2(String defVal2) {
+		this.defVal2 = defVal2;
 	}
 
-	public String getValue_2() {
-		return value_2;
+	public String getDefVal3() {
+		return defVal3;
 	}
 
-	public void setValue_2(String value_2) {
-		this.value_2 = value_2;
+	public void setDefVal3(String defVal3) {
+		this.defVal3 = defVal3;
 	}
 
-	public String getValue_3() {
-		return value_3;
+	public String getDefVal4() {
+		return defVal4;
 	}
 
-	public void setValue_3(String value_3) {
-		this.value_3 = value_3;
+	public void setDefVal4(String defVal4) {
+		this.defVal4 = defVal4;
 	}
 
-	public String getValue_4() {
-		return value_4;
+	public String getDefVal5() {
+		return defVal5;
 	}
 
-	public void setValue_4(String value_4) {
-		this.value_4 = value_4;
+	public void setDefVal5(String defVal5) {
+		this.defVal5 = defVal5;
 	}
 
-	public String getValue_5() {
-		return value_5;
+	public String getColHead1() {
+		return colHead1;
 	}
 
-	public void setValue_5(String value_5) {
-		this.value_5 = value_5;
+	public void setColHead1(String colHead1) {
+		this.colHead1 = colHead1;
 	}
-	
+
+	public String getColHead2() {
+		return colHead2;
+	}
+
+	public void setColHead2(String colHead2) {
+		this.colHead2 = colHead2;
+	}
+
+	public String getColHead3() {
+		return colHead3;
+	}
+
+	public void setColHead3(String colHead3) {
+		this.colHead3 = colHead3;
+	}
+
+	public String getColHead4() {
+		return colHead4;
+	}
+
+	public void setColHead4(String colHead4) {
+		this.colHead4 = colHead4;
+	}
+
+	public String getColHead5() {
+		return colHead5;
+	}
+
+	public void setColHead5(String colHead5) {
+		this.colHead5 = colHead5;
+	}
+
+	public String getRowHead1() {
+		return rowHead1;
+	}
+
+	public void setRowHead1(String rowHead1) {
+		this.rowHead1 = rowHead1;
+	}
+
+	public String getRowHead2() {
+		return rowHead2;
+	}
+
+	public void setRowHead2(String rowHead2) {
+		this.rowHead2 = rowHead2;
+	}
+
+	public String getRowHead3() {
+		return rowHead3;
+	}
+
+	public void setRowHead3(String rowHead3) {
+		this.rowHead3 = rowHead3;
+	}
+
+	public String getRowHead4() {
+		return rowHead4;
+	}
+
+	public void setRowHead4(String rowHead4) {
+		this.rowHead4 = rowHead4;
+	}
+
+	public String getRowHead5() {
+		return rowHead5;
+	}
+
+	public void setRowHead5(String rowHead5) {
+		this.rowHead5 = rowHead5;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}	
+		
 }

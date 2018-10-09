@@ -50,7 +50,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	public void addAnswer(Answer answer) {
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
 		jdbcTemplate.update("UPDATE users SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
-		jdbcTemplate.update("UPDATE questions SET amount_answs = amount_answs + 1 WHERE qid = ?",answer.getQid());
+		jdbcTemplate.update("UPDATE questions SET amountAnswrs = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
 	}
 	
 // CHECK IF USER EXISTS OR CREATE NEW IF IT DOESNT
