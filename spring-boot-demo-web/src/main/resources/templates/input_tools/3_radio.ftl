@@ -3,7 +3,7 @@
 <#-- Input tool header row -->
 var inputTable = document.createElement("TABLE");
 inputTable.setAttribute("id","inputTable");
-document.getElementById("input-tool").appendChild(inputTable);
+document.getElementById("input-tools").appendChild(inputTable);
 var inputTableRow = document.createElement("TR");
 inputTableRow.innerHTML = 
 	`<th class="empty"></th>
@@ -18,19 +18,16 @@ document.getElementById("inputTable").appendChild(inputTableRow);
 for (i = 1; i <= ${uQ.amount}; i++){
 	var inputTableRow = document.createElement("TR");
 	inputTableRow.innerHTML = 
-		`	<#if uQ.rowHead1??><td class = 'rowLabel'>${uQ.rowHead1}</td>
-			<#else><td class="empty"></td>
-			</#if>
-			<#if uQ.colHead1??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'></td></#if>
-			<#if uQ.colHead2??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'></td></#if>
-			<#if uQ.colHead3??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'></td></#if>
-			<#if uQ.colHead4??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'></td></#if>
-			<#if uQ.colHead5??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'></td></#if>`;	
-    document.getElementById("inputTable").appendChild(inputTableRow);
+		`<#if uQ.rowHead1??><td class = 'rowLabel'>${uQ.rowHead1}</td>
+		<#else><td class="empty"></td>
+		</#if>
+		<#if uQ.colHead1??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal1}'></td></#if>
+		<#if uQ.colHead2??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal2}'></td></#if>
+		<#if uQ.colHead3??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal3}'></td></#if>
+		<#if uQ.colHead4??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal4}'></td></#if>
+		<#if uQ.colHead5??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal5}'></td></#if>`;	
+	document.getElementById("inputTable").appendChild(inputTableRow);
 }	
-
-<#-- Close input tool table -->
-document.getElementById("input-tools").appendChild(`</table>`);
 
 </script>
 <br>
