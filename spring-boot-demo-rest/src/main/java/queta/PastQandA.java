@@ -6,17 +6,17 @@ public class PastQandA {
 	private int qid;
 	private String question;
 	private Timestamp timeOfAnsw;
-	private String answer;
+	private String answer1;
 	
 	public PastQandA() {}
 	
-	public PastQandA(int uid, int qid, String question, Timestamp timeOfAnsw, String answer) {
+	public PastQandA(int uid, int qid, String question, Timestamp timeOfAnsw, String answer1) {
 		super();
 		this.uid = uid;
 		this.qid = qid;
 		this.question = question;
 		this.timeOfAnsw = timeOfAnsw;
-		this.answer = answer;
+		this.answer1 = answer1;
 	}
 
 	public int getUid() {
@@ -43,11 +43,11 @@ public class PastQandA {
 	public void setTimeOfAnsw(Timestamp timeOfAnsw) {
 		this.timeOfAnsw = timeOfAnsw;
 	}
-	public String getAnswer() {
-		return answer;
+	public String getAnswer1() {
+		return answer1;
 	}
-	public void setAnswer(String answer) {
-		this.answer = answer;
+	public void setAnswer1(String answer1) {
+		this.answer1 = answer1;
 	}
 	
 }

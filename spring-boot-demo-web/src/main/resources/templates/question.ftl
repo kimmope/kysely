@@ -3,7 +3,7 @@
 	<body>
 		<span id="question">${uQ.question}</span><br>
 		type = ${uQ.type}<br>
-		amount_answs = ${uQ.amountAnswrs}<br>
+		amount_answs = ${uQ.amntAnswTot}<br>
 		<form action="/answer" method="POST">
 			<input type="hidden" name="uid" value="${uid}">
 			<input type="hidden" name="qid" value="${uQ.qid}">

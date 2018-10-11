@@ -9,7 +9,7 @@
 		On ${pastQandA.timeOfAnswer} you answered question:
 		<span class="historic" id="pastQuestion">${pastQandA.question}</span>
 		<br>
-		Your answer was:<span id="pastAnswer">${pastQandA.answer}</span>
+		Your answer was:<span id="pastAnswer">${pastQandA.answer1}</span>
 		<br>
 		Statistics of answers:
 		<span class="historic" id="pastAmntOAnsws"><AMOUNT OF ANSWERS></span>

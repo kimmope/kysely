@@ -12,23 +12,23 @@
 			<br>
 			Vastauksesi oli:
 			<br>
-			<#if answer.answer == "v1">	<#-- Change answer value to text-format for viewing -->
+			<#if answer.answer1 == "v1">	<#-- Change answer value to text-format for viewing -->
 				<h1>${oldQuestion.colHead1}</h1>
-			<#elseif answer.answer == "v2">
+			<#elseif answer.answer1 == "v2">
 				<h1>${oldQuestion.colHead2}</h1>
-			<#elseif answer.answer == "v3">
+			<#elseif answer.answer1 == "v3">
 				<h1>${oldQuestion.colHead3}</h1>
-			<#elseif answer.answer == "v4">
+			<#elseif answer.answer1 == "v4">
 				<h1>${oldQuestion.colHead4}</h1>
-			<#elseif answer.answer == "v5">
+			<#elseif answer.answer1 == "v5">
 				<h1>${oldQuestion.colHead5}</h1>
 			<#else>
-				<h1>${answer.answer}</h1>								
+				<h1>${answer.answer1}</h1>								
 			</#if>			
 			<br>
 			Vastauksien lukumäärä:
 			<br>
-			<h2>${oldQuestion.amountAnswrs}</h2>
+			<h2>${oldQuestion.amntAnswTot}</h2>
 			<br>
 			Vastauksien keskiarvo:
 			<br>

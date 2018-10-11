@@ -31,8 +31,11 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 
 	public Question getNotAskedQuestion(int uid){	// Create database queries for creating not-asked question for question-page
 		Question question = new Question(0,"");		// Asettaa tyhjän olion qid:ksi nollan. Tulkitaan webin usercontrollerissa.
+		log.info("!******** REST Dao getNotAskedQuestion 1 uid : " + uid);
 		String notAsked = "SELECT IFNULL((SELECT qid FROM questions WHERE qid NOT IN (SELECT qid FROM user_answers WHERE uid = ?) LIMIT 1),0)";	// Query for which question is not asked yet from user
+		log.info("!******** REST Dao getNotAskedQuestion 2 notAsked : " + notAsked);
 		int qid = (int)jdbcTemplate.queryForObject(notAsked, Integer.class, uid); // Saving query-result to object-variable instead of list
+		log.info("!******** REST Dao getNotAskedQuestion 3 qid : " + qid);
 		if (qid != 0) {								// Checking if there are any questions left which user has not answered
 			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
 		}
@@ -48,12 +51,12 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 
 // ADD USER'S ANSWER DATA TO DATABASES AND CALCULATE RESPECTIVE STATISTICS TO THEM
 	public void addAnswer(Answer answer) {
-		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
+		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer1) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer1());
 		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
-		jdbcTemplate.update("UPDATE questions SET amountAnswrs = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
+		jdbcTemplate.update("UPDATE questions SET amntAnswTot = amntAnswTot + 1 WHERE qid = ?",answer.getQid());
 		int type = (int)jdbcTemplate.queryForObject("SELECT type FROM questions WHERE qid = ?", Integer.class, answer.getQid());
 		if (type == 1 || type == 2) {
-			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer),0) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
+			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer1),0) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
 			log.info("!******** REST DAO addAnswer average : " + avg);
 			jdbcTemplate.update("UPDATE questions SET average = ? WHERE qid = ?",avg,answer.getQid());
 		}
@@ -99,20 +102,20 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 				resultSet.getInt("qid"),					
 				resultSet.getString("question"),
 				resultSet.getTimestamp("timeOfAnswer"),				
-				resultSet.getString("answer"));
+				resultSet.getString("answer1"));
 		}
 	};	
 	public List<PastQandA> getPastQandAs(int uid) {			// Hae lista aikaisemmista kysymys-vastauspareista
-		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid);	// List queryllä 
+		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid);	// List queryllä 
 	}
 	public PastQandA getPastQandA(int uid, int qid) {		// Hae yksi kysymys-vastauspari
-		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
+		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
 	}
 	
 // PREVENTING RESUBMISSION OF THE FORM
 	public boolean checkIfAnswered(int uid, int qid) {
 		try{
-			jdbcTemplate.queryForObject("SELECT answer FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
+			jdbcTemplate.queryForObject("SELECT answer1 FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
 			return true;
 		}
 		catch(EmptyResultDataAccessException e){

@@ -11,12 +11,7 @@ public class QuestionRowMapper{
 			return new Question(
 				rs.getInt("qid"),
 				rs.getString("question"),
-				rs.getInt("amountAnswrs"),
-				rs.getInt("sumAnswers"),
-				rs.getDouble("average"),
-				rs.getInt("trueAnswer"),
 				rs.getInt("type"),
-				rs.getInt("amount"),
 				rs.getInt("maxLength"),
 				rs.getInt("min"),
 				rs.getString("minTitle"),
@@ -39,7 +34,18 @@ public class QuestionRowMapper{
 				rs.getString("rowHead4"),
 				rs.getString("rowHead5"),
 				rs.getString("message"),
-				rs.getString("info")
+				rs.getString("info"),
+				rs.getInt("amntAnswTot"),
+				rs.getInt("amntAnswVal1"),
+				rs.getInt("amntAnswVal2"),
+				rs.getInt("amntAnswVal3"),
+				rs.getInt("amntAnswVal4"),
+				rs.getInt("amntAnswVal5"),
+				rs.getInt("sumAnswers"),
+				rs.getDouble("average"),
+				rs.getDouble("mean"),
+				rs.getDouble("mode"),
+				rs.getString("trueAnswer")
 			);
 		}
 	};
