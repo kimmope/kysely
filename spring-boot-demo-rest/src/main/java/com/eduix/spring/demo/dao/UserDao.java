@@ -49,31 +49,30 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 // ADD USER'S ANSWER DATA TO DATABASES AND CALCULATE RESPECTIVE STATISTICS TO THEM
 	public void addAnswer(Answer answer) {
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
-		jdbcTemplate.update("UPDATE users SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
+		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
 		jdbcTemplate.update("UPDATE questions SET amountAnswrs = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
 		int type = (int)jdbcTemplate.queryForObject("SELECT type FROM questions WHERE qid = ?", Integer.class, answer.getQid());
 		if (type == 1 || type == 2) {
-			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer),1) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
+			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer),0) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
 			log.info("!******** REST DAO addAnswer average : " + avg);
 			jdbcTemplate.update("UPDATE questions SET average = ? WHERE qid = ?",avg,answer.getQid());
 		}
-		else if (type == 3) {
-			
-		}
-		jdbcTemplate.update("UPDATE questions SET average = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
-	}
+}
 	
 // CHECK IF USER EXISTS OR CREATE NEW IF IT DOESNT
 	public User checkUser(String username) {
 		try {
+			log.info("!******** REST Dao try checkUser username : " + username);
 			return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new UserRowMapper(), username);
 		}
 		catch(EmptyResultDataAccessException e){
+			log.info("!******** REST Dao catch checkUser username : " + username);
 			throw new RuntimeException(e);			// Needs to be changed to RuntimeException for UserController
 		}
 	}
 	public User createNewUser(String username) {
-		jdbcTemplate.update("INSERT INTO users(username,amount_answers,score) VALUES (?, ?, ?)",username,0,0);
+		log.info("!******** REST Dao createNewUser username : " + username);
+		jdbcTemplate.update("INSERT INTO users(username,amntUserAnsw,score) VALUES (?, ?, ?)",username,0,0);
 		return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new UserRowMapper(), username);
 	}
 
@@ -83,7 +82,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 			return new User(
 			resultSet.getInt("uid"),
 			resultSet.getString("username"),
-			resultSet.getInt("amount_answers"),
+			resultSet.getInt("amntUserAnsw"),
 			resultSet.getInt("score"));
 		}
 	};
@@ -99,15 +98,15 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 				resultSet.getInt("uid"),
 				resultSet.getInt("qid"),					
 				resultSet.getString("question"),
-				resultSet.getTimestamp("time_of_answ"),				
+				resultSet.getTimestamp("timeOfAnswer"),				
 				resultSet.getString("answer"));
 		}
 	};	
 	public List<PastQandA> getPastQandAs(int uid) {			// Hae lista aikaisemmista kysymys-vastauspareista
-		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid);	// List queryllä 
+		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid);	// List queryllä 
 	}
 	public PastQandA getPastQandA(int uid, int qid) {		// Hae yksi kysymys-vastauspari
-		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.time_of_answ, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.time_of_answ DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
+		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
 	}
 	
 // PREVENTING RESUBMISSION OF THE FORM

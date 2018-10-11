@@ -44,6 +44,7 @@ public class UserClient {
 	}
 
 	public User checkUser(String username) {
+		log.info("!******** WUCli checkUser username: " + username);
 		User user = restTemplate.postForObject("/checkUser", username, User.class);
 		return user;
 	}

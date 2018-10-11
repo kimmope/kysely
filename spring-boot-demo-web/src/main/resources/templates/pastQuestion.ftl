@@ -6,7 +6,7 @@
 			<input type="hidden" name="uid" value="${pastQandA.uid}">
 			<input type="submit" value="Aikaisemmat vastaukset">
 		</form>	
-		On ${pastQandA.time_of_answ} you answered question:
+		On ${pastQandA.timeOfAnswer} you answered question:
 		<span class="historic" id="pastQuestion">${pastQandA.question}</span>
 		<br>
 		Your answer was:<span id="pastAnswer">${pastQandA.answer}</span>

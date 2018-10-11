@@ -32,7 +32,7 @@
 			<br>
 			Vastauksien keskiarvo:
 			<br>
-			<h2>${oldQuestion.average}</h2>
+			<h2>${oldQuestion.average?c}</h2>
 			<br>
 			Vastauksen tyyppi:
 			<br>

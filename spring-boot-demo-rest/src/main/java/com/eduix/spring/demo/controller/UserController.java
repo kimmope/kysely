@@ -59,9 +59,11 @@ public class UserController {
 	public ResponseEntity<?> checkUser(@RequestBody String username) { // @RequestBodyä ei tarvita kuin raakadatan lähetykseen
 		User user = new User();
 		try {
+			log.info("!******** RUC try checkUser: " + username);
 			user = dao.checkUser(username); // Testataan onko useria
 		} 
 		catch (RuntimeException e) {
+			log.info("!******** RUC catch checkUser: " + username);
 			user = dao.createNewUser(username);	// Jos useria ei ole, niin tehdään sellainen
 		}
 		return ResponseEntity.ok(user);

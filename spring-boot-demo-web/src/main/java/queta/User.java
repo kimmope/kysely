@@ -3,7 +3,7 @@ package queta;
 public class User {
 	private int uid;
 	private String username;
-	private int amount_answers;
+	private int amntUserAnsw;
 	private int score;
 	
 	public User(){
@@ -26,12 +26,12 @@ public class User {
 		this.username = username;
 	}
 
-	public int getAmount_answers() {
-		return amount_answers;
+	public int getAmntUserAnsw() {
+		return amntUserAnsw;
 	}
 
-	public void setAmount_answers(int amount_answers) {
-		this.amount_answers = amount_answers;
+	public void setAmntUserAnsw(int amntUserAnsw) {
+		this.amntUserAnsw = amntUserAnsw;
 	}
 
 	public int getScore() {

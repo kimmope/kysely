@@ -11,7 +11,7 @@ public class UserRowMapper implements RowMapper<User>  {
 		User user = new User();
 		user.setUid(rs.getInt("uid"));
 		user.setUsername(rs.getString("username"));
-		user.setAmount_answers(rs.getInt("amount_answers"));
+		user.setAmntUserAnsw(rs.getInt("amntUserAnsw"));
 		user.setScore(rs.getInt("score"));
 		return user;
 	}

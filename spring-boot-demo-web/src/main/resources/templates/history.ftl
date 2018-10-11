@@ -10,7 +10,7 @@
 			<span id="nameField">Username: <span id="username">${user.username}</span></span>
 			<span id="scoreField">Score: <span id="userScore">${user.score}</span></span>
 			<br>
-			<span id="amntOfAnswsField">Amount of answered questions: <span id="amntAnsws">${user.amount_answers}</span></span>
+			<span id="amntOfAnswsField">Amount of answered questions: <span id="amntAnsws">${user.amntUserAnsw}</span></span>
 			<h2>View past questions and answers:</h2>
 			<table id="oldQuestionsTable">
 				<thead><tr><th>Past answered questions</th><th>Time of answer</th></tr></thead>
@@ -25,7 +25,7 @@
 								<input type="submit" id="questionButton" value="${pastQandA.question}">
 							</form>						
 						</td>
-						<td id="answerDate">${pastQandA.time_of_answ}</td>
+						<td id="answerDate">${pastQandA.timeOfAnswer}</td>
 					</tr>
 					</#list>
 				</tbody>
