@@ -97,6 +97,9 @@ public class UserController {
 	public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
 		return dao.checkIfAnswered(uid,qid);
 	}	
+
+// TEST CALCULATING AVERAGE FROM NUMERICAL DATA
+	
 	
 }
 

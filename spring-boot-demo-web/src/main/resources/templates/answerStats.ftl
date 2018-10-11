@@ -26,9 +26,25 @@
 				<h1>${answer.answer}</h1>								
 			</#if>			
 			<br>
+			Vastauksien lukumäärä:
+			<br>
+			<h2>${oldQuestion.amountAnswrs}</h2>
+			<br>
 			Vastauksien keskiarvo:
 			<br>
 			<h2>${oldQuestion.average}</h2>
+			<br>
+			Vastauksen tyyppi:
+			<br>
+			<h2>${oldQuestion.type}</h2>
+			<br>
+			Vastauksen qid:
+			<br>
+			<h2>${oldQuestion.qid}</h2>
+			<br>
+			Vastauksien summa:						
+			<br>
+			<h2>${oldQuestion.sumAnswers}</h2>			
 			<br>
 			<#if resubmitError != true>	<#-- Jos käyttäjä ei ole vielä vastannut kysymykseen -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->

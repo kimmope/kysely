@@ -76,7 +76,7 @@ public class UserController {
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
-		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent resubmission of the form
+		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent form resubmission
 			log.info("!******** WUCon. /answer 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			boolean resubmitError = true;
 			model.addAttribute("resubmitError",resubmitError);
@@ -97,7 +97,7 @@ public class UserController {
 			model.addAttribute("answer", answer);
 			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
-			log.info("!******** WUCon. /answer 3 no resubmit error oldQuestion.qid: " + oldQuestion.getQid());
+			log.info("!******** average: " + oldQuestion.getAverage());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
 			log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());

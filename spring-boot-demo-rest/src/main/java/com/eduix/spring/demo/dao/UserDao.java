@@ -46,11 +46,21 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		return question;
 	}	
 
-// ADD USER'S ANSWER DATA TO DATABASES	
+// ADD USER'S ANSWER DATA TO DATABASES AND CALCULATE RESPECTIVE STATISTICS TO THEM
 	public void addAnswer(Answer answer) {
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
 		jdbcTemplate.update("UPDATE users SET amount_answers = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
 		jdbcTemplate.update("UPDATE questions SET amountAnswrs = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
+		int type = (int)jdbcTemplate.queryForObject("SELECT type FROM questions WHERE qid = ?", Integer.class, answer.getQid());
+		if (type == 1 || type == 2) {
+			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer),1) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
+			log.info("!******** REST DAO addAnswer average : " + avg);
+			jdbcTemplate.update("UPDATE questions SET average = ? WHERE qid = ?",avg,answer.getQid());
+		}
+		else if (type == 3) {
+			
+		}
+		jdbcTemplate.update("UPDATE questions SET average = amountAnswrs + 1 WHERE qid = ?",answer.getQid());
 	}
 	
 // CHECK IF USER EXISTS OR CREATE NEW IF IT DOESNT
