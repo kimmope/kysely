@@ -38,6 +38,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		log.info("!******** REST Dao getNotAskedQuestion 3 qid : " + qid);
 		if (qid != 0) {								// Checking if there are any questions left which user has not answered
 			question = (Question)jdbcTemplate.queryForObject("SELECT * FROM questions WHERE qid = ?", QuestionRowMapper.questionRowMapper,qid);	// Select question which qid is not asked
+			log.info("!******** REST Dao getNotAskedQuestion 4 in if-loop question : " + question);
 		}
 		return question;
 	}
@@ -51,15 +52,41 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 
 // ADD USER'S ANSWER DATA TO DATABASES AND CALCULATE RESPECTIVE STATISTICS TO THEM
 	public void addAnswer(Answer answer) {
+		log.info("!******** REST DAO addAnswer 1");
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer1) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer1());
+		log.info("!******** REST DAO addAnswer 2 uid ja answer1: " + answer.getUid() + answer.getAnswer1());
 		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
+		log.info("!******** REST DAO addAnswer 3");
 		jdbcTemplate.update("UPDATE questions SET amntAnswTot = amntAnswTot + 1 WHERE qid = ?",answer.getQid());
+		log.info("!******** REST DAO addAnswer 4");
 		int type = (int)jdbcTemplate.queryForObject("SELECT type FROM questions WHERE qid = ?", Integer.class, answer.getQid());
 		if (type == 1 || type == 2) {
+			log.info("!******** REST DAO addAnswer 5");
 			double avg = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer1),0) FROM user_answers WHERE qid = ?", Double.class, answer.getQid());
-			log.info("!******** REST DAO addAnswer average : " + avg);
+			log.info("!******** REST DAO addAnswer 6 average created average : " + avg);
 			jdbcTemplate.update("UPDATE questions SET average = ? WHERE qid = ?",avg,answer.getQid());
 		}
+		else if(type == 3) {
+			log.info("!******** REST DAO addAnswer 7 answer.getAnswer1() : " + answer.getAnswer1());
+			if (answer.getAnswer1().equals("v1")){
+				log.info("!******** REST DAO addAnswer 7 adding v1");
+				jdbcTemplate.update("UPDATE questions SET amntAnswVal1 = amntAnswVal1 + 1 WHERE qid = ?",answer.getQid());	
+			}
+			else if (answer.getAnswer1().equals("v2")) {
+				log.info("!******** REST DAO addAnswer 7 adding v2");
+				jdbcTemplate.update("UPDATE questions SET amntAnswVal2 = amntAnswVal2 + 1 WHERE qid = ?",answer.getQid());	
+			}
+			else if (answer.getAnswer1().equals("v3")) {
+				jdbcTemplate.update("UPDATE questions SET amntAnswVal3 = amntAnswVal3 + 1 WHERE qid = ?",answer.getQid());	
+			}
+			else if (answer.getAnswer1().equals("v4")) {
+				jdbcTemplate.update("UPDATE questions SET amntAnswVal4 = amntAnswVal4 + 1 WHERE qid = ?",answer.getQid());	
+			}
+			else if (answer.getAnswer1().equals("v5")) {
+				jdbcTemplate.update("UPDATE questions SET amntAnswVal5 = amntAnswVal5 + 1 WHERE qid = ?",answer.getQid());	
+			}			
+		}
+		log.info("!******** REST DAO addAnswer end");
 }
 	
 // CHECK IF USER EXISTS OR CREATE NEW IF IT DOESNT

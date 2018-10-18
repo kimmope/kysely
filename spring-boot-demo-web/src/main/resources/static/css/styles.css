@@ -18,6 +18,25 @@
 	border-radius: 5px;
 }
 
+#map{
+	height:600;
+	width:300;
+}
+
+#pie-chart-legend{
+	background-color: #679ef7;
+	color:#FFF;		
+	font: 16px Calibri, sans-serif;
+	margin: 4px 0;
+}
+
+#pie-chart-legend span{
+	display:inline-block;
+	height:20px;
+	vertical-align: middle;
+	width:20px;
+}
+
 #questionButton {
     border: none;
     color: white;

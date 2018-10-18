@@ -39,8 +39,9 @@ public class UserController {
 	
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
-		log.info("!******** RUC getNotAskedQuestion uid: " + uid);
+		log.info("!******** RUC getNotAskedQuestion 1 uid: " + uid);
 		Question question = dao.getNotAskedQuestion(uid);
+		log.info("!******** RUC getNotAskedQuestion 2 returning question: " + question);
 		return ResponseEntity.ok(question);
 	}
 	
@@ -52,6 +53,7 @@ public class UserController {
 	
 	@PostMapping("/answer")			// Kuunnellaan /answer-pagea ja vähennetään sille tuleva kutsu koskemaan ainoastaan allaolevaa funktiota
 	public void addAnswer(@RequestBody Answer answer){
+		log.info("!******** RUC addAnswer 1 answer: " + answer);
 		dao.addAnswer(answer);
 	}
 	

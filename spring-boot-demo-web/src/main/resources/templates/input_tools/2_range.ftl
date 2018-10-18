@@ -18,14 +18,14 @@ document.getElementById("input-tools").innerHTML =
 	`<#if uQ.colHead1??><div id = 'columnLabel1'>${uQ.colHead1}</div></#if>
 	<#if uQ.colHead2??><div id = 'columnLabel2'>${uQ.colHead2}</div></#if>
 	<#if uQ.rowHead1??><div id = 'rowLabel1'>${uQ.rowHead1}</div></#if>
-	<input class = 'inputRange' type = 'range' name = 'answer' 
+	<input class = 'inputRange' type = 'range' name = 'answer1' 
 		<#if uQ.defVal1??>value='${uQ.defVal1}'</#if>
 		<#if uQ.min??>min = '${uQ.min}'</#if>
 		<#if uQ.min??>max = '${uQ.max}'</#if>
 		<#if uQ.defVal1??>value = '${uQ.defVal1}'</#if>>`;
 
 <#-- Create rest of the input tools if available-->
-for (i = 2; i <= ${uQ.amount}; i++){
+for (i = 2; i <= ${uQ.subQuestAmnt}; i++){
 	var input_tool_container = document.createElement("input-tool-container");
 	input_tool_container.innerHTML = `<div id='rowLabel` + i + `'>` + rowLabels[i] + `</div>
 		<input class='inputRadio' type='radio' name='answer' value='` + defVals[i] + `'>`;	

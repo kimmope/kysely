@@ -18,6 +18,7 @@ public class QuestionRowMapper{
 				rs.getInt("max"),
 				rs.getString("maxTitle"),
 				rs.getInt("step"),
+				rs.getInt("subQuestAmnt"),
 				rs.getString("defval1"),
 				rs.getString("defval2"),
 				rs.getString("defval3"),

@@ -48,12 +48,12 @@ public class UserController {
 	// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
 	@PostMapping("/firstQuestionForm")
 	public String checkUserForm(Model model, User user) {
-		log.info("!******** WUC checUserForm1");
+		log.info("!******** WUC checkUserForm1");
 		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-		log.info("!******** WUC checUserForm2");
+		log.info("!******** WUC checkUserForm2");
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		log.info("!******** WUC checUserForm3");
+		log.info("!******** WUC checkUserForm3");
 		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
 			log.info("!******** Web user first question if unansweredQuestions");
@@ -79,8 +79,9 @@ public class UserController {
 	
 	@PostMapping("/answer")
 	public String answerForm(Model model, Answer answer) {
+		log.info("!*** WUCon checkIfAlreadyAnswered 0 uid, answer: " + answer.getUid() +" "+ answer.getAnswer1());
 		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent form resubmission
-			log.info("!******** WUCon. /answer 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
+			log.info("!******** WUCon checkIfAlreadyAnswered 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			boolean resubmitError = true;
 			model.addAttribute("resubmitError",resubmitError);
 			model.addAttribute("answer", answer);
@@ -93,7 +94,7 @@ public class UserController {
 			return "answerStats";
 		}
 		else {
-			log.info("!******** WUCon. /answer 1 no resubmit error");
+			log.info("!******** WUCon checkIfAlreadyAnswered 1 no resubmit error");
 			boolean resubmitError = false;
 			model.addAttribute("resubmitError",resubmitError);
 			userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan

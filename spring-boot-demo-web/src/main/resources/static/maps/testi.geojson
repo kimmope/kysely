@@ -1,0 +1,11 @@
+var testi = 
+{
+	"type": "Feature",	
+	"geometry": {
+		"type": "Polygon",
+		"coordinates":[[[25.4, 65.1],[25.4, 65.8],[25.8, 65.4]]]
+	},
+	"properties": {
+		"name": "Dinagat Islands"
+	}	
+};

@@ -10,6 +10,7 @@ public class Question {
 	private int max;
 	private String maxTitle;
 	private int step;
+	private int subQuestAmnt;
 	private String defVal1;
 	private String defVal2;
 	private String defVal3;
@@ -47,7 +48,7 @@ public class Question {
 	}
 
 	public Question(int qid, String question, int type, int maxLength, int min, String minTitle, int max,
-			String maxTitle, int step, String defVal1, String defVal2, String defVal3, String defVal4, String defVal5,
+			String maxTitle, int step, int subQuestAmnt, String defVal1, String defVal2, String defVal3, String defVal4, String defVal5,
 			String colHead1, String colHead2, String colHead3, String colHead4, String colHead5, String rowHead1,
 			String rowHead2, String rowHead3, String rowHead4, String rowHead5, String message, String info,
 			int amntAnswTot, int amntAnswVal1, int amntAnswVal2, int amntAnswVal3, int amntAnswVal4, int amntAnswVal5,
@@ -62,6 +63,7 @@ public class Question {
 		this.max = max;
 		this.maxTitle = maxTitle;
 		this.step = step;
+		this.subQuestAmnt = subQuestAmnt;
 		this.defVal1 = defVal1;
 		this.defVal2 = defVal2;
 		this.defVal3 = defVal3;
@@ -162,6 +164,14 @@ public class Question {
 
 	public void setStep(int step) {
 		this.step = step;
+	}
+
+	public int getSubQuestAmnt() {
+		return subQuestAmnt;
+	}
+
+	public void setSubQuestAmnt(int subQuestAmnt) {
+		this.subQuestAmnt = subQuestAmnt;
 	}
 
 	public String getDefVal1() {

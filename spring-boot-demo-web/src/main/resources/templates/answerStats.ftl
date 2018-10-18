@@ -30,22 +30,15 @@
 			<br>
 			<h2>${oldQuestion.amntAnswTot}</h2>
 			<br>
-			Vastauksien keskiarvo:
-			<br>
-			<h2>${oldQuestion.average?c}</h2>
-			<br>
-			Vastauksen tyyppi:
-			<br>
-			<h2>${oldQuestion.type}</h2>
-			<br>
-			Vastauksen qid:
-			<br>
-			<h2>${oldQuestion.qid}</h2>
-			<br>
-			Vastauksien summa:						
-			<br>
-			<h2>${oldQuestion.sumAnswers}</h2>			
-			<br>
+			<#if oldQuestion.type == 1 || oldQuestion.type == 2>
+				Vastauksien keskiarvo:
+				<h2>${oldQuestion.average?c}</h2>
+			<#elseif oldQuestion.type == 3>
+				<#include "charts/bar_chart.ftl">
+				<#include "charts/pie_chart.ftl">
+				<#include "charts/map.ftl">
+			</#if>
+				<br>	
 			<#if resubmitError != true>	<#-- Jos käyttäjä ei ole vielä vastannut kysymykseen -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
 					<form action="/newQuestion" method="POST">
@@ -62,7 +55,7 @@
 						<input type="hidden" name="uid" value="${answer.uid}">
 						<input type="submit" value="Seuraava kysymys">
 					</form>
-				<#elseif unansweredQuestion.qid == 0>
+				<#elseif unansweredQuestion.qid == 0>	<#-- Jos kysymättömiä kysymyksiä ei ole enää -->
 					<h2>Olet jo vastannut tähän kysymykseen.</h2>
 					<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 				</#if>
