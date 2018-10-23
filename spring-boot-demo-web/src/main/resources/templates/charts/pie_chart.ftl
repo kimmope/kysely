@@ -1,13 +1,14 @@
-<canvas id="pie-canvas" width="360" height="300">
-Vastausten lukumäärät:
-<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
-<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
-<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${oldQuestion.amntAnswVal3}</#if>
-<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${oldQuestion.amntAnswVal4}</#if>
-<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${oldQuestion.amntAnswVal5}</#if>
-</canvas>
-<div id="legend"></div>
-
+<div class="column">
+	<canvas id="pie-canvas" width="360" height="300">
+	Vastausten lukumäärät:
+	<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
+	<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
+	<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${oldQuestion.amntAnswVal3}</#if>
+	<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${oldQuestion.amntAnswVal4}</#if>
+	<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${oldQuestion.amntAnswVal5}</#if>
+	</canvas>
+	<div id="legend"></div>
+</div>
 <script>
 var data = [];
 <#if oldQuestion.colHead1??>data[0] = ${oldQuestion.amntAnswVal1};</#if>
@@ -34,7 +35,7 @@ ctx.fillStyle = "#679ef7";
 ctx.fillRect(0, 0, c.width, c.height);
 
 // Variables
-var colors = ["#ACF", "#8AF", "#CEF", "#68F", "#46F"];
+var colors = ["#EFF3FF", "#6BAED6", "#6BAED6", "#3182BD", "#08519C"];
 var xCenter = 150;
 var yCenter = 150;
 var radius = 100;
@@ -87,9 +88,8 @@ for (var i = 0; i < data.length; i++){
 color_index = 0;
 var legendHTML = "";
 for (var i = 0; i < data.length; i++){
-	legendHTML += "<div id='pie-chart-legend'><span style='background-color:"+colors[color_index++]+";'>&nbsp;</span> "+labels[i]+"</div>";
+	legendHTML += "<div class='legend-text'><span style='background-color:"+colors[color_index++]+";'>&nbsp;</span> "+labels[i]+"</div>";
 }
 document.getElementById("legend").innerHTML = legendHTML;
 
 </script>
-<br>

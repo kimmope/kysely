@@ -1,3 +1,25 @@
+/********** GENERAL CONTENT SETTINGS **********/
+
+body{
+	background-color: #679ef7;
+	color: #FFF;
+}
+
+.container{
+   	text-align:center;
+   	width:100%;
+}
+
+.column, .page-width{
+	display: inline-block;
+	text-align:left;
+	width: 30%;
+}
+
+.page-width{
+	width:100%;
+}
+
 .historic {
     background-color: #CCC;
     color: #444;
@@ -18,19 +40,44 @@
 	border-radius: 5px;
 }
 
+/********** MAP **********/
 #map{
 	height:600;
-	width:300;
+	margin: 0 auto;
+	width:360;
 }
 
-#pie-chart-legend{
+.leaflet-container {
+    background-color:#679ef7 !important;
+}
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.info {
+	color: #FFF;
+    margin: 4px 4px 0;
+}
+
+/********** CHARTS **********/
+.legend-text{
 	background-color: #679ef7;
 	color:#FFF;		
 	font: 16px Calibri, sans-serif;
 	margin: 4px 0;
+	width: 360px;
 }
 
-#pie-chart-legend span{
+.legend-text span{
 	display:inline-block;
 	height:20px;
 	vertical-align: middle;

@@ -1,13 +1,13 @@
-
-<canvas id="bar-canvas" width="500" height="300">
-Vastausten lukumäärät:
-<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
-<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
-<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${oldQuestion.amntAnswVal3}</#if>
-<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${oldQuestion.amntAnswVal4}</#if>
-<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${oldQuestion.amntAnswVal5}</#if>
-</canvas>
-
+<div class="column">
+	<canvas id="bar-canvas" width="500" height="300">
+	Vastausten lukumäärät:
+	<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
+	<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
+	<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${oldQuestion.amntAnswVal3}</#if>
+	<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${oldQuestion.amntAnswVal4}</#if>
+	<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${oldQuestion.amntAnswVal5}</#if>
+	</canvas>
+</div>
 <script>
 var originalValues = [];
 <#if oldQuestion.colHead1??>originalValues[0] = ${oldQuestion.amntAnswVal1};</#if>
@@ -81,6 +81,4 @@ function drawCanvas(c,w){
 	c.width = w;
 }
 
-
 </script>
-<br>
