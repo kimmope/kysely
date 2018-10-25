@@ -1,5 +1,5 @@
 <div class="column">
-	<canvas id="pie-canvas" width="360" height="300">
+	<canvas id="pie-canvas" width="380" height="300">
 	Vastausten lukumäärät:
 	<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
 	<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
@@ -31,17 +31,17 @@ console.log(dataTotal);
 // Canvas with fill color
 var c = document.getElementById("pie-canvas");
 var ctx = c.getContext("2d");
-ctx.fillStyle = "#679ef7";
+ctx.fillStyle = "#09D";
 ctx.fillRect(0, 0, c.width, c.height);
 
 // Variables
 var colors = ["#EFF3FF", "#6BAED6", "#6BAED6", "#3182BD", "#08519C"];
-var xCenter = 150;
+var xCenter = 160;
 var yCenter = 150;
-var radius = 100;
-var labelDistY = 120;
-var labelDistXLeft = 130;
-var labelDistXRight = 105;
+var radius = 120;
+var labelDistY = 140;
+var labelDistXLeft = 160;
+var labelDistXRight = 125;
 var lastEnd = Math.PI * 1.5;
 
 // Sectors
@@ -59,7 +59,7 @@ for (var i = 0; i < data.length; i++){
 	ctx.beginPath();
     ctx.moveTo(xCenter, yCenter);
     ctx.arc(xCenter, yCenter, radius, lastEnd, lastEnd + (Math.PI * 2 * (data[i] / dataTotal)));
-    ctx.strokeStyle="#679ef7";
+    ctx.strokeStyle='rgba(255,255,255,0.2)';
     ctx.lineWidth=4;
     ctx.stroke();
     lastEnd += Math.PI * 2 * (data[i] / dataTotal);
@@ -88,7 +88,7 @@ for (var i = 0; i < data.length; i++){
 color_index = 0;
 var legendHTML = "";
 for (var i = 0; i < data.length; i++){
-	legendHTML += "<div class='legend-text'><span style='background-color:"+colors[color_index++]+";'>&nbsp;</span> "+labels[i]+"</div>";
+	legendHTML += "<div class='legend-text-pie'><span style='background-color:"+colors[color_index++]+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
 }
 document.getElementById("legend").innerHTML = legendHTML;
 

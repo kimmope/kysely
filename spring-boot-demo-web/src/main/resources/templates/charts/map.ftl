@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
-<div class="page-width">
+<div class="page-wide">
 	<div id="map"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
@@ -68,7 +68,7 @@ function answerAmount(provinceId){
 var finProvinces = L.geoJSON(profinland);
 
 // Create basemap
-var map = L.map('map').setView([65.5, 28], null, { zoomControl:false });
+var map = L.map('map').setView([65.5, 29], null, { zoomControl:false });
 
 // Set up basemap
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -161,8 +161,8 @@ info.onAdd = function(map){
 };
 
 info.update = function(props){
-	this._div.innerHTML = props ? '<b>' + props.VARNAME_1 + '</b><br />Vastauksia: ' + answerAmount(props.ID_1) + '<br />'
-        : 'Vie hiiri läänin päälle';
+	this._div.innerHTML = props ? '<span class="legend-text"><b>' + props.VARNAME_1 + '</b></span><br /><span class="legend-text">Vastauksia: ' + answerAmount(props.ID_1) + '</span><br />'
+        : '<span class="legend-text">Vie hiiri läänin päälle</span>';
 };
 
 info.addTo(map);

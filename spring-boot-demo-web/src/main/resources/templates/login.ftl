@@ -1,12 +1,20 @@
 <html>
-	<#include "head.ftl">	
-	<body>
-		<form action="/firstQuestionForm" method="POST">
-			Username:
-			<br>
-			<input type="text" name="username">
-			<br>
-			<input type="submit" value="Login">
-		</form>
-	</body>
+<#include "head.ftl">	
+<body>
+<div class="centerer">	
+	<form action="/firstQuestionForm" method="POST">
+		Käyttäjätunnus
+		<div id="toolRow">
+			<input type="text" name="username" class="text-input">
+		</div>
+		Synnyinlääni
+		<div id="toolRow">
+			<input type="text" name="username" class="text-input">
+		</div>		
+		<div id="toolRow">
+			<input type="submit" class="answer-button" value="Kirjaudu sisään">
+		</div>
+	</form>
+</div>
+</body>
 </html>

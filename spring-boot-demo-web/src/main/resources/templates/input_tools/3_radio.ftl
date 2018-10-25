@@ -30,4 +30,4 @@ for (i = 1; i <= ${uQ.subQuestAmnt}; i++){
 }	
 
 </script>
-<br>
+<input type="submit" class="answer-button" value="Vastaa">

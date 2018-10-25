@@ -1,8 +1,89 @@
-/********** GENERAL CONTENT SETTINGS **********/
+/* Reset all elements to get rid of browser-specific issues */
+abbr,address,audio,b,blockquote,body,caption,cite,code,dd,del,dfn,div,dl,dt,em,fieldset,figure,form,h1,h2,h3,h4,h5,h6,html,i,iframe,img,ins,kbd,label,legend,li,mark,object,ol,p,pre,q,samp,small,span,strong,sub,sup,table,tbody,td,tfoot,th,thead,time,tr,ul,var,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:0 0}html{text-rendering:optimizeLegibility;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}strong{font-weight:700}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}img{border:0}svg:not(:root){overflow:hidden}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:none;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;box-sizing:content-box}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}legend{white-space:normal}textarea{overflow:auto;vertical-align:top}optgroup{font-weight:700}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}
+
+/* TOC
+01 General content settings (fonts, body, containers)
+02 Buttons (links, buttons, radio buttons)
+03 Number input
+04 Range (-slider) input
+05 Map
+06 Tooltips, messages, popups
+07 Charts
+08 Tables
+09 Footer
+10 Debug
+*/
+
+/********** 01 GENERAL CONTENT SETTINGS **********/
 
 body{
-	background-color: #679ef7;
-	color: #FFF;
+	background-color: #09D;
+	font-family: 'Open Sans', sans-serif;
+	color:#FFF;
+}
+
+h1,h2,h3,h4,#rangeValue {
+    font-weight: bold;	
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+h1 { 
+    font-size: 2.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.67em;
+}
+
+h2, #rangeValue {
+    font-size: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.83em;
+}
+
+h3 { 
+    font-size: 1.17em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+h4 { 
+    font-size: 1em;
+    font-weight: normal;
+    margin-top: 2em;
+}
+
+#rangeValue{
+	color:#FFF;	
+	display:inline-block;
+}
+
+a{
+	color: inherit; 
+	text-decoration: none;	
+}
+
+.centerer{
+	min-width: 360px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#question{
+	font-size:2em;
+	text-align:center;
+}
+
+#menu{
+	padding: 10px;
+}
+
+.tool-row{
+	margin: 30px 0;
+	text-align:center;
+	width:100%;
 }
 
 .container{
@@ -10,13 +91,13 @@ body{
    	width:100%;
 }
 
-.column, .page-width{
+.column, .page-wide{
 	display: inline-block;
 	text-align:left;
 	width: 30%;
 }
 
-.page-width{
+.page-wide{
 	width:100%;
 }
 
@@ -33,22 +114,179 @@ body{
 	float:right;
 }
 
-.chart{
-	height:300px;
-	width:600px;
-	border: 1px solid #888;
-	border-radius: 5px;
+/********** 02 BUTTONS (LINKS, BUTTONS, RADIO BUTTONS) **********/
+
+.answer-button, .answer-button-link, .option-button{
+	background: #1AE;
+	border: 2px solid #FFF;
+	border-radius: 5px;	
+	cursor: pointer;
+	margin-top:20px;
+	padding: 10px;
+	text-align:center;
+	width:100%;
 }
 
-/********** MAP **********/
+/*
+#answer-button-link{
+	background: #1AE;
+	border: 2px solid #FFF;
+	border-radius: 5px;	
+	cursor: pointer;
+	padding-top: 10px;
+	text-align:center;
+	width:100%;
+}
+#answer-button-link:hover{
+	background: #2BF;
+}
+*/
+
+.option-button{
+	display:inline-block;
+	margin-right:20px;
+	width:100px;
+}
+
+.answer-button:hover, .answer-button-link:hover, .option-button:hover{
+	background: #0DF;
+}
+
+/********** 03 NUMBER INPUT **********/
+
+.number-input, .text-input{
+	background: #FFF;
+	border: 2px solid #CCC;
+    border-radius: 5px;
+    box-sizing: border-box;	
+	color: #333;
+    display: inline-block;	
+	font-size:1.5em;
+    margin: 10px 0;
+	padding: 5px;
+	text-align:center;
+}
+
+/* Removes up-and down- arrows from number
+input[type=number] {
+	-moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none; 
+	margin: 0; 
+}
+*/
+
+
+/********** 04 Range (-slider) input **********/
+
+.rangeLabelLeft{
+	float:left;
+}
+.rangeLabelRight{
+	float:right;
+}
+
+input[type=range] {
+	background: transparent;
+	-webkit-appearance: none;
+	margin: 18px 0;
+	width: 100%;
+}
+input[type=range]:focus {
+	outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+	width: 100%;
+	height: 11px;
+	cursor: pointer;
+	background: #1AE;
+	border: 2px solid #FFF;
+	border-radius: 5px;
+}
+input[type=range]::-webkit-slider-thumb {
+	border: 2px solid #FFF;
+	height: 35px;
+	width: 15px;
+	border-radius: 5px;
+	background: #1AE;
+	cursor: pointer;
+	-webkit-appearance: none;
+	margin-top: -14px;
+}
+input[type=range]:hover::-webkit-slider-thumb {
+	background: #0DF;
+}
+input[type=range]::-moz-range-track {
+	width: 100%;
+	height: 11px;
+	cursor: pointer;
+	animate: 0.2s;
+	background: #1AE;
+	border-radius: 5px;
+	border: 2px solid #FFF;
+}
+input[type=range]::-moz-range-thumb {
+	border: 2px solid #FFF;
+	height: 35px;
+	width: 15px;
+	border-radius: 5px;
+	background: #1AE;
+	cursor: pointer;
+}
+input[type=range]:hover::-moz-range-thumb {
+	background: #0DF;
+}
+input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+input[type=range]::-ms-track {
+	width: 100%;
+	height: 10px;
+	cursor: pointer;
+	animate: 0.2s;
+	background: transparent;
+	border-color: transparent;
+	border-width: 16px 0;
+	color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+	background: #09D;
+	border: 2px solid #FFF;
+	border-radius: 5px;
+}
+input[type=range]::-ms-fill-upper {
+	background: #09D;
+	border: 2px solid #FFF;
+	border-radius: 5px;
+}
+input[type=range]::-ms-thumb {
+	border: 2px solid #FFF;
+	height: 35px;
+	width: 15px;
+	border-radius: 5px;
+	background: #0DF;
+	cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+	background: #09D;
+}
+input[type=range]:focus::-ms-fill-upper {
+	background: #09D;
+}
+
+
+/********** 05 MAP **********/
+
 #map{
 	height:600;
 	margin: 0 auto;
-	width:360;
+	width:400;
 }
 
 .leaflet-container {
-    background-color:#679ef7 !important;
+    background-color:#09D !important;
 }
 
 .legend {
@@ -68,13 +306,25 @@ body{
     margin: 4px 4px 0;
 }
 
-/********** CHARTS **********/
-.legend-text{
-	background-color: #679ef7;
+/********** 07 CHARTS **********/
+
+.chart{
+	height:300px;
+	width:600px;
+	border: 1px solid #888;
+	border-radius: 5px;
+}
+
+.legend-text, .legend-text-pie{
+	background-color: #09D;
 	color:#FFF;		
 	font: 16px Calibri, sans-serif;
 	margin: 4px 0;
 	width: 360px;
+}
+
+.legend-text-pie{
+	padding-left:120px;	
 }
 
 .legend-text span{
@@ -84,62 +334,9 @@ body{
 	width:20px;
 }
 
-#questionButton {
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    overflow: hidden;
-    padding: 10px;
-    text-align: left;
-    text-decoration: none;
-    transition-duration: 0.2s;
-    -webkit-transition-duration: 0.2s; /* Safari */
+/********** 10 DEBUG **********/
+.debug::before {
+	content: "\A";
+	white-space: pre;
 }
-
-#questionButton {
-    background-color: white;
-    border: 2px solid #e7e7e7;
-    color: black;
-  	width: 360px;    
-}
-
-#questionButton:hover {background-color: #e7e7e7;}
-
-.input-number, .input-radio, .input-range{
-	display:inline;
-    margin: auto;
-    width: 50%;
-    border: 3px solid green;
-    padding: 10px;
-}
-
-.input-label-top, .input-label-bottom, .input-label-min-val, .input-label-max-val{
-    margin: auto;
-    width: 20%;
-    border: 3px solid red;
-    padding: 10px;
-}
-
-.input-label-top{
-	display:block;
-}
-
-.input-label-bottom{
-	display:block;
-}
-
-.input-label-min-val{
-	display:inline;
-}
-
-.input-label-max-val{
-	display:inline;	
-}
-
-
-
-
 

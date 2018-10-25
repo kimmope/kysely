@@ -1,64 +1,73 @@
 <html>
 	<#include "head.ftl">	
 	<body>
-		<div class="container">
-			<form action="/pastAnswers" method="POST" id="pastAmntOAnsws">
-				<input type="hidden" name="uid" value="${answer.uid}">
-				<input type="submit" value="Aikaisemmat vastaukset">
-			</form>		
+		<form action="/pastAnswers" method="POST" id="pastAmntOAnsws">
+			<input type="hidden" name="uid" value="${answer.uid}">
+			<input type="image" id="menu" src="/img/hamburger_white.png" onmouseover="this.src='/img/hamburger_blue.png'" onmouseout="this.src='/img/hamburger_white.png'" border="0" alt="Aikaisemmat vastaukset" />
+		</form>
+		<div class="centerer">
+			<div class="page-wide">
 			<#if resubmitError != true>	<#-- Jos käyttäjä ei ole vielä vastannut kysymykseen -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
 					<form action="/newQuestion" method="POST">
 						<input type="hidden" name="uid" value="${answer.uid}">
-						<input type="submit" value="Seuraava kysymys">
+						<input type="submit" class="answer-button" value="Seuraava kysymys">
 					</form>
 				<#elseif unansweredQuestion.qid == 0>
-					<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
+					<h2>Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 				</#if>
 			<#else>	<#-- Jos käyttäjä on jo vastannut kysymykseen (form resubmission) -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
-					<h2>Olet jo vastannut tähän kysymykseen.</h2>
+					<h3>Olet jo vastannut tähän kysymykseen</h3>
 					<form action="/newQuestion" method="POST">
 						<input type="hidden" name="uid" value="${answer.uid}">
-						<input type="submit" value="Seuraava kysymys">
+						<input type="submit" class="answer-button" value="Seuraava kysymys">
 					</form>
 				<#elseif unansweredQuestion.qid == 0>	<#-- Jos kysymättömiä kysymyksiä ei ole enää -->
-					<h2>Olet jo vastannut tähän kysymykseen.</h2>
-					<h2>Hienoa! Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
+					<h2>Olet jo vastannut tähän kysymykseen</h2>
+					<h2>Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
 				</#if>
-			</#if>		
-			<div class="column">
-				Kysymys oli:
-				<br>
-				<h3>${oldQuestion.question}</h3>
-				<br>
-				Vastauksesi oli:
-				<br>
-				<#if answer.answer1 == "v1">	<#-- Change answer value to text-format for viewing -->
-					<h1>${oldQuestion.colHead1}</h1>
-				<#elseif answer.answer1 == "v2">
-					<h1>${oldQuestion.colHead2}</h1>
-				<#elseif answer.answer1 == "v3">
-					<h1>${oldQuestion.colHead3}</h1>
-				<#elseif answer.answer1 == "v4">
-					<h1>${oldQuestion.colHead4}</h1>
-				<#elseif answer.answer1 == "v5">
-					<h1>${oldQuestion.colHead5}</h1>
-				<#else>
-					<h1>${answer.answer1}</h1>								
-				</#if>			
-				<br>
-				Vastausten lukumäärä:
-				<br>
-				<h2>${oldQuestion.amntAnswTot}</h2>
-				<br>
-			</div>					
-			<#if oldQuestion.type == 1 || oldQuestion.type == 2>
-			<div class="column">
-				Vastauksien keskiarvo:
-				<h2>${oldQuestion.average?c}</h2>
+			</#if>
 			</div>
-			<#elseif oldQuestion.type == 3>
+			<div class="page-wide">
+				<h4>Kysymys oli</h4>
+				<h2>${oldQuestion.question}</h2>
+				<h4>Vastauksesi oli</h4>
+				<h2>
+				<#if answer.answer1 == "v1">	<#-- Change answer value to text-format for viewing -->
+					${oldQuestion.colHead1}
+				<#elseif answer.answer1 == "v2">
+					${oldQuestion.colHead2}
+				<#elseif answer.answer1 == "v3">
+					${oldQuestion.colHead3}
+				<#elseif answer.answer1 == "v4">
+					${oldQuestion.colHead4}
+				<#elseif answer.answer1 == "v5">
+					${oldQuestion.colHead5}
+				<#else>
+					${answer.answer1}								
+				</#if>
+				</h2>	
+			</div>
+			<#if oldQuestion.type == 1 || oldQuestion.type == 3>
+				<div class="column">
+					<h4>Vastausten lukumäärä</h4>
+					<h2>${oldQuestion.amntAnswTot}</h2>			
+					<h4>Vastausten keskiarvo</h4>
+					<h1>${oldQuestion.average?c}</h1>
+					<h4>Vastausten mediaani</h4>
+					<h2>TODO</h2>
+				</div>
+				<#if oldQuestion.type == 3>
+					<#include "charts/bar_chart.ftl">
+				</#if>	
+			<#elseif oldQuestion.type == 4>
+				<div class="column">
+					<h4>Vastausten lukumäärä</h4>
+					<h2>${oldQuestion.amntAnswTot}</h2>			
+					<h4>Vastausten moodi</h4>
+					<h2>TODO</h2>
+				</div>
 				<#include "charts/bar_chart.ftl">
 				<#include "charts/pie_chart.ftl">
 				<#include "charts/map.ftl">
