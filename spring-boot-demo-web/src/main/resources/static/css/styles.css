@@ -3,14 +3,14 @@ abbr,address,audio,b,blockquote,body,caption,cite,code,dd,del,dfn,div,dl,dt,em,f
 
 /* TOC
 01 General content settings (fonts, body, containers)
-02 Buttons (links, buttons, radio buttons)
+02 Buttons (links, buttons)
 03 Number input
 04 Range (-slider) input
-05 Map
-06 Tooltips, messages, popups
-07 Charts
-08 Tables
-09 Footer
+05 Select input
+06 Map
+07 Tooltips, messages, popups
+08 Charts
+09 Tables
 10 Debug
 */
 
@@ -50,7 +50,7 @@ h3 {
 h4 { 
     font-size: 1em;
     font-weight: normal;
-    margin-top: 2em;
+    margin-top: 1.4em;
 }
 
 #rangeValue{
@@ -80,10 +80,14 @@ a{
 	padding: 10px;
 }
 
-.tool-row{
+.toolRow{
 	margin: 30px 0;
 	text-align:center;
 	width:100%;
+}
+
+.textLeft{
+	text-align:left;
 }
 
 .container{
@@ -164,7 +168,6 @@ a{
 	font-size:1.5em;
     margin: 10px 0;
 	padding: 5px;
-	text-align:center;
 }
 
 /* Removes up-and down- arrows from number
@@ -277,7 +280,62 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 
-/********** 05 MAP **********/
+/********** 05 Select input **********/
+
+
+.custom-select {
+	margin-top: 10px;  	
+	position: relative;
+}
+.custom-select select {
+  display: none; /*hide original SELECT element:*/
+}
+.select-selected {
+  background-color: #1AE;
+}
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 20px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  padding: 10px 5px;
+  border: 2px solid #FFF;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: #1AE;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+.select-items div:hover, .same-as-selected {
+  background-color: #0DF;
+}
+
+
+/********** 06 MAP **********/
 
 #map{
 	height:600;
@@ -306,7 +364,7 @@ input[type=range]:focus::-ms-fill-upper {
     margin: 4px 4px 0;
 }
 
-/********** 07 CHARTS **********/
+/********** 08 CHARTS **********/
 
 .chart{
 	height:300px;
