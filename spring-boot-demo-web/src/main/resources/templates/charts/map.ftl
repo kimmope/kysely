@@ -29,6 +29,7 @@ var classes = [];
 //<#if oldQuestion.colHead4??>classes[3] = '${oldQuestion.colHead4}';</#if>
 //<#if oldQuestion.colHead5??>classes[4] = '${oldQuestion.colHead5}';</#if>
 -->
+// DATALASKUT
 
 // TESTIARVOJA
 dataProvinces[0] = 1;
@@ -46,6 +47,8 @@ amntProvinces[4] = 23;
 classes[0] = "Ei";
 classes[1] = "Kyllä";
 
+
+// Return correct amounts of answers per province to info-window
 function answerAmount(provinceId){
 	if(provinceId == 979){
 		return amntProvinces[0];
@@ -67,8 +70,10 @@ function answerAmount(provinceId){
 // Load geoJSON
 var finProvinces = L.geoJSON(profinland);
 
+
 // Create basemap
 var map = L.map('map').setView([65.5, 29], null, { zoomControl:false });
+
 
 // Set up basemap
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -87,7 +92,7 @@ map.zoomControl.remove();
 map.dragging.disable();
 
 
-// Select color for each polygon according to data value
+// Select color according to amount of classes
 function getColor(c){
 	if(classes.length == 5){
 		return c > 4.2 ? '#08519C':

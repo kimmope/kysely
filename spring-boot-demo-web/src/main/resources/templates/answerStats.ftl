@@ -68,7 +68,6 @@
 					<h4>Vastausten moodi</h4>
 					<h2>TODO</h2>
 				</div>
-				<#include "charts/bar_chart.ftl">
 				<#include "charts/pie_chart.ftl">
 				<#include "charts/map.ftl">
 			</#if>

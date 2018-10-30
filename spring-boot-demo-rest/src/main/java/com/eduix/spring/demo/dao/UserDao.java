@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import Rowmappers.QuestionRowMapper;
 import Rowmappers.UserRowMapper;
 import queta.Answer;
+import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
@@ -93,35 +94,24 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	public User checkUser(String username) {
 		try {
 			log.info("!******** REST Dao try checkUser username : " + username);
-			return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new UserRowMapper(), username);
+			return jdbcTemplate.queryForObject("SELECT users.*, provinces.province FROM users JOIN provinces USING(pid) WHERE username=?", new UserRowMapper(), username);
 		}
 		catch(EmptyResultDataAccessException e){
 			log.info("!******** REST Dao catch checkUser username : " + username);
 			throw new RuntimeException(e);			// Needs to be changed to RuntimeException for UserController
 		}
 	}
-	public User createNewUser(String username) {
-		log.info("!******** REST Dao createNewUser username : " + username);
-		jdbcTemplate.update("INSERT INTO users(username,amntUserAnsw,score) VALUES (?, ?, ?)",username,0,0);
-		return jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new UserRowMapper(), username);
+	public User createNewUser(User user) {
+		log.info("!******** REST Dao createNewUser username : " + user.getUsername() + " pid: " + user.getPid() );
+		jdbcTemplate.update("INSERT INTO users(username,pid,amntUserAnsw,score) VALUES (?, ?, ?, ?)",user.getUsername(),user.getPid(),0,0);
+		return jdbcTemplate.queryForObject("SELECT users.*, provinces.province FROM users JOIN provinces USING(pid) WHERE username=?", new UserRowMapper(), user.getUsername());
 	}
 
-// GET EXISTING USER
-	private static RowMapper<User> ROW_MAPPER_3 = new RowMapper<User>(){
-		public User mapRow(ResultSet resultSet, int row) throws SQLException {
-			return new User(
-			resultSet.getInt("uid"),
-			resultSet.getString("username"),
-			resultSet.getInt("amntUserAnsw"),
-			resultSet.getInt("score"));
-		}
-	};
 	public User getUser(int uid) {
-		return jdbcTemplate.queryForObject("SELECT * FROM users WHERE uid=?", ROW_MAPPER_3, uid);
+		return jdbcTemplate.queryForObject("SELECT users.*, provinces.province FROM users JOIN provinces USING(pid) WHERE uid=?", new UserRowMapper(), uid);
 	}	
 	
 // IF OLD QUESTIONS FOR THE USER EXIST RETURN THEM IN LIST OR ELSE RETURN NULL
-// TESTING PAGE-SPECIFIC OBJECT CREATED FROM DATA OF DIFFERENT DATABASES
 	private static RowMapper<PastQandA> ROW_MAPPER_4 = new RowMapper<PastQandA>() {			// Creates new RowMapper-list-object for returning the list of queried PastQandAs
 		public PastQandA mapRow(ResultSet resultSet, int row) throws SQLException {
 			return new PastQandA(
@@ -139,6 +129,67 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
 	}
 	
+// CALCULATING FIGURES FOR ANSWER STATISTICS
+	public AnswerStats calculateAnswerStatistics(int qid) {
+		int amountTot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ?",Integer.class,qid);
+		int amountP1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979",Integer.class,qid);
+		int amountP2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980",Integer.class,qid);
+		int amountP3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 981",Integer.class,qid);
+		int amountP4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982",Integer.class,qid);
+		int amountP5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983",Integer.class,qid);
+		double meanAll = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer1),0) FROM user_answers WHERE qid = ?", Double.class, qid);
+		double meanP1 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979", Double.class, qid);
+		double meanP2 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980", Double.class, qid);
+		double meanP3 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 981", Double.class, qid);
+		double meanP4 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982", Double.class, qid);
+		double meanP5 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983", Double.class, qid);
+		double mediAll = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer1),0) FROM user_answers WHERE qid = ?", Double.class, qid);
+		double mediP1 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979", Double.class, qid);
+		double mediP2 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980", Double.class, qid);
+		double mediP3 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 981", Double.class, qid);
+		double mediP4 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982", Double.class, qid);
+		double mediP5 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983", Double.class, qid);
+		double modeAll = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(answer1),0) FROM user_answers WHERE qid = ?", Double.class, qid);
+		double modeP1 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979", Double.class, qid);
+		double modeP2 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980", Double.class, qid);
+		double modeP3 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 981", Double.class, qid);
+		double modeP4 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982", Double.class, qid);
+		double modeP5 = (double)jdbcTemplate.queryForObject("SELECT ROUND(AVG(ua.answer1),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983", Double.class, qid);
+		int class1Tot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO01'",Integer.class,qid);
+		int class1P1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 979",Integer.class,qid);
+		int class1P2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 980",Integer.class,qid);
+		int class1P3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 981",Integer.class,qid);
+		int class1P4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 982",Integer.class,qid);
+		int class1P5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 983",Integer.class,qid);
+		int class2Tot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO02'",Integer.class,qid);
+		int class2P1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = 979",Integer.class,qid);
+		int class2P2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = 980",Integer.class,qid);
+		int class2P3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = 981",Integer.class,qid);
+		int class2P4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = 982",Integer.class,qid);
+		int class2P5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = 983",Integer.class,qid);
+		int class3Tot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO03'",Integer.class,qid);
+		int class3P1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = 979",Integer.class,qid);
+		int class3P2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = 980",Integer.class,qid);
+		int class3P3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = 981",Integer.class,qid);
+		int class3P4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = 982",Integer.class,qid);
+		int class3P5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = 983",Integer.class,qid);
+		int class4Tot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO04'",Integer.class,qid);
+		int class4P1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = 979",Integer.class,qid);
+		int class4P2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = 980",Integer.class,qid);
+		int class4P3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = 981",Integer.class,qid);
+		int class4P4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = 982",Integer.class,qid);
+		int class4P5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = 983",Integer.class,qid);
+		int class5Tot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO05'",Integer.class,qid);
+		int class5P1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = 979",Integer.class,qid);
+		int class5P2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = 980",Integer.class,qid);
+		int class5P3 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = 981",Integer.class,qid);
+		int class5P4 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = 982",Integer.class,qid);
+		int class5P5 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = 983",Integer.class,qid);
+		AnswerStats AnswerStats = new AnswerStats(amountTot, amountP1, amountP2, amountP3, amountP4, amountP5, meanAll, meanP1, meanP2, meanP3, meanP4, meanP5, mediAll, mediP1, mediP2, mediP3, mediP4, mediP5, modeAll, modeP1, modeP2, modeP3, modeP4, modeP5, class1Tot, class1P1, class1P2, class1P3, class1P4, class1P5, class2Tot, class2P1, class2P2, class2P3, class2P4, class2P5, class3Tot, class3P1, class3P2, class3P3, class3P4, class3P5, class4Tot, class4P1, class4P2, class4P3, class4P4, class4P5,
+				class5Tot, class5P1, class5P2, class5P3, class5P4, class5P5);
+		return AnswerStats;
+	}
+	
 // PREVENTING RESUBMISSION OF THE FORM
 	public boolean checkIfAnswered(int uid, int qid) {
 		try{
@@ -151,6 +202,18 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	}
 	
 }
+
+//!!!! VOIKO TÄMÄN KANSSA KÄYTTÄÄ MYÖS UserRowMapper.java:a???!!!!!!!
+//GET EXISTING USER 
+//	private static RowMapper<User> ROW_MAPPER_3 = new RowMapper<User>(){
+//		public User mapRow(ResultSet resultSet, int row) throws SQLException {
+//			return new User(
+//			resultSet.getInt("uid"),
+//			resultSet.getString("username"),
+//			resultSet.getInt("amntUserAnsw"),
+//			resultSet.getInt("score"));
+//		}
+//	};
 
 //GET NEW QUESTION OLD WORKING
 //	private static RowMapper<Question> QUESTION_ROW_MAPPER = new RowMapper<Question>(){	// Builds query-results into lists

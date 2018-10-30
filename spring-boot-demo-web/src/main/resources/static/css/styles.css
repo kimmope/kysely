@@ -64,11 +64,11 @@ a{
 }
 
 .centerer{
-	min-width: 360px;
-	position: fixed;
-	top: 50%;
+	top: 10%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	min-width: 360px;
+	position: absolute;
+	transform: translate(-50%, 0%);
 }
 
 #question{
@@ -96,6 +96,7 @@ a{
 }
 
 .column, .page-wide{
+	vertical-align: top;
 	display: inline-block;
 	text-align:left;
 	width: 30%;

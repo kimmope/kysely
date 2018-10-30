@@ -48,12 +48,12 @@ public class UserController {
 	// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
 	@PostMapping("/firstQuestionForm")
 	public String checkUserForm(Model model, User user) {
-		log.info("!******** WUC checkUserForm1");
-		User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-		log.info("!******** WUC checkUserForm2");
+		log.info("!******** WUC checkUserForm1 ");
+		User checkedUser = userClient.checkUser(user);	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
+		log.info("!******** WUC checkUserForm2, checkedUser.getUid(): " + checkedUser.getUid());
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		log.info("!******** WUC checkUserForm3");
+		log.info("!******** WUC checkUserForm3, unansweredQuestion.getUid(): " + unansweredQuestion.getQuestion());
 		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
 			log.info("!******** Web user first question if unansweredQuestions");

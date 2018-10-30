@@ -2,21 +2,21 @@
 <#include "head.ftl">	
 <body>
 <div class="centerer">	
-	<form action="/firstQuestionForm" method="POST">
+	<form action="/firstQuestionForm" method="POST" id="loginForm">
 		<div class="textLeft">
 			<h4 class="left">Käyttäjätunnus</h4>
 			<input type="text" name="username" class="text-input">
 		</div>
 		<div class="textLeft">
-			<h4>Synnyinlääni</h4>
+			<h4>Mistä läänistä olet kotoisin</h4>
 			<div class="custom-select">
-			  <select>
-			    <option value="0">Valitse</option>
-			    <option value="1">Länsi-Suomen lääni</option>
-			    <option value="2">Itä-Suomen lääni</option>
-			    <option value="3">Lapin lääni</option>
-			    <option value="4">Oulun lääni</option>
-			    <option value="5">Etelä-Suomen lääni</option>
+			  <select name="pid" form="loginForm" required>
+			    <option value="" disabled selected>Valitse</option>
+			    <option value="983">Länsi-Suomen lääni</option>
+			    <option value="979">Itä-Suomen lääni</option>
+			    <option value="980">Lapin lääni</option>
+			    <option value="981">Oulun lääni</option>
+			    <option value="982">Etelä-Suomen lääni</option>
 			  </select>
 			</div>
 		</div>			

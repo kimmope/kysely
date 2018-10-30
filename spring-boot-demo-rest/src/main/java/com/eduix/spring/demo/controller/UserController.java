@@ -35,8 +35,6 @@ public class UserController {
 	@Autowired
 	private UserDao dao; 								// Esitellään Database Access Object nimeltä "dao"
 	
-//OWN PROJECT
-	
 	@GetMapping("/{uid}")						
 	public ResponseEntity<Question> getNotAskedQuestion(@PathVariable("uid") int uid) {
 		log.info("!******** RUC getNotAskedQuestion 1 uid: " + uid);
@@ -58,17 +56,17 @@ public class UserController {
 	}
 	
 	@PostMapping("/checkUser")	// Kuuntelee /checkUser-pagea ja siirtää sille tulevan kutsun allaolevalle funktiolle. Jos lähettää raakadataa niin <, consumes={application/json"}> 
-	public ResponseEntity<?> checkUser(@RequestBody String username) { // @RequestBodyä ei tarvita kuin raakadatan lähetykseen
-		User user = new User();
+	public ResponseEntity<?> checkUser(@RequestBody User user) { // @RequestBodyä ei tarvita kuin raakadatan lähetykseen
+		User newUser = new User();
 		try {
-			log.info("!******** RUC try checkUser: " + username);
-			user = dao.checkUser(username); // Testataan onko useria
+			log.info("!******** RUC try checkUser: " + user.getUsername());
+			newUser = dao.checkUser(user.getUsername()); // Testataan onko useria, turhaan tehdään try catch täällä vaan testin vuoksi
 		} 
 		catch (RuntimeException e) {
-			log.info("!******** RUC catch checkUser: " + username);
-			user = dao.createNewUser(username);	// Jos useria ei ole, niin tehdään sellainen
+			log.info("!******** RUC catch checkUser: " + newUser.getUsername());
+			newUser = dao.createNewUser(user);	// Jos useria ei ole, niin tehdään sellainen
 		}
-		return ResponseEntity.ok(user);
+		return ResponseEntity.ok(newUser);
 	}
 	
 	@GetMapping("/user/{uid}")				
@@ -102,9 +100,6 @@ public class UserController {
 		return dao.checkIfAnswered(uid,qid);
 	}	
 
-// TEST CALCULATING AVERAGE FROM NUMERICAL DATA
-	
-	
 }
 
 //@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)			// Tässä yritetään estää RESTin kaatuminen formin resubmittauksessa, mutta ei toimi kuten WEBissä

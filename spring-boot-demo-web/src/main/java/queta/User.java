@@ -3,11 +3,22 @@ package queta;
 public class User {
 	private int uid;
 	private String username;
+	private int pid;
 	private int amntUserAnsw;
 	private int score;
+	private String province;		
 	
 	public User(){
+	}
 		
+	public User(int uid, int pid, String username, int amntUserAnsw, int score, String province) {
+		super();
+		this.uid = uid;
+		this.pid = pid;		
+		this.username = username;
+		this.amntUserAnsw = amntUserAnsw;
+		this.score = score;
+		this.province = province;		
 	}
 
 	public int getUid() {
@@ -16,6 +27,14 @@ public class User {
 
 	public void setUid(int uid) {
 		this.uid = uid;
+	}
+
+	public int getPid() {
+		return pid;
+	}
+
+	public void setPid(int pid) {
+		this.pid = pid;
 	}
 
 	public String getUsername() {
@@ -42,4 +61,11 @@ public class User {
 		this.score = score;
 	}
 	
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}	
 }

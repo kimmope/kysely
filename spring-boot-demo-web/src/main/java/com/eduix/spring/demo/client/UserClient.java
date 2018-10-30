@@ -25,8 +25,6 @@ public class UserClient {
 	@Autowired						// Spring dependency injectionin luoma automaattinen yhteys allaolevaan constructoriin, kenttään tai setteriin
 	RestTemplate restTemplate;		// keskeinen spring-luokka clientin http-kytkentöihin. alusta (template) sisältää metodeja kuten delete, get, post...
 
-// OWN PROJECT:
-	
 	public Question getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
 		Question question = restTemplate.getForObject("/"+uid, Question.class);
 		return question;
@@ -43,9 +41,9 @@ public class UserClient {
 		restTemplate.postForObject("/answer", answer ,Answer.class);	// luodaan /answer-osoite ja kutsutaan restiä
 	}
 
-	public User checkUser(String username) {
-		log.info("!******** WUCli checkUser username: " + username);
-		User user = restTemplate.postForObject("/checkUser", username, User.class);
+	public User checkUser(User checkUser) {
+		log.info("!******** WUCli checkUser username: " + checkUser.getUsername());
+		User user = restTemplate.postForObject("/checkUser", checkUser, User.class);
 		return user;
 	}
 	
