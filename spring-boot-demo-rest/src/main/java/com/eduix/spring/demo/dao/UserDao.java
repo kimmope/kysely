@@ -129,8 +129,8 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
 	}
 	
-// CALCULATING FIGURES FOR ANSWER STATISTICS
-	public AnswerStats calculateAnswerStatistics(int qid) {
+// CALCULATING FIGURES FOR ANSWER STATISTICS-CLASS
+	public AnswerStats getAnswerStats(int qid) {
 		int amountTot = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers WHERE qid = ?",Integer.class,qid);
 		int amountP1 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979",Integer.class,qid);
 		int amountP2 = (int)jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980",Integer.class,qid);

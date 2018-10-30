@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import queta.Answer;
+import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
@@ -49,6 +50,10 @@ public class UserClient {
 	
 	public User getUser(int uid) {
 		return restTemplate.getForObject("/user/" + uid, User.class);
+	}
+	
+	public AnswerStats getAnswerStats(int qid) {
+		return restTemplate.getForObject("/answerStats/" + qid, AnswerStats.class);
 	}	
 	
 	public List<PastQandA> getPastQandAs(int uid) {	

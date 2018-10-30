@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 //import com.eduix.spring.demo.domain.DemoUser;
 
 import queta.Answer;
+import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
@@ -99,6 +100,8 @@ public class UserController {
 			model.addAttribute("resubmitError",resubmitError);
 			userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
 			model.addAttribute("answer", answer);
+			AnswerStats answerStats = userClient.getAnswerStats(answer.getQid());
+			model.addAttribute("answerStats",answerStats);
 			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
 			log.info("!******** average: " + oldQuestion.getAverage());

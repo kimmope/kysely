@@ -14,6 +14,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import com.eduix.spring.demo.dao.UserDao;
 import queta.Answer;
+import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
@@ -74,6 +75,11 @@ public class UserController {
 		return ResponseEntity.ok(dao.getUser(uid));
 	}		
 
+	@GetMapping("/answerStats/{qid}")
+	public ResponseEntity<AnswerStats> getAnswerStats(@PathVariable("qid") int qid) {
+		return ResponseEntity.ok(dao.getAnswerStats(qid));
+	}		
+	
 	@GetMapping("/answerHistory/{uid}")
 	public ResponseEntity<List<PastQandA>> getPastQandAs(@PathVariable("uid") int uid) {
 		try {
