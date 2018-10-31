@@ -18,7 +18,7 @@ document.getElementById("input-tools").innerHTML =
 	`<#if uQ.colHead1??><div class='rangeLabelLeft'>${uQ.colHead1}</div></#if>
 	<#if uQ.colHead2??><div class='rangeLabelRight'>${uQ.colHead2}</div></#if>
 	<#if uQ.rowHead1??><div id='rowLabel1'>${uQ.rowHead1}</div></#if>
-	<input type='range' name='answer1' id='rangeId' class='inputRange' oninput='rangeValue.value = rangeId.value'
+	<input type='range' name='answer' id='rangeId' class='inputRange' oninput='rangeValue.value = rangeId.value'
 		<#if uQ.min??>min='${uQ.min}'</#if>
 		<#if uQ.min??>max='${uQ.max}'</#if>
 		<#if uQ.step??>step='${uQ.step}'</#if>

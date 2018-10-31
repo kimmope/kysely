@@ -12,11 +12,11 @@
 			<div class="custom-select">
 			  <select name="pid" form="loginForm" required>
 			    <option value="" disabled selected>Valitse</option>
-			    <option value="983">Länsi-Suomen lääni</option>
 			    <option value="979">Itä-Suomen lääni</option>
 			    <option value="980">Lapin lääni</option>
 			    <option value="981">Oulun lääni</option>
 			    <option value="982">Etelä-Suomen lääni</option>
+			    <option value="983">Länsi-Suomen lääni</option>
 			  </select>
 			</div>
 		</div>			

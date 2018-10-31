@@ -9,10 +9,11 @@ public class Answer {
 	private String answer3;
 	private String answer4;
 	private String answer5;
+	private String answer;
 
 	public Answer() {}
 
-	public Answer(int uid, int qid, String answer1, String answer2, String answer3, String answer4, String answer5) {
+	public Answer(int uid, int qid, String answer1, String answer2, String answer3, String answer4, String answer5, String answer) {
 		super();
 		this.uid = uid;
 		this.qid = qid;
@@ -21,6 +22,7 @@ public class Answer {
 		this.answer3 = answer3;
 		this.answer4 = answer4;
 		this.answer5 = answer5;
+		this.answer = answer;
 	}
 
 	public int getUid() {
@@ -79,4 +81,11 @@ public class Answer {
 		this.answer5 = answer5;
 	}
 	
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}	
 }

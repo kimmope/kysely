@@ -58,7 +58,7 @@ public class UserController {
 		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
 			log.info("!******** Web user first question if unansweredQuestions");
-			return "answerStats";
+			return "answerPage";
 		}
 		else {	// Jos on kysymätön kysymys, esitetään se
 			return "question";
@@ -71,7 +71,7 @@ public class UserController {
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
 		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
-			return "answerStats";
+			return "answerPage";
 		}
 		else {
 			return "question";							// Jos on kysymätön kysymys, esitetään se
@@ -86,13 +86,15 @@ public class UserController {
 			boolean resubmitError = true;
 			model.addAttribute("resubmitError",resubmitError);
 			model.addAttribute("answer", answer);
+			AnswerStats answerStats = userClient.getAnswerStats(answer.getQid());
+			model.addAttribute("answerStats",answerStats);			
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
 			log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
 			log.info("!******** WUCon. /answer 3 resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
-			return "answerStats";
+			return "answerPage";
 		}
 		else {
 			log.info("!******** WUCon checkIfAlreadyAnswered 1 no resubmit error");
@@ -109,7 +111,7 @@ public class UserController {
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
 			log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
-			return "answerStats";
+			return "answerPage";
 		}
 	}
 	
@@ -134,211 +136,3 @@ public class UserController {
 		return "pastQuestion";
 	}
 }	
-// EN SAANUT PELAAMAAN MONIDATAOLIOTA
-//@PostMapping("/firstQuestionForm")
-//public String checkUserForm(Model model, User user) {
-//	log.info("!******** WUContr. /firstQuestionForm checkUserForm 0 username: " + user.getUsername());
-//	User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-//	log.info("!******** WUContr. /firstQuestionForm checkUserForm 1 uid: " + checkedUser.getUid());
-//	Question2 unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-//	model.addAttribute("uQ", unansweredQuestion);
-//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
-//		log.info("!******** WUContr. /firstQuestionForm 2, no unanswered questions");
-//		return "answerStats";
-//	}
-//	else {	// Jos on kysymätön kysymys, esitetään se
-//		log.info("!******** WUContr. /firstQuestionForm 2, unanswered question qid: " + unansweredQuestion.getQid());
-//		return "question";
-//	}
-//}	
-//@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
-//public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
-//	log.info("!******** Web UserController newQuestion 1 uid: " + uid);
-//	Question2 unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-//	model.addAttribute("uQ", unansweredQuestion);
-//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
-//		log.info("!******** WUContr. /newQuestion 2, no unansweredQuestion qid: " + unansweredQuestion.getQid());
-//		return "answerStats";
-//	}
-//	else {
-//		log.info("!******** WUContr. /newQuestion 2, unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
-//		return "question";							// Jos on kysymätön kysymys, esitetään se
-//	}
-//}	
-//@PostMapping("/answer")
-//public String answerForm(Model model, Answer answer) {
-//	if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent resubmission of the form
-//		log.info("!******** WUCon. /answer 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
-//		boolean resubmitError = true;
-//		model.addAttribute("resubmitError",resubmitError);
-//		model.addAttribute("answer", answer);
-//		Question2 oldQuestion = userClient.getQuestion(answer.getQid());
-//		log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
-//		model.addAttribute("oldQuestion", oldQuestion);
-//		Question2 unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
-//		log.info("!******** WUCon. /answer 3 resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
-//		model.addAttribute("unansweredQuestion", unansweredQuestion);		
-//		return "answerStats";
-//	}
-//	else {
-//		log.info("!******** WUCon. /answer 1 no resubmit error");
-//		boolean resubmitError = false;
-//		model.addAttribute("resubmitError",resubmitError);
-//		userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
-//		model.addAttribute("answer", answer);
-//		log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
-//		Question2 oldQuestion = userClient.getQuestion(answer.getQid());
-//		log.info("!******** WUCon. /answer 3 no resubmit error oldQuestion.qid: " + oldQuestion.getQid());
-//		model.addAttribute("oldQuestion", oldQuestion);
-//		Question2 unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
-//		log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getUid() +" "+ unansweredQuestion.getQid());
-//		model.addAttribute("unansweredQuestion", unansweredQuestion);		
-//		return "answerStats";
-//	}	
-
-//@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)	// Testiä formin resubmittauksen estämiseen
-//public String resubmitError() {					
-//	return "resubmitError";						
-//}		
-
-//@ExceptionHandler(HttpServerErrorException.class)	// Ohjaa formin resubmittausvirheen webissä, mutta REST kaatuu
-//public String resubmitError() {					
-//	return "resubmitError";						
-//}	
-
-//BACKUP
-//@PostMapping("/loginForm")
-//public String checkUserForm(Model model, User user) {	// Model tulee taikuudesta, user loginformista
-//	User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-//	model.addAttribute("user",checkedUser);
-//	int uid = checkedUser.getUid();
-//	return "redirect:/newQuestion/"+uid;
-//}
-//BACKUP
-//	@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
-//	public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
-//		Question question = userClient.getNotAskedQuestion(uid);	// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-//		model.addAttribute("question", question);
-//		model.addAttribute("uid", uid);
-//		// JOS POST EI RATKAISE BACK-NAPPULAN CRASHAUSONGELMAA NIIN JOS MAHDOLLISTA NIIN TARKASTA TÄSSÄ ONKO SIVULLETULIJAN UID/QID JO VASTATTU
-//		if(question.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan viestisivulle
-//			return "answerStats";
-//		}
-//		else {
-//			return "question";			// Jos on kysymätön kysymys, esitetään se
-//		}
-//	}
-
-
-// ORIGINAL CODES + TESTS
-//	@PostMapping("/options")
-//	public String options(Model model, Answer answer) {
-//		userClient.getOldUserAnswers(answer);
-//		model.addAttribute("answer", answer);
-//		Question question = userClient.getQuestion(answer.getQid());
-//		model.addAttribute("question", question);
-//		return "answerStats";
-//	}
-
-// RESPONSE ERROREIDEN KÄSITTELYTESTI
-//@ResponseStatus(value=HttpStatus.NOT_FOUND)
-//public userNotFoundException extends RuntimeException{
-//	
-//}
-
-//@GetMapping("/userspage")							// kun tässä mainitulle "userspage"-sivulle (voi olla mikä vaan) tullaan lähetetään get_kutsu, tämä annotaatio lähettää sen allaolevalle funktiolle
-//public String getUsers(Model model) {				// parametrina annetaan MVC:n java model-object
-//	List<DemoUser> listOfUsers = userClient.getUsers(); 	// userClientin getUsers-funktion tulos asetetaan DemoUser-olioina arraylistiin nimeltä "listOfUsers"
-//	model.addAttribute("listOfUsers", listOfUsers);				// lisää modeliin "listOfUsers"-nimisen model attribuutin jonka arvo on listOfUsers
-//	return "userlist";								// palauttaa userlist- nimisen ftl-tiedoston
-//}
-
-// Tässä testailtiin testi kuinka palautetaan tietokannasta erroreita 
-//@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
-//public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
-//	try {
-//		DemoUser user = userClient.getUser(username);
-//		model.addAttribute("user", user);
-//		return "user";
-//	}
-//	catch(RestClientException e){
-//		return "noSuchUser";
-//	}
-//	DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla
-//	if (user == null) {
-//		return "noSuchUser";
-//	}
-//	else {
-//		model.addAttribute("user", user);			// lisätään modeliin user-olio
-//		return "user";	
-//	}
-//}
-
-//@GetMapping("/user/{username}")						// Kun sivu lähettää rakentumisvaiheessaan http get-kutsun, @GetMapping- annotaatio lähettää mainitun sisällön ({username}) allaolevalle funktiolle
-//public String getUser(Model model, @PathVariable("username") String username) { // parametreina springin model, @pathvariable lukee urlin aaltosulkeiden välisen osan ja asettaa sen stringiin nimeltä username. ("username")a ei tarvita mikäli sana pysyy samana kuin lähetettävä string
-//	DemoUser user = userClient.getUser(username);	// Tehdään DemoUser-luokan olio user käyttämällä useClientin getUser-metodia username-parametrilla
-//	if (user == null) {
-//		return "noSuchUser";
-//	}
-//	else {
-//		model.addAttribute("user", user);			// lisätään modeliin user-olio
-//		return "user";	
-//	}
-//}	
-
-//@RequestMapping("/adduser")							// luo perustietopolun ja kutsuu seuraavaa funktiota. Kaikki http-kutsut /-polulla ohjataan home-metodiin
-//public String adduser() {							// parametriton adduser-funktio joka palauttaa stringin
-//	return "adduser";								// Palauttaa string-tyyppisen adduser-ftl-sivun
-//}
-//@PostMapping("/adduserform")						// vähentää seuraavan funktiokutsun koskemaan ainoastaan adduserform-formista lähetettyä post-kutsua
-//public String addUserForm(DemoUser demouser) {		// stringin palauttava funktio jonka parametrina demouser-olio
-//	userClient.addUser(demouser);					// kutsutaan userClientin adduser-funktiota demouser-parametrille
-//	return "redirect:/userspage";					// kun palataan userclientista mennään uuteen osoitteeseen, tässä: localhost:62000/userspage.
-//}
-//
-///** TRAINING CODE: ------------------ */
-//@GetMapping("/edituser/{username}")
-//public String getEditUser(Model model, @PathVariable("username") String username) {
-//	DemoUser user = userClient.getUser(username);
-//	model.addAttribute("user", user);
-//	return "edituser";
-//}	
-//@PostMapping("/edituserform")
-//public String editUserForm(DemoUser demouser) {
-//	userClient.editUser(demouser);
-//	return "redirect:/userspage";
-//}	
-//
-//@GetMapping("/deleteuser")							// vähentää seuraavan funktiokutsun koskemaan ainoastaan deleteuser-sivun käynnistyksen laukaisemaa GET-tyyppistä tietoa (tässä: "deleteuser?Id=${user.username}) 
-//public String deleteUser(@RequestParam String Id) {	// stringin palauttava deleteUser-metodi jonka parametrina @RequestParamin keräämä parametri (tässä a hrefin Id)
-//	userClient.deleteUser(Id);						// kutsutaan userClientin deleteUseria Id:llä joka juuri noudettiin userspagelta
-//	return "redirect:/userspage";					// palatessa siirrytään uudelle sivulle (reloadataan) userspage
-//}
-
-// FIGHT AGAINST RESUBMISSION OF THE FORM
-//@PostMapping("/firstQuestionForm")
-//public String checkUserForm(Model model, User user) {
-//	User checkedUser = userClient.checkUser(user.getUsername());	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-//	model.addAttribute("uid", checkedUser.getUid());		
-//	Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-//	model.addAttribute("unansweredQuestion", unansweredQuestion);
-//	if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
-//		log.info("!******** Web user first question if unansweredQuestions");
-//		return "answerStats";
-//	}
-//	else {	// Jos on kysymätön kysymys, esitetään se
-//		log.info("!******** Web UserController there is unansweredQuestion: "+unansweredQuestion.getQid());
-//		if(userClient.checkIfAlreadyAnswered(checkedUser.getUid(), unansweredQuestion.getQid())){ // Jos yrittää uudelleenlähettää formia
-//			log.info("!******** Web UserController there is resubmitError: "+checkedUser.getUid()+" "+unansweredQuestion.getQid());
-//			return "resubmitError";
-//		}
-//		else {
-//			log.info("!******** Web UserController there is no resubmitError: "+checkedUser.getUid()+" "+unansweredQuestion.getQid());
-//			return "question";
-//		}
-//	}
-//}	
-
-
-
-
