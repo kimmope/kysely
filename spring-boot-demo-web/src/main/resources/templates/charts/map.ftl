@@ -7,46 +7,46 @@
 
 <script>
 
-var amntProvinces = [];
+// KUNKIN LÄÄNIN ENITEN OSUMIA SAANEET LUOKAT TAULUKKOON
 var dataProvinces = [];
+<#if answerStats.classModeP1??>dataProvinces[0] = "${answerStats.classModeP1}";</#if>
+<#if answerStats.classModeP2??>dataProvinces[1] = "${answerStats.classModeP2}";</#if>
+<#if answerStats.classModeP3??>dataProvinces[2] = "${answerStats.classModeP3}";</#if>
+<#if answerStats.classModeP4??>dataProvinces[3] = "${answerStats.classModeP4}";</#if>
+<#if answerStats.classModeP5??>dataProvinces[4] = "${answerStats.classModeP5}";</#if>
+// REMOVE EXTRA CHARACTERS FROM THE BEGINNING OF THE CLASS NAME (E.G. AO02 = 2)
+for (var i = 0; i < dataProvinces.length; i++) { 
+	dataProvinces[i] = dataProvinces[i].slice(3);
+}
+
+// KUNKIN LÄÄNIN VASTAUSTEN YHTEISLUKUMÄÄRÄT TAULUKKOON
+var amntProvinces = [];
+<#if answerStats.amountP1??>amntProvinces[0] = ${answerStats.amountP1};</#if>
+<#if answerStats.amountP2??>amntProvinces[1] = ${answerStats.amountP2};</#if>
+<#if answerStats.amountP3??>amntProvinces[2] = ${answerStats.amountP3};</#if>
+<#if answerStats.amountP4??>amntProvinces[3] = ${answerStats.amountP4};</#if>
+<#if answerStats.amountP5??>amntProvinces[4] = ${answerStats.amountP5};</#if>
+
+// LUOKKIEN NIMET TAULUKKOON
 var classes = [];
-<#--  
-//<#if oldQuestion.colHead1??>amntProvinces[0] = ${oldQuestion.amntAnswPro1};</#if>
-//<#if oldQuestion.colHead2??>amntProvinces[1] = ${oldQuestion.amntAnswPro2};</#if>
-//<#if oldQuestion.colHead3??>amntProvinces[2] = ${oldQuestion.amntAnswPro3};</#if>
-//<#if oldQuestion.colHead4??>amntProvinces[3] = ${oldQuestion.amntAnswPro4};</#if>
-//<#if oldQuestion.colHead5??>amntProvinces[4] = ${oldQuestion.amntAnswPro5};</#if>
+<#if oldQuestion.colHead1??>classes[0] = '${oldQuestion.colHead1}';</#if>
+<#if oldQuestion.colHead2??>classes[1] = '${oldQuestion.colHead2}';</#if>
+<#if oldQuestion.colHead3??>classes[2] = '${oldQuestion.colHead3}';</#if>
+<#if oldQuestion.colHead4??>classes[3] = '${oldQuestion.colHead4}';</#if>
+<#if oldQuestion.colHead5??>classes[4] = '${oldQuestion.colHead5}';</#if>
 
-//<#if oldQuestion.colHead1??>dataProvinces[0] = ${oldQuestion.amntAnswVal1};</#if>
-//<#if oldQuestion.colHead2??>dataProvinces[1] = ${oldQuestion.amntAnswVal2};</#if>
-//<#if oldQuestion.colHead3??>dataProvinces[2] = ${oldQuestion.amntAnswVal3};</#if>
-//<#if oldQuestion.colHead4??>dataProvinces[3] = ${oldQuestion.amntAnswVal4};</#if>
-//<#if oldQuestion.colHead5??>dataProvinces[4] = ${oldQuestion.amntAnswVal5};</#if>
-
-//<#if oldQuestion.colHead1??>classes[0] = '${oldQuestion.colHead1}';</#if>
-//<#if oldQuestion.colHead2??>classes[1] = '${oldQuestion.colHead2}';</#if>
-//<#if oldQuestion.colHead3??>classes[2] = '${oldQuestion.colHead3}';</#if>
-//<#if oldQuestion.colHead4??>classes[3] = '${oldQuestion.colHead4}';</#if>
-//<#if oldQuestion.colHead5??>classes[4] = '${oldQuestion.colHead5}';</#if>
--->
-// DATALASKUT
-
-// TESTIARVOJA
-dataProvinces[0] = 1;
-dataProvinces[1] = 2;
-dataProvinces[2] = 1;
-dataProvinces[3] = 2;
-dataProvinces[4] = 2;
-
-amntProvinces[0] = 12;
-amntProvinces[1] = 23;
-amntProvinces[2] = 159;
-amntProvinces[3] = 4;
-amntProvinces[4] = 23;
-
-classes[0] = "Ei";
-classes[1] = "Kyllä";
-
+// DEBUG
+console.log("amntProvinces[0] =" + amntProvinces[0]);
+console.log("amntProvinces[1] =" + amntProvinces[1]);
+console.log("amntProvinces[2] =" + amntProvinces[2]);
+console.log("amntProvinces[3] =" + amntProvinces[3]);
+console.log("amntProvinces[4] =" + amntProvinces[4]);
+console.log("dataProvinces[0] =" + dataProvinces[0]);
+console.log("dataProvinces[1] =" + dataProvinces[1]);
+console.log("dataProvinces[2] =" + dataProvinces[2]);
+console.log("dataProvinces[3] =" + dataProvinces[3]);
+console.log("dataProvinces[4] =" + dataProvinces[4]);
+console.log("classes.length = " + classes.length);
 
 // Return correct amounts of answers per province to info-window
 function answerAmount(provinceId){
@@ -104,7 +104,7 @@ function getColor(c){
 	else if(classes.length == 4){
 		return c > 3.25 ? '#2171b5':
 	   	c > 2.5  ? '#6BAED6':
-	   	c > 1.75  ? '#BDD7E7':
+	   	c > 1.75 ? '#BDD7E7':
 	   	'#EFF3FF';		
 	}
 	else if(classes.length == 3){

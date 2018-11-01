@@ -18,8 +18,9 @@ abbr,address,audio,b,blockquote,body,caption,cite,code,dd,del,dfn,div,dl,dt,em,f
 
 body{
 	background-color: #09D;
-	font-family: 'Open Sans', sans-serif;
 	color:#FFF;
+	font-family: 'Open Sans', sans-serif;
+/*	border: 1px solid #F00; */
 }
 
 h1,h2,h3,h4,#rangeValue {
@@ -63,21 +64,25 @@ a{
 	text-decoration: none;	
 }
 
+.center{
+	text-align:center;
+    margin: auto;
+    width: 80%;	
+}
+
 .centerer{
-	top: 10%;
+	top:10%;
 	left: 50%;
+	margin-bottom: 50px;
 	min-width: 360px;
 	position: absolute;
 	transform: translate(-50%, 0%);
+/*	border: 2px solid #0F0; */
 }
 
 #question{
 	font-size:2em;
 	text-align:center;
-}
-
-#menu{
-	padding: 10px;
 }
 
 .toolRow{
@@ -102,6 +107,12 @@ a{
 	width: 30%;
 }
 
+.divider{
+	height: 20px;
+	border-bottom: 1px solid #CCC;
+	margin-bottom: 10px;
+}
+
 .page-wide{
 	width:100%;
 }
@@ -111,12 +122,16 @@ a{
     color: #444;
 }
 
+/*
 #pastAnswers{
 	float:right;
 }
+*/
 
 #pastAmntOAnsws{
-	float:right;
+    position: fixed;
+    right: 10px;
+    top: 10px;
 }
 
 /********** 02 BUTTONS (LINKS, BUTTONS, RADIO BUTTONS) **********/
@@ -130,6 +145,26 @@ a{
 	padding: 10px;
 	text-align:center;
 	width:100%;
+}
+
+.answer-button2{
+    position: fixed;
+    right: 150px;
+    top: 300px;
+	background: #0DF;
+	border: 2px solid #FFF;
+	border-radius: 5px;	
+	cursor: pointer;
+	margin-top:20px;
+	padding: 10px;
+	text-align:center;
+	width:100px;
+	height:70px;
+	white-space: normal;
+}
+
+.answer-button2:hover{
+	background: #1AE;
 }
 
 /*
@@ -339,6 +374,7 @@ input[type=range]:focus::-ms-fill-upper {
 /********** 06 MAP **********/
 
 #map{
+/*	border: 1px solid #F00;	*/
 	height:600;
 	margin: 0 auto;
 	width:400;
@@ -383,7 +419,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .legend-text-pie{
-	padding-left:120px;	
+	left:0px;	
 }
 
 .legend-text span{
