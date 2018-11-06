@@ -56,7 +56,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		log.info("!******** REST DAO addAnswer 1");
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer1,answer) VALUES (?,?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer1(), answer.getAnswer());
 //		log.info("!******** REST DAO addAnswer 2 uid ja answer1: " + answer.getUid() + answer.getAnswer1());
-//		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
+		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
 //		log.info("!******** REST DAO addAnswer 3");
 //		jdbcTemplate.update("UPDATE questions SET amntAnswTot = amntAnswTot + 1 WHERE qid = ?",answer.getQid());
 //		log.info("!******** REST DAO addAnswer 4");
@@ -119,14 +119,14 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 				resultSet.getInt("qid"),					
 				resultSet.getString("question"),
 				resultSet.getTimestamp("timeOfAnswer"),				
-				resultSet.getString("answer1"));
+				resultSet.getString("answer"));
 		}
 	};	
 	public List<PastQandA> getPastQandAs(int uid) {			// Hae lista aikaisemmista kysymys-vastauspareista
-		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid);	// List queryllä 
+		return jdbcTemplate.query("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid);	// List queryllä 
 	}
 	public PastQandA getPastQandA(int uid, int qid) {		// Hae yksi kysymys-vastauspari
-		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer1 FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
+		return jdbcTemplate.queryForObject("SELECT u.uid, u.qid, q.question, u.timeOfAnswer, u.answer FROM user_answers u INNER JOIN questions q ON u.qid=q.qid WHERE u.uid=? AND q.qid=? ORDER BY u.timeOfAnswer DESC",ROW_MAPPER_4,uid,qid);	//	Objekti queryForObjectillä
 	}
 	
 // CALCULATING FIGURES FOR ANSWER STATISTICS-CLASS
@@ -205,7 +205,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 // PREVENTING RESUBMISSION OF THE FORM
 	public boolean checkIfAnswered(int uid, int qid) {
 		try{
-			jdbcTemplate.queryForObject("SELECT answer1 FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
+			jdbcTemplate.queryForObject("SELECT answer FROM user_answers WHERE uid = ? AND QID = ?",String.class, uid,qid);
 			return true;
 		}
 		catch(EmptyResultDataAccessException e){

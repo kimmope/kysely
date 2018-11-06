@@ -78,7 +78,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/answer")
+	@PostMapping("/answer")	// Käyttäjän vastaus kantaan
 	public String answerForm(Model model, Answer answer) {
 		log.info("!*** WUCon checkIfAlreadyAnswered 0 uid, answer: " + answer.getUid() +" "+ answer.getAnswer1());
 		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent form resubmission
@@ -121,7 +121,7 @@ public class UserController {
 		model.addAttribute("pastQandAs", pastQandAs);	// VARMISTA ETTÄ NULL-VASTAUS KÄSITELLÄÄN OIKEIN
 		User user = userClient.getUser(uid);
 		model.addAttribute("user", user);
-		model.addAttribute("uid", uid);	// TÄMÄ PITI TEHDÄ KOSKA FORMISSA user.uid TULKATTIIN STRINGIKSI??? MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
+		model.addAttribute("uid", uid);	// TÄMÄ PITI TEHDÄ KOSKA FORMISSA user.uid TULKATTIIN STRINGIKSI. MUUALLA TOIMII (ESIM: answer.uid ja pastQandA.uid)
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
 		model.addAttribute("unansweredQuestion", unansweredQuestion);		
 		return "history";
@@ -131,6 +131,10 @@ public class UserController {
 	public String oldAnswer(Model model, @RequestParam int uid, @RequestParam int qid){
 		PastQandA pastQandA = userClient.getPastQandA(uid,qid);	// Toimiiko function overloading userclientissä
 		model.addAttribute("pastQandA",pastQandA);
+		Question oldQuestion = userClient.getQuestion(qid);	// Hae vanha kysymys
+		model.addAttribute("oldQuestion", oldQuestion);
+		AnswerStats answerStats = userClient.getAnswerStats(qid);
+		model.addAttribute("answerStats",answerStats);		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
 		model.addAttribute("unansweredQuestion", unansweredQuestion);			
 		return "pastQuestion";

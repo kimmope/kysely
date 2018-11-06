@@ -35,4 +35,4 @@ for (i = 2; i <= ${uQ.subQuestAmnt}; i++){
 }	-->
 
 </script>
-<input type="submit" class="answer-button" value="Lähetä vastauksesi">
+<input type="submit" class="answer-button" value="Lähetä vastaus">

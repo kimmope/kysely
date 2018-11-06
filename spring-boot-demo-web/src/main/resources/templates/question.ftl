@@ -2,12 +2,12 @@
 <#include "head.ftl">	
 <body>
 <div class="centerer">
-	<h2>${uQ.question}</h2>
+	<div id="question">${uQ.question}</div>
 	<div id="tool-row">
 		<form action="/answer" method="POST">
 			<input type="hidden" name="uid" value="${uid}">
 			<input type="hidden" name="qid" value="${uQ.qid}">
-			<div id="input-tools"></div>
+			<div id="input-tools"></div> <#-- Tool(s) will be put in this div with JavaScript -->
 			<#if uQ.type == 1>
 				<#include "input_tools/1_number.ftl">
 			<#elseif uQ.type == 2>
@@ -20,9 +20,5 @@
 		</form>
 	</div>
 </div>
-<span class="debug">Debug type = ${uQ.type}</span>
-<span class="debug">Debug amount_answs = ${uQ.amntAnswTot}</span>
-<span class="debug">Debug question.qid: ${uQ.qid}</span>
-<span class="debug">Debug answer.uid: ${uid}</span>
 </body>
 </html>

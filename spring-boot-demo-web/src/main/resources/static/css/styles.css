@@ -23,8 +23,13 @@ body{
 /*	border: 1px solid #F00; */
 }
 
+p{
+	color:#FFF;
+	font-family: 'Open Sans', sans-serif;
+}
+
 h1,h2,h3,h4,#rangeValue {
-    font-weight: bold;	
+    font-weight: normal;	
     display: block;
     margin-left: 0;
     margin-right: 0;
@@ -86,7 +91,7 @@ a{
 }
 
 .toolRow{
-	margin: 30px 0;
+	margin: 30px auto;
 	text-align:center;
 	width:100%;
 }
@@ -95,6 +100,7 @@ a{
 	text-align:left;
 }
 
+/* TSEKKAA ONKO KÄYTÖSSÄ MISSÄÄN!!!*/
 .container{
    	text-align:center;
    	width:100%;
@@ -107,10 +113,20 @@ a{
 	width: 30%;
 }
 
-.divider{
-	height: 20px;
+.divider, .divider-with-line{
+	margin: 40px 0;
+	width: 100%;
+}
+
+.divider-with-line{
 	border-bottom: 1px solid #CCC;
-	margin-bottom: 10px;
+}
+
+#spirit{
+	border: 1px solid #CCC;
+	border-radius: 10px;
+	margin: 40px auto;	
+	padding: 20px;
 }
 
 .page-wide{
@@ -118,8 +134,8 @@ a{
 }
 
 .historic {
-    background-color: #CCC;
-    color: #444;
+    background-color: #6E6E6E;
+    color: #FFF;
 }
 
 /*
@@ -136,51 +152,19 @@ a{
 
 /********** 02 BUTTONS (LINKS, BUTTONS, RADIO BUTTONS) **********/
 
-.answer-button, .answer-button-link, .option-button{
+.answer-button, .option-button{
 	background: #1AE;
 	border: 2px solid #FFF;
 	border-radius: 5px;	
 	cursor: pointer;
-	margin-top:20px;
+	margin-top: 40px;
 	padding: 10px;
 	text-align:center;
-	width:100%;
 }
 
-.answer-button2{
-    position: fixed;
-    right: 150px;
-    top: 300px;
-	background: #0DF;
-	border: 2px solid #FFF;
-	border-radius: 5px;	
-	cursor: pointer;
-	margin-top:20px;
-	padding: 10px;
-	text-align:center;
-	width:100px;
-	height:70px;
-	white-space: normal;
+.answer-button{
+	display:inline-block;
 }
-
-.answer-button2:hover{
-	background: #1AE;
-}
-
-/*
-#answer-button-link{
-	background: #1AE;
-	border: 2px solid #FFF;
-	border-radius: 5px;	
-	cursor: pointer;
-	padding-top: 10px;
-	text-align:center;
-	width:100%;
-}
-#answer-button-link:hover{
-	background: #2BF;
-}
-*/
 
 .option-button{
 	display:inline-block;
@@ -188,11 +172,90 @@ a{
 	width:100px;
 }
 
-.answer-button:hover, .answer-button-link:hover, .option-button:hover{
+.answer-button:hover, .option-button:hover{
 	background: #0DF;
 }
 
+.history-q-btn{
+	background: #BABDB6;
+	border: 2px solid #FFF;
+	border-radius: 5px;	
+	cursor: pointer;
+	max-width:300px;	
+	overflow: hidden; 
+	padding: 5px;
+	text-align:center;
+	text-overflow: ellipsis;
+	white-space: nowrap;	
+}
+
+.history-q-btn:hover{
+	background: #888A85;
+}
+
+.next-button, .next-button-history{
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+	border: 2px solid #FFF;    
+	border-radius: 5px;	
+	cursor: pointer;
+	margin-top:20px;
+	padding: 10px;
+	text-align:center;
+	width:100px;
+	height:70px;
+	white-space: normal;    
+}
+
+.next-button{
+	animation: blinker 1s infinite alternate;	
+	background-color: #0DF;
+}
+
+@keyframes blinker {  
+    from {
+    	background-color: #0DF;
+    	color:#045;
+    	}
+    to {
+    	background-color: #1AE;
+    	color:#FFF;
+    	}
+}
+
+.next-button:hover{
+    animation: step-end;
+}
+
+.next-button-history{
+	animation: blinkerHistory 1s infinite alternate;	
+	background-color: #666;
+}
+
+@keyframes blinkerHistory {  
+    from {
+    	background-color: #666;
+    	color:#999;
+    	}
+    to {
+    	background-color: #EEE;
+    	color:#FFF;
+    	}
+}
+
+.next-button-history:hover{
+    animation: step-end;
+}
+
+
 /********** 03 NUMBER INPUT **********/
+
+#tool-row{
+	margin: 50 0;
+	text-align: center;
+	width: 100%;
+}
 
 .number-input, .text-input{
 	background: #FFF;
@@ -200,10 +263,10 @@ a{
     border-radius: 5px;
     box-sizing: border-box;	
 	color: #333;
-    display: inline-block;	
 	font-size:1.5em;
-    margin: 10px 0;
+    margin: 10 auto;
 	padding: 5px;
+	max-width: 360px;
 }
 
 /* Removes up-and down- arrows from number
@@ -375,9 +438,9 @@ input[type=range]:focus::-ms-fill-upper {
 
 #map{
 /*	border: 1px solid #F00;	*/
-	height:600;
+	height: 600;
 	margin: 0 auto;
-	width:400;
+	width: 400;
 }
 
 .leaflet-container {
@@ -393,7 +456,7 @@ input[type=range]:focus::-ms-fill-upper {
     height: 18px;
     float: left;
     margin-right: 8px;
-    opacity: 0.7;
+    opacity: 1;
 }
 
 .info {
@@ -427,6 +490,23 @@ input[type=range]:focus::-ms-fill-upper {
 	height:20px;
 	vertical-align: middle;
 	width:20px;
+}
+
+
+/********** 09 TABLES **********/
+
+table.historyTable td, table.historyTable th{
+	padding: 5px 10px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+th.q-no-title{
+	font-family:arial;
+}
+
+td.q-no{
+	text-align:center;
 }
 
 /********** 10 DEBUG **********/

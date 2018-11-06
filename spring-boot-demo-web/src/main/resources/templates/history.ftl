@@ -1,41 +1,40 @@
 <html>
+	<#setting locale="fi_FI">
 	<#include "head.ftl">	
 	<body class="historic">
-	DEBUG: user.uid=${user.uid} <script>console.log(typeof ${user.uid});</script>
-	<br>
-	DEBUG: uid=${uid} <script>console.log(typeof ${uid});</script>
-	<br>
-		<div class="container">
-			<h1>Old questions and answers</h1>
-			<span id="nameField">Username: <span id="username">${user.username}</span></span>
-			<span id="scoreField">Score: <span id="userScore">${user.score}</span></span>
-			<br>
-			<span id="amntOfAnswsField">Amount of answered questions: <span id="amntAnsws">${user.amntUserAnsw}</span></span>
-			<h2>View past questions and answers:</h2>
-			<table id="oldQuestionsTable">
-				<thead><tr><th>Past answered questions</th><th>Time of answer</th></tr></thead>
+	<#if unansweredQuestion.qid != 0>
+		<form action="/newQuestion" method="POST" id="nextQuestionForm">
+			<input type="hidden" name="uid" value="${uid}">
+			<input type="submit" class="next-button" value="Seuraava kysymys">
+		</form>
+	</#if>	
+		<div class="centerer">
+			<h2>Perustiedot</h2>
+			<h4>Käyttäjätunnus: </h4><h3>${user.username}</h3>
+			<h4>Pistemäärä: </h4><h3>${user.score}</h3>
+			<h4>Vastattujen kysymysten lukumäärä: </h4><h3>${user.amntUserAnsw}</h3>
+			<div class="divider-with-line"></div>
+			<h2>Aikaisemmat kysymykset ja vastaukset</h2>
+			<table class="historyTable">
+				<thead>
+					<tr><th class="q-no-title">№</th><th>Vastattu kysymys</th><th width="100">Päivämäärä</th></tr>
+				</thead>
 				<tbody>
 					<#list pastQandAs as pastQandA>
 					<tr>
-						<td>DEBUG: pastQandA.uid=${pastQandA.uid} <script>console.log(typeof ${pastQandA.uid});</script></td>
-						<td id="pastQuestion">
+						<td class="q-no">${pastQandA.qid}</td>
+						<td>
 							<form action="/oldAnswer" method="POST">
 								<input type="hidden" name="uid" value="${pastQandA.uid}">
 								<input type="hidden" name="qid" value="${pastQandA.qid}">
-								<input type="submit" id="questionButton" value="${pastQandA.question}">
+								<input type="submit" class="history-q-btn" value="${pastQandA.question}">
 							</form>						
 						</td>
-						<td id="answerDate">${pastQandA.timeOfAnswer}</td>
+						<td align=right>${pastQandA.timeOfAnswer?date}</td>
 					</tr>
 					</#list>
 				</tbody>
 			</table>
-			<#if unansweredQuestion.qid != 0>
-			<form action="/newQuestion" method="POST">
-				<input type="hidden" name="uid" value="${uid}">
-				<input type="submit" value="Seuraava kysymys">
-			</form>
-			</#if>
 		</div>
 	</body>
 </html>

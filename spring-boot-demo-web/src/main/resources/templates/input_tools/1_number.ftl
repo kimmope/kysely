@@ -5,4 +5,4 @@ document.getElementById("input-tools").innerHTML =
 	<#if uQ.defVal1??>value = '${uQ.defVal1}'</#if>>
 	<#if uQ.colHead1??><div id='numberInputValue'>${uQ.colHead1}</div></#if>`;
 </script>
-<input type="submit" class="answer-button" value="Vastaa">
+<input type="submit" class="answer-button" value="Lähetä vastaus">

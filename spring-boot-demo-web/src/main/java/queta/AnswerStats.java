@@ -1,5 +1,4 @@
 package queta;
-import java.sql.Timestamp;
 
 public class AnswerStats {
 	private int amountTot;

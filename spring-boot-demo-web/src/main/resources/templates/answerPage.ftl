@@ -5,33 +5,36 @@
 			<input type="hidden" name="uid" value="${answer.uid}">
 			<input type="image" id="menu" src="/img/hamburger_white.png" onmouseover="this.src='/img/hamburger_blue.png'" onmouseout="this.src='/img/hamburger_white.png'" border="0" alt="Aikaisemmat vastaukset" />
 		</form>
-		<input type="submit" class="answer-button2" value="Seuraava kysymys">		
+		<form action="/newQuestion" method="POST" id="nextQuestionForm">
+			<input type="hidden" name="uid" value="${answer.uid}">
+			<input type="submit" class="next-button" value="Seuraava kysymys">
+		</form>		
 		<div class="centerer">
 			<div class="page-wide">
 			<#if resubmitError != true>	<#-- Jos käyttäjä ei ole vielä vastannut kysymykseen -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
-					<form action="/newQuestion" method="POST">
-						<input type="hidden" name="uid" value="${answer.uid}">
-						<#-- <input type="submit" class="answer-button" value="Seuraava kysymys"> -->
-					</form>
 				<#elseif unansweredQuestion.qid == 0>
-					<h2 class="center">Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
+					<h2 class="center">Olet vastannut kaikkiin kysymyksiin!</h2><br>
+					<h2 class="center">Tervetuloa uudelleen ensi viikolla!</h2>
+					<div class="divider-with-line"></div>
+					<#-- Poista next-question-nappi -->
+					<script>document.getElementById("nextQuestionForm").outerHTML = "";</script>					
 				</#if>
 			<#else>	<#-- Jos käyttäjä on jo vastannut kysymykseen (form resubmission) -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
 					<h3 class="center">Olet jo vastannut tähän kysymykseen!</h3>
-					<form action="/newQuestion" method="POST">
-						<input type="hidden" name="uid" value="${answer.uid}">
-						<#-- <input type="submit" class="answer-button" value="Seuraava kysymys"> -->
-					</form>
+					<div class="divider-with-line"></div>
 				<#elseif unansweredQuestion.qid == 0>	<#-- Jos kysymättömiä kysymyksiä ei ole enää -->
-					<h2 class="center">Olet jo vastannut tähän kysymykseen!</h2>
-					<h2 class="center">Olet vastannut kaikkiin kysymyksiin. Tervetuloa uudelleen ensi viikolla!</h2>
+					<h2 class="center">Olet jo vastannut kaikkiin kysymyksiin!</h2><br>
+					<h2 class="center">Tervetuloa uudelleen ensi viikolla!</h2>
+					<div class="divider-with-line"></div>
+					<#-- Poista next-question-nappi -->
+					<script>document.getElementById("nextQuestionForm").outerHTML = "";</script>
 				</#if>
 			</#if>
 			</div>
 			<div class="page-wide">
-				<h4>Kysymys oli</h4>
+				<h4>Kysymys</h4>
 				<h2>${oldQuestion.question}</h2>
 				<h4>Vastauksesi oli</h4>
 				<h2>
@@ -49,13 +52,14 @@
 					${answer.answer}								
 				</#if>
 				</h2>
+				<div id="spirit">
 				<#if oldQuestion.type == 1 || oldQuestion.type == 2>
-					<h4>Vastauksemme (keskiarvo)</h4>
-					<h1 class="center">${answerStats.meanAll}</h1>
-					<h4>Vastauksemme (mediaani)</h4>
-					<h1 class="center">${answerStats.mediAll?c}</h1>
+					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
+					<h1 class="center">${answerStats.meanAll?c}</h1><div class="center">(keskiarvo)</div>
+					<br>
+					<h1 class="center">${answerStats.mediAll?c}</h1><div class="center">(mediaani)</div>
 				<#elseif oldQuestion.type == 4 || oldQuestion.type == 5>
-					<h4>Vastauksemme:</h4>
+					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
 					<h1 class="center">
 					<#if answerStats.classModeAll == "0">	
 						${answerStats.modeAll?c}
@@ -73,9 +77,10 @@
 						</#if>			
 					</#if>
 					</h1>
-				</#if>					
+				</#if>
+				</div>				
 			</div>
-			<div class="divider"></div>
+			<div class="divider-with-line"></div>
 			<#if oldQuestion.type == 4 || oldQuestion.type == 5>
 				<div class="center">
 				<#if oldQuestion.type == 4>
@@ -86,9 +91,9 @@
 				<#include "charts/map.ftl">			
 				</div>
 			</#if>
+			<div class="divider-with-line"></div>
 			<div class="center">
 				<h4>Vastausten lukumäärä</h4>
-				<h2>${oldQuestion.amntAnswTot}</h2>
 				<h2>${answerStats.amountTot}</h2>
 			</div>
 		</div>	

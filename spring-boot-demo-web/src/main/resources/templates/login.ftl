@@ -4,7 +4,7 @@
 <div class="centerer">	
 	<form action="/firstQuestionForm" method="POST" id="loginForm">
 		<div class="textLeft">
-			<h4 class="left">Käyttäjätunnus</h4>
+			<h4>Käyttäjätunnus</h4>
 			<input type="text" name="username" class="text-input">
 		</div>
 		<div class="textLeft">

@@ -1,21 +1,22 @@
 <canvas id="pie-canvas" width="380" height="300">
+<#-- This section is shown if canvas is not supported -->
 Vastausten lukumäärät:
-<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${oldQuestion.amntAnswVal1}</#if>	
-<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${oldQuestion.amntAnswVal2}</#if>
-<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${oldQuestion.amntAnswVal3}</#if>
-<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${oldQuestion.amntAnswVal4}</#if>
-<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${oldQuestion.amntAnswVal5}</#if>
+<#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${answerStats.amountP1}</#if>	
+<#if oldQuestion.colHead2??><h2>${oldQuestion.colHead2}</h2>${answerStats.amountP2}</#if>
+<#if oldQuestion.colHead3??><h2>${oldQuestion.colHead3}</h2>${answerStats.amountP3}</#if>
+<#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${answerStats.amountP4}</#if>
+<#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${answerStats.amountP5}</#if>
 </canvas>
 </div>
 <div id="legend"></div>
 <div class="center">
 <script>
 var data = [];
-<#if oldQuestion.colHead1??>data[0] = ${oldQuestion.amntAnswVal1};</#if>
-<#if oldQuestion.colHead2??>data[1] = ${oldQuestion.amntAnswVal2};</#if>
-<#if oldQuestion.colHead3??>data[2] = ${oldQuestion.amntAnswVal3};</#if>
-<#if oldQuestion.colHead4??>data[3] = ${oldQuestion.amntAnswVal4};</#if>
-<#if oldQuestion.colHead5??>data[4] = ${oldQuestion.amntAnswVal5};</#if>
+<#if oldQuestion.colHead1??>data[0] = ${answerStats.amountP1};</#if>
+<#if oldQuestion.colHead2??>data[1] = ${answerStats.amountP2};</#if>
+<#if oldQuestion.colHead3??>data[2] = ${answerStats.amountP3};</#if>
+<#if oldQuestion.colHead4??>data[3] = ${answerStats.amountP4};</#if>
+<#if oldQuestion.colHead5??>data[4] = ${answerStats.amountP5};</#if>
 
 var labels = [];
 <#if oldQuestion.colHead1??>labels[0] = '${oldQuestion.colHead1}';</#if>
@@ -35,7 +36,7 @@ ctx.fillStyle = "#09D";
 ctx.fillRect(0, 0, c.width, c.height);
 
 // Variables
-var colors = ["#EFF3FF", "#6BAED6", "#6BAED6", "#3182BD", "#08519C"];
+//var colors = ["#EFF3FF", "#BDD7E7", "#6BAED6", "#3182BD", "#08519C"];
 var xCenter = 190;
 var yCenter = 150;
 var radius = 120;
@@ -44,9 +45,46 @@ var labelDistXLeft = 165;
 var labelDistXRight = 125;
 var lastEnd = Math.PI * 1.5;
 
+// Select color according to amount of classes
+function getColor(c){
+	if (data.length == 5){
+		switch(c){
+			case 0: return '#EFF3FF';
+			case 1: return '#BDD7E7';	
+			case 2: return '#6BAED6';
+			case 3: return '#3182BD';
+			case 4: return '#08519C';
+		}
+	}
+	else if (data.length == 4){
+		switch(c){
+			case 0: return '#EFF3FF';	
+			case 1: return '#BDD7E7';
+			case 2: return '#6BAED6';
+			case 3: return '#2171b5';
+		}
+	}
+	else if (data.length == 3){
+		switch(c){
+			case 0: return '#DEEBF7';	
+			case 1: return '#9ECAE1';
+			case 2: return '#3182BD';
+		}
+	}
+	else{
+		switch(c){
+			case 0: return '#DEEBF7';	
+			case 1: return '#3182BD';
+		}
+	}
+}
+
+// DEBUG
+console.log("data.length = " + data.length);
+
 // Sectors
 for (var i = 0; i < data.length; i++){
-	ctx.fillStyle = colors[i];
+	ctx.fillStyle = getColor(i);
     ctx.beginPath();
 	ctx.moveTo(xCenter, yCenter);
 	ctx.arc(xCenter, yCenter, radius, lastEnd, lastEnd + (Math.PI * 2 * (data[i] / dataTotal)));
@@ -88,7 +126,7 @@ for (var i = 0; i < data.length; i++){
 color_index = 0;
 var legendHTML = "";
 for (var i = 0; i < data.length; i++){
-	legendHTML += "<div class='legend-text-pie'><span style='background-color:"+colors[color_index++]+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
+	legendHTML += "<div class='legend-text-pie'><span style='background-color:"+getColor(i)+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
 }
 document.getElementById("legend").innerHTML = legendHTML;
 
