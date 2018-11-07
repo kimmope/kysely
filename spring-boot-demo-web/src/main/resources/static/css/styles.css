@@ -69,26 +69,29 @@ a{
 	text-decoration: none;	
 }
 
+/*JÄRKEISTÄ NÄMÄ CONTAINERIT !!!*/
 .center{
 	text-align:center;
     margin: auto;
-    width: 80%;	
+    width: 80%;
+/*	border: 2px solid #F00; */    
 }
 
 .centerer{
 	top:10%;
 	left: 50%;
 	margin-bottom: 50px;
-	min-width: 360px;
+	min-width: 400px;
 	position: absolute;
 	transform: translate(-50%, 0%);
 /*	border: 2px solid #0F0; */
 }
 
-#question{
-	font-size:2em;
-	text-align:center;
-}
+/* TSEKKAA ONKO KÄYTÖSSÄ MISSÄÄN!!!
+.container{
+   	text-align:center;
+   	width:100%;
+}*/
 
 .toolRow{
 	margin: 30px auto;
@@ -100,17 +103,16 @@ a{
 	text-align:left;
 }
 
-/* TSEKKAA ONKO KÄYTÖSSÄ MISSÄÄN!!!*/
-.container{
-   	text-align:center;
-   	width:100%;
-}
-
 .column, .page-wide{
 	vertical-align: top;
 	display: inline-block;
 	text-align:left;
 	width: 30%;
+}
+
+.page-wide{
+	clear:both;
+	width:100%;
 }
 
 .divider, .divider-with-line{
@@ -122,15 +124,17 @@ a{
 	border-bottom: 1px solid #CCC;
 }
 
+#question{
+	font-size:2em;
+	text-align:center;
+}
+
 #spirit{
 	border: 1px solid #CCC;
 	border-radius: 10px;
-	margin: 40px auto;	
+	margin: 40px auto;
+	max-width: 360px;
 	padding: 20px;
-}
-
-.page-wide{
-	width:100%;
 }
 
 .historic {
@@ -443,20 +447,28 @@ input[type=range]:focus::-ms-fill-upper {
 	width: 400;
 }
 
-.leaflet-container {
-    background-color:#09D !important;
+#legend-pie{
+	text-align:left;
 }
 
-.legend {
-    line-height: 18px;
-    color: #555;
+.legend-item{
+	margin: 4px 0;	
 }
+
 .legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
+	display:inline-block;	
+    width: 20px;
+    height: 20px;
     opacity: 1;
+    vertical-align: middle;
+}
+
+.legend-text, .info-text{
+	color:#FFF;		
+	font: 16px Calibri, sans-serif;
+	display:inline-block;
+	vertical-align: middle;
+	margin-left:5px;
 }
 
 .info {
@@ -466,6 +478,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 /********** 08 CHARTS **********/
 
+/* PLACEHOLDER? */
 .chart{
 	height:300px;
 	width:600px;
@@ -473,25 +486,10 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 5px;
 }
 
-.legend-text, .legend-text-pie{
-	background-color: #09D;
-	color:#FFF;		
-	font: 16px Calibri, sans-serif;
-	margin: 4px 0;
-	width: 360px;
+/* DEBUG */
+#bar-canvas{
+	border: solid 1px red;
 }
-
-.legend-text-pie{
-	left:0px;	
-}
-
-.legend-text span{
-	display:inline-block;
-	height:20px;
-	vertical-align: middle;
-	width:20px;
-}
-
 
 /********** 09 TABLES **********/
 
@@ -506,6 +504,11 @@ th.q-no-title{
 }
 
 td.q-no{
+	text-align:center;
+}
+
+td.inputData, th.columnLabel{
+	padding-top: 20px;
 	text-align:center;
 }
 

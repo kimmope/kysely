@@ -14,20 +14,17 @@ inputTableRow.innerHTML =
 	<#if uQ.colHead5??><th class='columnLabel'>${uQ.colHead5}</th></#if>`;
 document.getElementById("inputTable").appendChild(inputTableRow);
 
-<#-- Input tool content row(s) NOTE: ALSO NAME NEEDS TO BE +1 IF MULTIPLE ROWS -->
-for (i = 1; i <= ${uQ.subQuestAmnt}; i++){
-	var inputTableRow = document.createElement("TR");
-	inputTableRow.innerHTML = 
-		`<#if uQ.rowHead1??><td class = 'rowLabel'>${uQ.rowHead1}</td>
-		<#else><td class="empty"></td>
-		</#if>
-		<#if uQ.colHead1??><td class='inputData'><input class='inputRadio' type='radio' name='answer1' value='${uQ.defVal1}'></td></#if>
-		<#if uQ.colHead2??><td class='inputData'><input class='inputRadio' type='radio' name='answer1' value='${uQ.defVal2}'></td></#if>
-		<#if uQ.colHead3??><td class='inputData'><input class='inputRadio' type='radio' name='answer1' value='${uQ.defVal3}'></td></#if>
-		<#if uQ.colHead4??><td class='inputData'><input class='inputRadio' type='radio' name='answer1' value='${uQ.defVal4}'></td></#if>
-		<#if uQ.colHead5??><td class='inputData'><input class='inputRadio' type='radio' name='answer1' value='${uQ.defVal5}'></td></#if>`;	
-	document.getElementById("inputTable").appendChild(inputTableRow);
-}	
+var inputTableRow = document.createElement("TR");
+inputTableRow.innerHTML = 
+	`<#if uQ.rowHead??><td class = 'rowLabel'>${uQ.rowHead}</td>
+	<#else><td class="empty"></td>
+	</#if>
+	<#if uQ.colHead1??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal1}'></td></#if>
+	<#if uQ.colHead2??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal2}'></td></#if>
+	<#if uQ.colHead3??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal3}'></td></#if>
+	<#if uQ.colHead4??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal4}'></td></#if>
+	<#if uQ.colHead5??><td class='inputData'><input class='inputRadio' type='radio' name='answer' value='${uQ.defVal5}'></td></#if>`;	
+document.getElementById("inputTable").appendChild(inputTableRow);	
 
 </script>
 <input type="submit" class="answer-button" value="Vastaa">

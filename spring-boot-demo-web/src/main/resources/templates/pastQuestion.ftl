@@ -1,5 +1,16 @@
+<#-- Värivakiot karttaan ja graafeihin -->
+<#assign darkest = '#525252'>
+<#assign darkerer = '#6B6B6B'><#--  -->
+<#assign darker = '#787878'>
+<#assign plain = '#A1A1A1'>
+<#assign plainer = '#BFBFBF'><#--  -->
+<#assign lighter = '#D1D1D1'>
+<#assign lighterer = '#EBEBEB'><#--  -->
+<#assign lightest = '#F7F7F7'>
+<#assign bg = '#6E6E6E'>
+<#setting locale="fi_FI"> <#-- Paikallisasetus päivämäärään -->
 <html>
-	<#include "head.ftl">	
+	<#include "head.ftl">
 	<body class="historic">
 		<form action="/pastAnswers" method="POST" id="pastAmntOAnsws">
 			<input type="hidden" name="uid" value="${pastQandA.uid}">

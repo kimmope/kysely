@@ -1,5 +1,5 @@
 <html>
-	<#setting locale="fi_FI">
+	<#setting locale="fi_FI"> <#-- Paikallisasetus päivämäärään -->
 	<#include "head.ftl">	
 	<body class="historic">
 	<#if unansweredQuestion.qid != 0>

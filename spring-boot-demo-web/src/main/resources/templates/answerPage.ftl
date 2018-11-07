@@ -1,3 +1,14 @@
+<#-- Värivakiot karttaan ja graafeihin -->
+<#assign darkest = '#08519C'>
+<#assign darkerer = '#2171B5'><#--  -->
+<#assign darker = '#3182BD'>
+<#assign plain = '#6BAED6'>
+<#assign plainer = '#9ECAE1'><#--  -->
+<#assign lighter = '#BDD7E7'>
+<#assign lighterer = '#DEEBF7'><#--  -->
+<#assign lightest = '#EFF3FF'>
+<#assign bg = '#09D'>
+
 <html>
 	<#include "head.ftl">
 	<body>
@@ -17,24 +28,23 @@
 					<h2 class="center">Olet vastannut kaikkiin kysymyksiin!</h2><br>
 					<h2 class="center">Tervetuloa uudelleen ensi viikolla!</h2>
 					<div class="divider-with-line"></div>
-					<#-- Poista next-question-nappi -->
+					<#-- Poistaa next-question-napin -->
 					<script>document.getElementById("nextQuestionForm").outerHTML = "";</script>					
 				</#if>
 			<#else>	<#-- Jos käyttäjä on jo vastannut kysymykseen (form resubmission) -->
 				<#if unansweredQuestion.qid != 0>	<#-- Jos kysymättömiä kysymyksiä on vielä -->
 					<h3 class="center">Olet jo vastannut tähän kysymykseen!</h3>
-					<div class="divider-with-line"></div>
 				<#elseif unansweredQuestion.qid == 0>	<#-- Jos kysymättömiä kysymyksiä ei ole enää -->
 					<h2 class="center">Olet jo vastannut kaikkiin kysymyksiin!</h2><br>
 					<h2 class="center">Tervetuloa uudelleen ensi viikolla!</h2>
-					<div class="divider-with-line"></div>
-					<#-- Poista next-question-nappi -->
+					<#-- Poistaa next-question-napin -->
 					<script>document.getElementById("nextQuestionForm").outerHTML = "";</script>
 				</#if>
+				<div class="divider-with-line"></div>
 			</#if>
 			</div>
 			<div class="page-wide">
-				<h4>Kysymys</h4>
+				<h4>Kysymys oli</h4>
 				<h2>${oldQuestion.question}</h2>
 				<h4>Vastauksesi oli</h4>
 				<h2>
@@ -54,12 +64,16 @@
 				</h2>
 				<div id="spirit">
 				<#if oldQuestion.type == 1 || oldQuestion.type == 2>
-					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
-					<h1 class="center">${answerStats.meanAll?c}</h1><div class="center">(keskiarvo)</div>
+					<h4 class="center"><b>YHTEISVASTAUS</b></h4>
 					<br>
-					<h1 class="center">${answerStats.mediAll?c}</h1><div class="center">(mediaani)</div>
-				<#elseif oldQuestion.type == 4 || oldQuestion.type == 5>
-					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
+					<h1 class="center">${answerStats.meanAll?c}</h1>
+					<div class="center">(keskiarvo)</div>
+					<br>
+					<h1 class="center">${answerStats.mediAll?c}</h1>
+					<div class="center">(mediaani)</div>
+				<#elseif oldQuestion.type == 3 || oldQuestion.type == 4>
+					<h4 class="center"><b>YHTEISVASTAUS</b></h4>
+					<br>
 					<h1 class="center">
 					<#if answerStats.classModeAll == "0">	
 						${answerStats.modeAll?c}
@@ -81,20 +95,23 @@
 				</div>				
 			</div>
 			<div class="divider-with-line"></div>
-			<#if oldQuestion.type == 4 || oldQuestion.type == 5>
+			<#if oldQuestion.type == 3 || oldQuestion.type == 4>
 				<div class="center">
-				<#if oldQuestion.type == 4>
-					<#include "charts/pie_chart.ftl">
-				<#elseif oldQuestion.type == 5>				
+				<#if oldQuestion.type == 3>
 					<#include "charts/bar_chart.ftl">
+				<#elseif oldQuestion.type == 4>				
+					<#include "charts/pie_chart.ftl">
 				</#if>
+				</div>
+				<div class="divider-with-line"></div>
+				<div class="center">
 				<#include "charts/map.ftl">			
 				</div>
+				<div class="divider-with-line"></div>	
 			</#if>
-			<div class="divider-with-line"></div>
 			<div class="center">
 				<h4>Vastausten lukumäärä</h4>
-				<h2>${answerStats.amountTot}</h2>
+				<h2>${answerStats.amountTot}</h2>	
 			</div>
 		</div>	
 		&nbsp;

@@ -7,16 +7,16 @@ Vastausten lukumäärät:
 <#if oldQuestion.colHead4??><h2>${oldQuestion.colHead4}</h2>${answerStats.amountP4}</#if>
 <#if oldQuestion.colHead5??><h2>${oldQuestion.colHead5}</h2>${answerStats.amountP5}</#if>
 </canvas>
-</div>
-<div id="legend"></div>
-<div class="center">
+
+<div id="legend-pie"></div>
+
 <script>
 var data = [];
-<#if oldQuestion.colHead1??>data[0] = ${answerStats.amountP1};</#if>
-<#if oldQuestion.colHead2??>data[1] = ${answerStats.amountP2};</#if>
-<#if oldQuestion.colHead3??>data[2] = ${answerStats.amountP3};</#if>
-<#if oldQuestion.colHead4??>data[3] = ${answerStats.amountP4};</#if>
-<#if oldQuestion.colHead5??>data[4] = ${answerStats.amountP5};</#if>
+<#if oldQuestion.colHead1??>data[0] = ${answerStats.class1Tot};</#if>
+<#if oldQuestion.colHead2??>data[1] = ${answerStats.class2Tot};</#if>
+<#if oldQuestion.colHead3??>data[2] = ${answerStats.class3Tot};</#if>
+<#if oldQuestion.colHead4??>data[3] = ${answerStats.class4Tot};</#if>
+<#if oldQuestion.colHead5??>data[4] = ${answerStats.class5Tot};</#if>
 
 var labels = [];
 <#if oldQuestion.colHead1??>labels[0] = '${oldQuestion.colHead1}';</#if>
@@ -27,16 +27,14 @@ var labels = [];
 
 var dataTotal = 0;
 data.forEach(function(item){dataTotal+=item;});
-console.log(dataTotal);
 
-// Canvas with fill color
+<#-- Canvas with fill color -->
 var c = document.getElementById("pie-canvas");
 var ctx = c.getContext("2d");
-ctx.fillStyle = "#09D";
+ctx.fillStyle = "${bg}";
 ctx.fillRect(0, 0, c.width, c.height);
 
-// Variables
-//var colors = ["#EFF3FF", "#BDD7E7", "#6BAED6", "#3182BD", "#08519C"];
+<#-- Variables -->
 var xCenter = 190;
 var yCenter = 150;
 var radius = 120;
@@ -45,44 +43,41 @@ var labelDistXLeft = 165;
 var labelDistXRight = 125;
 var lastEnd = Math.PI * 1.5;
 
-// Select color according to amount of classes
+<#-- Select color according to amount of classes -->
 function getColor(c){
 	if (data.length == 5){
 		switch(c){
-			case 0: return '#EFF3FF';
-			case 1: return '#BDD7E7';	
-			case 2: return '#6BAED6';
-			case 3: return '#3182BD';
-			case 4: return '#08519C';
+			case 0: return "${lightest}";
+			case 1: return "${lighter}";	
+			case 2: return "${plain}";
+			case 3: return "${darker}";
+			case 4: return "${darkest}";
 		}
 	}
 	else if (data.length == 4){
 		switch(c){
-			case 0: return '#EFF3FF';	
-			case 1: return '#BDD7E7';
-			case 2: return '#6BAED6';
-			case 3: return '#2171b5';
+			case 0: return "${lightest}";	
+			case 1: return "${lighter}";
+			case 2: return "${plain}";
+			case 3: return "${darkerer}";
 		}
 	}
 	else if (data.length == 3){
 		switch(c){
-			case 0: return '#DEEBF7';	
-			case 1: return '#9ECAE1';
-			case 2: return '#3182BD';
+			case 0: return "${lighterer}";	
+			case 1: return "${plainer}";
+			case 2: return "${darker}";
 		}
 	}
 	else{
 		switch(c){
-			case 0: return '#DEEBF7';	
-			case 1: return '#3182BD';
+			case 0: return "${lighterer}";	
+			case 1: return "${darker}";
 		}
 	}
 }
 
-// DEBUG
-console.log("data.length = " + data.length);
-
-// Sectors
+<#-- Sectors -->
 for (var i = 0; i < data.length; i++){
 	ctx.fillStyle = getColor(i);
     ctx.beginPath();
@@ -92,7 +87,7 @@ for (var i = 0; i < data.length; i++){
 	lastEnd += Math.PI * 2 * (data[i] / dataTotal);
 }
 
-// Sector outlines
+<#-- Sector outlines -->
 for (var i = 0; i < data.length; i++){
 	ctx.beginPath();
     ctx.moveTo(xCenter, yCenter);
@@ -103,7 +98,7 @@ for (var i = 0; i < data.length; i++){
     lastEnd += Math.PI * 2 * (data[i] / dataTotal);
 }
 
-// Sector labels
+<#-- Sector labels -->
 var start_angle = Math.PI * 1.5;
 var slice_angle = 0;
 for (var i = 0; i < data.length; i++){
@@ -122,12 +117,12 @@ for (var i = 0; i < data.length; i++){
 	start_angle += slice_angle;    
 }
 
-// Legend
+<#-- Legend -->
 color_index = 0;
 var legendHTML = "";
 for (var i = 0; i < data.length; i++){
-	legendHTML += "<div class='legend-text-pie'><span style='background-color:"+getColor(i)+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
+	legendHTML += "<div class='legend-item'><span style='background-color:"+getColor(i)+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
 }
-document.getElementById("legend").innerHTML = legendHTML;
+document.getElementById("legend-pie").innerHTML = legendHTML;
 
 </script>

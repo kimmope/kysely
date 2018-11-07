@@ -15,7 +15,7 @@
 			<#elseif uQ.type == 3>
 				<#include "input_tools/3_radio.ftl">
 			<#elseif uQ.type == 4>
-				<#include "input_tools/4_options.ftl">								
+				<#include "input_tools/4_options.ftl">										
 			</#if>
 		</form>
 	</div>

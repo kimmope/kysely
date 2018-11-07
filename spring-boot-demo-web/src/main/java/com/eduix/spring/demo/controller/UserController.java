@@ -106,7 +106,6 @@ public class UserController {
 			model.addAttribute("answerStats",answerStats);
 			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
-			log.info("!******** average: " + oldQuestion.getAverage());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
 			log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());

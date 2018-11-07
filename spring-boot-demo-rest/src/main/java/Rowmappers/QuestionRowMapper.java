@@ -18,7 +18,6 @@ public class QuestionRowMapper{
 				rs.getInt("max"),
 				rs.getString("maxTitle"),
 				rs.getInt("step"),
-				rs.getInt("subQuestAmnt"),
 				rs.getString("defval1"),
 				rs.getString("defval2"),
 				rs.getString("defval3"),
@@ -29,24 +28,9 @@ public class QuestionRowMapper{
 				rs.getString("colHead3"),
 				rs.getString("colHead4"),
 				rs.getString("colHead5"),
-				rs.getString("rowHead1"),
-				rs.getString("rowHead2"),
-				rs.getString("rowHead3"),
-				rs.getString("rowHead4"),
-				rs.getString("rowHead5"),
+				rs.getString("rowHead"),
 				rs.getString("message"),
-				rs.getString("info"),
-				rs.getInt("amntAnswTot"),
-				rs.getInt("amntAnswVal1"),
-				rs.getInt("amntAnswVal2"),
-				rs.getInt("amntAnswVal3"),
-				rs.getInt("amntAnswVal4"),
-				rs.getInt("amntAnswVal5"),
-				rs.getInt("sumAnswers"),
-				rs.getDouble("average"),
-				rs.getDouble("mean"),
-				rs.getDouble("mode"),
-				rs.getString("trueAnswer")
+				rs.getString("info")
 			);
 		}
 	};
