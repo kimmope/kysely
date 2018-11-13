@@ -103,6 +103,7 @@ a{
 	text-align:left;
 }
 
+/* TSEKKAA ONKO COLUMN KÄYTÖSSÄ MISSÄÄN!!! */
 .column, .page-wide{
 	vertical-align: top;
 	display: inline-block;
@@ -441,10 +442,22 @@ input[type=range]:focus::-ms-fill-upper {
 /********** 06 MAP **********/
 
 #map{
-/*	border: 1px solid #F00;	*/
+/*	border: 1px solid #F00;		*/
+	display: block;
 	height: 600;
-	margin: 0 auto;
-	width: 400;
+	margin: auto;
+	width: 500;
+}
+
+.legend-map{
+	width: 200px;
+}
+
+.info{
+	color: #FFF;
+    margin: 4px 4px 0;
+   	text-align: right;
+    width: 260px;
 }
 
 #legend-pie{
@@ -455,25 +468,33 @@ input[type=range]:focus::-ms-fill-upper {
 	margin: 4px 0;	
 }
 
-.legend i {
+.legend-map i, .legend-item span {
 	display:inline-block;	
     width: 20px;
     height: 20px;
     opacity: 1;
     vertical-align: middle;
+    margin-right: 5px;
 }
 
-.legend-text, .info-text{
-	color:#FFF;		
-	font: 16px Calibri, sans-serif;
-	display:inline-block;
+.legend-text-pie, .legend-text{
+	color: #FFF;		
+	font: 14px Calibri, sans-serif;
+	display: inline-block;
 	vertical-align: middle;
-	margin-left:5px;
+	white-space: nowrap;		
 }
 
-.info {
-	color: #FFF;
-    margin: 4px 4px 0;
+.legend-text{
+	width: 170px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;		
+}
+
+.info-h{
+	font-size: 16px;
+	margin-bottom: 10px;
 }
 
 /********** 08 CHARTS **********/
@@ -486,10 +507,14 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 5px;
 }
 
-/* DEBUG */
-#bar-canvas{
-	border: solid 1px red;
+#pie-canvas, #bar-canvas, #line-canvas{
+	display: block;
+	margin: auto;
 }
+/*
+#line-canvas{
+	border: 1px solid #F00;
+}*/
 
 /********** 09 TABLES **********/
 

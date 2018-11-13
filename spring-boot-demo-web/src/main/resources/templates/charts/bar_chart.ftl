@@ -1,4 +1,4 @@
-<canvas id="bar-canvas" width="500" height="300">
+<canvas id="bar-canvas" width="500" height="380">
 <#-- This section is shown if canvas is not supported -->
 Vastausten lukumäärät:
 <#if oldQuestion.colHead1??><h2>${oldQuestion.colHead1}</h2>${answerStats.amountP1}</#if>	
@@ -30,9 +30,11 @@ data.forEach(function(item){dataTotal+=item;});
 
 originalHeightValues = [];
 var heightValues = [];
+var barLowLimit = 250;
+
 for(var i = 0; i < data.length; i++){
 	originalHeightValues[i] = Math.round((data[i] * 200) / dataTotal)
-	heightValues[i] = 200-originalHeightValues[i];
+	heightValues[i] = barLowLimit-originalHeightValues[i];
 }
 
 <#-- Function for wrapping the legends to correct width -->
@@ -63,7 +65,7 @@ drawCanvas(c, chartWidth);
 var barLeft = 25;
 var barRight = 75;
 var ctx = [];
-
+var labelTopLimit = 290;
 var maxLegendWidth = 100;
 var lineHeight = 20;
 
@@ -73,7 +75,7 @@ for (var i = 0; i < data.length; i++){
 	ctx[i].font = "14px sans serif";    
 	ctx[i].fillText(data[i], barLeft, heightValues[i]-10); 
 	ctx[i].fillRect(barLeft, heightValues[i], barRight, originalHeightValues[i]);
-	wrapText(ctx[i], labels[i], barLeft, 220, maxLegendWidth, lineHeight);    
+	wrapText(ctx[i], labels[i], barLeft, labelTopLimit, maxLegendWidth, lineHeight);    
 	barLeft = barLeft + 100;
 }
 

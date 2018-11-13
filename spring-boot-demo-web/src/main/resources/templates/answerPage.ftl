@@ -96,17 +96,14 @@
 			</div>
 			<div class="divider-with-line"></div>
 			<#if oldQuestion.type == 3 || oldQuestion.type == 4>
-				<div class="center">
 				<#if oldQuestion.type == 3>
 					<#include "charts/bar_chart.ftl">
+					<#include "charts/line_chart.ftl">
 				<#elseif oldQuestion.type == 4>				
 					<#include "charts/pie_chart.ftl">
 				</#if>
-				</div>
 				<div class="divider-with-line"></div>
-				<div class="center">
 				<#include "charts/map.ftl">			
-				</div>
 				<div class="divider-with-line"></div>	
 			</#if>
 			<div class="center">

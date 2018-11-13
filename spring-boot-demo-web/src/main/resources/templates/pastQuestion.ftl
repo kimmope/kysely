@@ -24,9 +24,8 @@
 	</#if>		
 		<div class="centerer">
 			<div class="page-wide">	
-				<h2>Aikaisempi vastaus</h2>
 				<h4>${pastQandA.timeOfAnswer?date} vastasit kysymykseen:</h4>
-				<h3>${pastQandA.question}</h3>
+				<h2>${pastQandA.question}</h2>
 				<h4>Vastauksesi oli:</h4>
 				<h2>
 				<#if pastQandA.answer == "AO01">	<#-- Change answer value to text-format for viewing -->
@@ -45,12 +44,15 @@
 				</h2>
 				<div id="spirit">
 				<#if oldQuestion.type == 1 || oldQuestion.type == 2>
-					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
-					<h1 class="center">${answerStats.meanAll?c}</h1><div class="center">(keskiarvo)</div>
+					<h4 class="center"><b>YHTEISVASTAUS</b></h4><br>
+					<h1 class="center">${answerStats.meanAll?c}</h1>
+					<div class="center">(keskiarvo)</div>
 					<br>
-					<h1 class="center">${answerStats.mediAll?c}</h1><div class="center">(mediaani)</div>
-				<#elseif oldQuestion.type == 4 || oldQuestion.type == 5>
-					<h4 class="center"><b>YHTEISARVAUS</b></h4><br>
+					<h1 class="center">${answerStats.mediAll?c}</h1>
+					<div class="center">(mediaani)</div>
+				<#elseif oldQuestion.type == 3 || oldQuestion.type == 4>
+					<h4 class="center"><b>YHTEISVASTAUS</b></h4>
+					<br>
 					<h1 class="center">
 					<#if answerStats.classModeAll == "0">	
 						${answerStats.modeAll?c}
@@ -72,17 +74,16 @@
 				</div>				
 			</div>
 			<div class="divider-with-line"></div>
-			<#if oldQuestion.type == 4 || oldQuestion.type == 5>
-				<div class="center">
-				<#if oldQuestion.type == 4>
+			<#if oldQuestion.type == 3 || oldQuestion.type == 4>
+				<#if oldQuestion.type == 3>
 					<#include "charts/pie_chart.ftl">
-				<#elseif oldQuestion.type == 5>				
+				<#elseif oldQuestion.type == 4>				
 					<#include "charts/bar_chart.ftl">
 				</#if>
+				<div class="divider-with-line"></div>
 				<#include "charts/map.ftl">			
-				</div>
+				<div class="divider-with-line"></div>
 			</#if>
-			<div class="divider"></div>
 			<div class="center">
 				<h4>Vastausten lukumäärä</h4>
 				<h2>${answerStats.amountTot}</h2>

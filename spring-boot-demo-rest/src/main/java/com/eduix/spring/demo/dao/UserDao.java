@@ -2,9 +2,17 @@ package com.eduix.spring.demo.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -102,12 +110,14 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 // CALCULATING FIGURES FOR ANSWER STATISTICS-CLASS
 	public AnswerStats getAnswerStats(int qid) {
 		log.info("!******** REST DAO AnswerStats Start qid = " + qid);
+		// Kaikkien yhteensä ja jokaisen regionin vastausmäärät erikseen
 		int amountTot = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers WHERE qid = ?),0)",Integer.class,qid);
 		int amountP1 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979),0)", Integer.class, qid);
 		int amountP2 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980),0)", Integer.class, qid);
 		int amountP3 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 981),0)", Integer.class, qid);
 		int amountP4 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982),0)", Integer.class, qid);
 		int amountP5 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983),0)", Integer.class, qid);
+		// Kaikkien yhteensä ja jokaisen regionin keskiarvot erikseen
 		double meanAll = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(answer),0) FROM user_answers WHERE qid = ?),0)", Double.class, qid);
 		double meanP1 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979),0)", Double.class, qid);
 		double meanP2 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 980),0)", Double.class, qid);
@@ -115,6 +125,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		double meanP4 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 982),0)", Double.class, qid);
 		double meanP5 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 983),0)", Double.class, qid);
 		log.info("!******** REST DAO AnswerStats 0");
+		// Kaikkien yhteensä ja jokaisen regionin mediaanit (keskimmäiset arvot) erikseen
 		double mediAll = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers, (SELECT @rownum:=0) c WHERE answer IS NOT NULL AND answer REGEXP '^-?[0-9]+$' AND qid=? ORDER BY answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
 		double mediP1 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid=? AND u.pid = 979 ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
 		double mediP2 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid=? AND u.pid = 980 ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
@@ -122,6 +133,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		double mediP4 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid=? AND u.pid = 982 ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
 		double mediP5 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid=? AND u.pid = 983 ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
 		log.info("!******** REST DAO AnswerStats 1");
+		// Kaikkien yhteensä ja jokaisen regionin yleisin luokka 
 		String classModeAll = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT answer FROM user_answers WHERE (answer='AO01' OR answer='AO02' OR answer='AO03' OR answer='AO04' OR answer='AO05') AND qid = ? GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1),0)",String.class,qid);
 		String classModeP1 = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? AND u.pid = 979 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid);
 		String classModeP2 = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? AND u.pid = 980 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid);
@@ -129,6 +141,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		String classModeP4 = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? AND u.pid = 982 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid);
 		String classModeP5 = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? AND u.pid = 983 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid);
 		log.info("!******** REST DAO AnswerStats 2");
+		// Kaikkien yhteensä ja jokaisen regionin yleisin arvo
 		double modeAll = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT answer FROM user_answers WHERE answer REGEXP '^-?[0-9]+$' AND qid = ? GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1),0)",Double.class,qid);
 		double modeP1 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? AND u.pid = 979 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid);
 		double modeP2 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? AND u.pid = 980 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid);
@@ -136,6 +149,7 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		double modeP4 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? AND u.pid = 982 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid);
 		double modeP5 = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? AND u.pid = 983 GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid);
 		log.info("!******** REST DAO AnswerStats 3");
+		// Kaikkien luokkien yhteinen ja jokaisen regionin jokaisen luokan vastausmäärä
 		int class1Tot = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers WHERE qid = ? AND answer='AO01'),0)",Integer.class,qid);
 		int class1P1 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 979),0)", Integer.class, qid);
 		int class1P2 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = 980),0)", Integer.class, qid);
@@ -182,5 +196,5 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 			return false;
 		}
 	}
-	
 }
+

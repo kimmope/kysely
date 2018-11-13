@@ -11,7 +11,7 @@
 
 <script>
 
-<#-- KUNKIN LÄÄNIN OSUMIA SAANEET LUOKAT TAULUKKOON -->
+<#-- KUNKIN LÄÄNIN ENITEN OSUMIA SAANEET LUOKAT TAULUKKOON -->
 var dataProvinces = [];
 <#if answerStats.classModeP1??>dataProvinces[0] = "${answerStats.classModeP1}";</#if>
 <#if answerStats.classModeP2??>dataProvinces[1] = "${answerStats.classModeP2}";</#if>
@@ -40,21 +40,46 @@ var classes = [];
 <#if oldQuestion.colHead5??>classes[4] = '${oldQuestion.colHead5}';</#if>
 
 <#-- Return correct amounts of answers per province to info-window -->
-function answerAmount(provinceId){
+function answerAmount(provinceId,x){
 	if(provinceId == 979){
-		return amntProvinces[0];
+		if(x == 0)return amntProvinces[0];
+		if(x == 1){return ${answerStats.class1P1};}
+		if(x == 2){return ${answerStats.class2P1};}
+		if(x == 3){return ${answerStats.class3P1};}
+		if(x == 4){return ${answerStats.class4P1};}
+		if(x == 5){return ${answerStats.class5P1};}
 	}
 	else if(provinceId == 980){
-		return amntProvinces[1];
+		if(x == 0)return amntProvinces[1];
+		if(x == 1){return ${answerStats.class1P2};}
+		if(x == 2){return ${answerStats.class2P2};}
+		if(x == 3){return ${answerStats.class3P2};}
+		if(x == 4){return ${answerStats.class4P2};}
+		if(x == 5){return ${answerStats.class5P2};}
 	}
 	else if(provinceId == 981){
-		return amntProvinces[2];
+		if(x == 0)return amntProvinces[2];
+		if(x == 1){return ${answerStats.class1P3};}
+		if(x == 2){return ${answerStats.class2P3};}
+		if(x == 3){return ${answerStats.class3P3};}
+		if(x == 4){return ${answerStats.class4P3};}
+		if(x == 5){return ${answerStats.class5P3};}
 	}
 	else if(provinceId == 982){
-		return amntProvinces[3];
+		if(x == 0)return amntProvinces[3];
+		if(x == 1){return ${answerStats.class1P4};}
+		if(x == 2){return ${answerStats.class2P4};}
+		if(x == 3){return ${answerStats.class3P4};}
+		if(x == 4){return ${answerStats.class4P4};}
+		if(x == 5){return ${answerStats.class5P4};}		
 	}
 	else if(provinceId == 983){
-		return amntProvinces[4];
+		if(x == 0)return amntProvinces[4];
+		if(x == 1){return ${answerStats.class1P5};}
+		if(x == 2){return ${answerStats.class2P5};}
+		if(x == 3){return ${answerStats.class3P5};}
+		if(x == 4){return ${answerStats.class4P5};}
+		if(x == 5){return ${answerStats.class5P5};}		
 	}		
 }
 
@@ -63,7 +88,7 @@ var finProvinces = L.geoJSON(profinland);
 
 
 <#-- Create basemap -->
-var map = L.map('map').setView([65.5, 29], null, { zoomControl:false });
+var map = L.map('map').setView([65.5, 30], null, { zoomControl:false });
 
 
 <#-- Set up basemap -->
@@ -113,25 +138,25 @@ function getNormalizedColor(c){
 <#-- Select color according to amount of classes -->
 function getColor(c){
 	if(classes.length == 5){
-		return c == 4 ? '${darkest}':
-	   	c == 3 ? '${darker}':
-	   	c == 2 ? '${plain}':
-	   	c == 1 ? '${lighter}':
+		return c == 5 ? '${darkest}':
+	   	c == 4 ? '${darker}':
+	   	c == 3 ? '${plain}':
+	   	c == 2 ? '${lighter}':
 	   	'${lightest}';	
 	}
 	else if(classes.length == 4){
-		return c == 3 ? '${darkerer}':
-	   	c == 2  ? '${plain}':
-	   	c == 1 ? '${lighter}':
+		return c == 4 ? '${darkerer}':
+	   	c == 3  ? '${plain}':
+	   	c == 2 ? '${lighter}':
 	   	'${lightest}';		
 	}
 	else if(classes.length == 3){
-		return c == 2 ? '${darker}':
-	   	c == 1 ? '${plainer}':
+		return c == 3 ? '${darker}':
+	   	c == 2 ? '${plainer}':
 	   	'${lighterer}';		
 	}
 	else if(classes.length == 2){
-		return c == 1 ? '${darker}':
+		return c == 2 ? '${darker}':
 	   	'${lighterer}';		
 	}
 }
@@ -141,36 +166,34 @@ function getColor(c){
 finProvinces.eachLayer(function(layer){
 	// Set borders and opacity for all layers (provinces)
 	layer.setStyle({stroke : true, weight : 3, color : '#FFF', opacity : 0.2, fillOpacity : 1});
-	if(layer.feature.properties.ID_1 == 979 && typeof dataProvinces[0] !== 'undefined'){	
-		layer.setStyle({fillColor : getColor((dataProvinces[0]-1))});
+	if(layer.feature.properties.ID_1 == 979 && dataProvinces[0] != 0){	
+		layer.setStyle({fillColor : getColor(dataProvinces[0])});
 		layer.bindTooltip("Itä-Suomen lääni", {sticky: true});
     }
-    else if(layer.feature.properties.ID_1 == 980 && typeof dataProvinces[1] !== 'undefined'){	
-		layer.setStyle({fillColor : getColor((dataProvinces[1]-1))});
+    else if(layer.feature.properties.ID_1 == 980 && dataProvinces[1] != 0){	
+		layer.setStyle({fillColor : getColor(dataProvinces[1])});
 		layer.bindTooltip("Lapin lääni, vastauksia: " + classes, {sticky: true});
     }
-    else if(layer.feature.properties.ID_1 == 981 && typeof dataProvinces[2] !== 'undefined'){	
-		layer.setStyle({fillColor : getColor((dataProvinces[2]-1))});
+    else if(layer.feature.properties.ID_1 == 981 && dataProvinces[2] != 0){	
+		layer.setStyle({fillColor : getColor(dataProvinces[2])});
 		layer.bindTooltip("Oulun lääni", {sticky: true});
     }
-    else if(layer.feature.properties.ID_1 == 982 && typeof dataProvinces[3] !== 'undefined'){	
-		layer.setStyle({fillColor : getColor((dataProvinces[3]-1))});
+    else if(layer.feature.properties.ID_1 == 982 && dataProvinces[3] != 0){	
+		layer.setStyle({fillColor : getColor(dataProvinces[3])});
 		layer.bindTooltip("Etelä-Suomen lääni", {sticky: true});
     }
-    else if(layer.feature.properties.ID_1 == 983 && typeof dataProvinces[4] !== 'undefined'){	
-		layer.setStyle({fillColor : getColor((dataProvinces[4]-1))});
+    else if(layer.feature.properties.ID_1 == 983 && dataProvinces[4] != 0){	
+		layer.setStyle({fillColor : getColor(dataProvinces[4])});
 		layer.bindTooltip("Länsi-Suomen lääni", {sticky: true});
     }
     else{
-    	layer.setStyle({fillColor : '#679ef7'})
+    	layer.setStyle({fillColor : '${bg}'})
     	layer.bindTooltip(layer.feature.properties.VARNAME_1+"Ei vastauksia", {sticky: true});
     }
 });
 
-
 <#-- Add provinces with colored data -->
 finProvinces.addTo(map);
-
 
 <#-- Add info-window to the map (top right corner) -->
 var info = L.control();
@@ -179,12 +202,16 @@ info.onAdd = function(map){
 	this.update();
 	return this._div;
 };
-<#-- Add text-content to info-window -->
+<#-- Add content to info-window -->
 info.update = function(props){
-	this._div.innerHTML = props ? '<span class="info-text"><b>' + props.VARNAME_1 + '</b></span><br />\
-		<span class="info-text">Vastauksia: ' + answerAmount(props.ID_1) + '</span><br />\
-		<#if oldQuestion.colHead1??>${oldQuestion.colHead1} : ${answerStats.class1P1}<br />\</#if>
-		<span class="info-text">Vastauksia: ' + answerAmount(props.ID_1) + '</span><br />' : '<span class="info-text">Vie hiiri läänin päälle</span>';
+	this._div.innerHTML = props ? '<span class="info-h"><b>' + props.VARNAME_1 + '</b></span><br />\
+		<span class="info-h">Vastauksia: ' + answerAmount(props.ID_1,0) + '</span><br />\
+		<#if oldQuestion.colHead1??><span class="info-t">${oldQuestion.colHead1} : ' + answerAmount(props.ID_1,1) + '</span><br /></#if>\
+		<#if oldQuestion.colHead2??><span class="info-t">${oldQuestion.colHead2} : ' + answerAmount(props.ID_1,2) + '</span><br /></#if>\
+		<#if oldQuestion.colHead3??><span class="info-t">${oldQuestion.colHead3} : ' + answerAmount(props.ID_1,3) + '</span><br /></#if>\
+		<#if oldQuestion.colHead4??><span class="info-t">${oldQuestion.colHead4} : ' + answerAmount(props.ID_1,4) + '</span><br /></#if>\
+		<#if oldQuestion.colHead5??><span class="info-t">${oldQuestion.colHead5} : ' + answerAmount(props.ID_1,5) + '</span><br /></#if>\
+		' : '<span class="info-h">Vie hiiri läänin päälle</span>';
 };
 
 info.addTo(map);
@@ -231,16 +258,15 @@ geojson = L.geoJson(profinland, {
     onEachFeature: onEachFeature
 }).addTo(map);
 
-
 <#-- Add legend to the map (bottom right corner) -->
 var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'info legend');
+    var div = L.DomUtil.create('div', 'legend-map');
 <#-- loop through density intervals and generate a label with a colored square for each interval -->
     for (var i = 0; i < classes.length; i++) {
         div.innerHTML += '<div class="legend-item">\
-            	<i style="background:' + getColor(i) + '"></i>\
-            	<span class="legend-text">' + classes[i] + '</span></div>';
+        <i style="background:' + getColor(i+1) + '"></i>\
+        <div class="legend-text">' + classes[i] + '</div></div>';
     }
    return div;
 };

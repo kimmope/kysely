@@ -36,7 +36,7 @@ ctx.fillRect(0, 0, c.width, c.height);
 
 <#-- Variables -->
 var xCenter = 190;
-var yCenter = 150;
+var yCenter = 155;
 var radius = 120;
 var labelDistY = 140;
 var labelDistXLeft = 165;
@@ -98,7 +98,7 @@ for (var i = 0; i < data.length; i++){
     lastEnd += Math.PI * 2 * (data[i] / dataTotal);
 }
 
-<#-- Sector labels -->
+<#-- Sector labels, left side labels are put a bit further -->
 var start_angle = Math.PI * 1.5;
 var slice_angle = 0;
 for (var i = 0; i < data.length; i++){
@@ -121,7 +121,9 @@ for (var i = 0; i < data.length; i++){
 color_index = 0;
 var legendHTML = "";
 for (var i = 0; i < data.length; i++){
-	legendHTML += "<div class='legend-item'><span style='background-color:"+getColor(i)+";'>&nbsp;&nbsp;&nbsp;&nbsp;</span> "+labels[i]+"</div>";
+	legendHTML += "<div class='legend-item'>\
+		<span style='background:" + getColor(i) + "'></span>\
+		<span class='legend-text-pie'>" + labels[i] + "</span></div>";
 }
 document.getElementById("legend-pie").innerHTML = legendHTML;
 
