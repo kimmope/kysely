@@ -18,6 +18,8 @@ import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
+import queta.YearlyStatus;
+
 //import java.net.URI;
 //import org.springframework.web.bind.annotation.DeleteMapping;
 //import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -61,10 +63,9 @@ public class UserController {
 		User newUser = new User();
 		try {
 			log.info("!******** RUC try checkUser: " + user.getUsername());
-			newUser = dao.checkUser(user.getUsername()); // Testataan onko useria, turhaan tehdään try catch täällä vaan testin vuoksi
+			newUser = dao.checkUser(user.getUsername()); // Testataan onko useria
 		} 
 		catch (RuntimeException e) {
-			log.info("!******** RUC catch checkUser: " + newUser.getUsername());
 			newUser = dao.createNewUser(user);	// Jos useria ei ole, niin tehdään sellainen
 		}
 		return ResponseEntity.ok(newUser);
@@ -104,90 +105,17 @@ public class UserController {
 	@GetMapping("/checkIfAnswered/{uid}/{qid}")
 	public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
 		return dao.checkIfAnswered(uid,qid);
-	}	
+	}
+	
+	@GetMapping("/yearlyStatuses")
+	public ResponseEntity<List<YearlyStatus>> getYearlyStatuses() {
+		log.info("!******** RUC getYearlyStatuses");		
+		try {
+			return ResponseEntity.ok(dao.getYearlyStatuses());
+		}
+		catch (DataAccessException e) { 
+			return ResponseEntity.notFound().build(); 
+		}
+	}
 
 }
-
-//@ExceptionHandler(MySQLIntegrityConstraintViolationException.class)			// Tässä yritetään estää RESTin kaatuminen formin resubmittauksessa, mutta ei toimi kuten WEBissä
-//public String resubmitError() {					
-//	return null;
-//}	
-
-// EN SAANUT TOIMIMAAN MONIKANTA/MUUDATAOLIOTA
-//@GetMapping("/{uid}")						
-//public ResponseEntity<Question2> getNotAskedQuestion(@PathVariable("uid") int uid) {
-//	log.info("!******** RUC getNotAskedQuestion uid: " + uid);
-//	Question2 question2 = dao.getNotAskedQuestion(uid);
-//	return ResponseEntity.ok(question2);
-//}	
-//@GetMapping("/getQuestionData/{qid}")						// saa webin userClientilta urista question id:en {gid} ja antaa sen allaolevan funktion käyttöön
-//public ResponseEntity<Question2> getQuestion(@PathVariable("qid") int qid) {
-//	log.info("!******** RUC getQuestion qid: " + qid);
-//	Question2 question = dao.getQuestionById(qid);
-//	return ResponseEntity.ok(question);
-//}	
-
-
-//	@GetMapping("/answerHistory/{uid}")	// Ilman ResponseEntityä
-//	public List<PastQandA> getPastQandA(@PathVariable("uid") int uid) {
-//		try {
-//			return dao.getPastQandA(uid);
-//		} 
-//		catch (RuntimeException e) {
-//			return null;
-//		}
-//	}	
-	
-//	@GetMapping("/userspage") 							// kun "userspage"lle tulee get-kutsu niin GetMapping-annotaatio lähettää sen allaolevalle funktiolle 
-//	public List<DemoUser> getUsers() {
-//		return dao.getUsers();							// palauttaa UserDao-luokan dao-objektin getUsers-funktion tuloksen
-//	}
-//	
-//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-//		try {
-//			return ResponseEntity.ok(dao.getUser(username));
-//		}
-//		catch(DataAccessException e){
-//			return ResponseEntity.notFound().build();
-//		}
-//	}
-
-//	@GetMapping("/user/{username}")						// saa arvonaan urista{usernamen} ja antaa sen allaolevan funktion käyttöön
-//	public ResponseEntity<DemoUser> getUser(@PathVariable("username") String username) {	// getUser-funktio palauttaa ResponseEntityn joka (perii httpEntityn) on kokonainen http-response (sis. header, body) ja lisää siihen HttpStatus status coden
-//		DemoUser user = dao.getUser(username);			
-//		if (user == null) {
-//			return ResponseEntity.notFound().build();	// Jos useria ei löydy, palautetaan ResponseEntityn builder notFound-statuksella (Http error 404)
-//		}
-//		return ResponseEntity.ok(user);					// Jos user löytyy, se palautetaan Ok-statuksella
-//	}	
-	
-//	@PostMapping("/user")
-//	public ResponseEntity<?> addUser(@RequestBody DemoUser user) { // addUser-funktio palauttaa ResponseEntityn määrittelemättömän olion. Parametrina on DemoUser-olio user joka yhdistetään @RequestBodylla @PostMappingista saapuvaan http-responseen
-//		dao.addUser(user);								// kutsutaan dao-luokan addUser-funktiota user-parametrilla
-//		URI location = ServletUriComponentsBuilder.fromCurrentRequest()	// Luodaan URI-luokan olio location. ServletUriComponentsBuilder on UriComponentsBuilder lisättynä staattisilla tehdasmetodeilla. Se luo linkin perustuen fromCurrentRequestiin.
-//													.path("/{username}")	// määritetään osa polkua
-//													.buildAndExpand(user.getUsername()).toUri(); // peritty UriComponentsBuilderilta, yhdistää build()in ja UriComponents.expand(Map)in. Palauttaa URI-komponentit lisätyillä arvoilla
-//		return ResponseEntity.created(location).build();	// palauttaa uuden urin created-statuksella
-//	}
-//	
-///** TRAINING CODE: ------------------ */
-//	@DeleteMapping("/nakkivene/{id}")
-//	public void deleteUser(@PathVariable String id) {
-//		dao.deleteUser(id);
-//	}
-//	
-//	@PostMapping("/edituser")
-//	public void editUser(@RequestBody DemoUser user) {
-//		dao.editUser(user);
-//	}
-
-// FIGHT AGAINST RESUBMISSION OF THE FORM
-//@GetMapping("/checkIfAnswered/{uid}/{qid}")
-//public boolean checkIfAnswered(@PathVariable("uid") int uid, @PathVariable("qid") int qid){
-//	log.info("!******** REST user controller uid: "+uid);
-//	return dao.checkIfAnswered(uid,qid);
-//}	
-
-
-

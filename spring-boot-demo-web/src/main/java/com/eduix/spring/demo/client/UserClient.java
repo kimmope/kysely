@@ -10,6 +10,8 @@ import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
+import queta.YearlyStatus;
+
 //import com.eduix.spring.demo.domain.DemoUser;
 //
 import org.apache.commons.logging.Log;
@@ -43,7 +45,6 @@ public class UserClient {
 	}
 
 	public User checkUser(User checkUser) {
-		log.info("!******** WUCli checkUser username: " + checkUser.getUsername());
 		User user = restTemplate.postForObject("/checkUser", checkUser, User.class);
 		return user;
 	}
@@ -67,60 +68,13 @@ public class UserClient {
 	
 //	PREVENT RESUBMISSION OF THE FORM
 	public boolean checkIfAlreadyAnswered(int uid, int qid) {
-		return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);	// JATKA TÄSTÄ!!!
+		return restTemplate.getForObject("/checkIfAnswered/" + uid + "/" + qid, boolean.class);
+	}
+	
+	public List<YearlyStatus> getYearlyStatuses() {	
+		log.info("!******** WUCli getYearlyStatuses");
+		YearlyStatus[] yearlyStatuses = restTemplate.getForObject("/yearlyStatuses", YearlyStatus[].class);
+		return Arrays.asList(yearlyStatuses);
 	}	
 	
 }
-// EN SAANUT PELAAMAAN MONIKANTA/MONIDATAOLIOTA
-//public Question2 getNotAskedQuestion(int uid) {		// Rakentaa question-sivun käyttäjän id:n perusteella
-//	log.info("!******** WUCli getNotAskedQuestion uid: " + uid);
-//	Question2 question2 = restTemplate.getForObject("/"+uid, Question2.class);
-//	return question2;
-//}	
-//public Question2 getQuestion(int qid) {				// Hakee vastatun kysymyksen statsit answerStats-sivulle 
-//	log.info("!******** WUCli getQuestion qid: " + qid);
-//	Question2 question2 = restTemplate.getForObject("/getQuestionData/"+qid, Question2.class);	// Oli aiemmin pelkkä /
-//	return question2;
-//}
-
-//TESTI PALAUTUSARVOLLE	
-//	public DemoUser getUser(String username) {
-//		try {
-//			DemoUser demouser = restTemplate.getForObject("/user/"+username, DemoUser.class);
-//			return demouser;
-//		}
-//		catch(Exception e) {
-//			return null;
-//		}
-//	}	
-
-//public List<DemoUser> getUsers() {	// DemoUser-olioita sisältävän listan palauttava getUsers-metodi joka ei saa parametreja
-//DemoUser[] demousers = restTemplate.getForObject("/userspage", DemoUser[].class);	// hakee getillä parametrin 1.stä urlista, mahdollinen vastaus muutetaan DemoUser[].class-tyyppiseksi  
-//return Arrays.asList(demousers);	// palauttaa usersit-list viewinä (johon tehtävät muutokset palautuvat alkuperäiseen arrayhyn)
-//}
-//
-//public DemoUser getUser(String username) { //Demouser-olion palauttava funktio joka saa parametrinaan usernamen
-//return restTemplate.getForObject("/user/"+username, DemoUser.class);
-//}
-
-///** TRAINING CODE: ------------------ */
-//public void addUser(DemoUser demouser) {
-//restTemplate.postForObject("/user", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
-//}
-//
-//public void editUser(DemoUser demouser) {
-//restTemplate.postForObject("/edituser", demouser ,DemoUser.class);	// postForObject luo uuden resurssin lähettämällä HTTP:n POSTilla objektin (demouser) URI-templateen ja palauttamalla vastauksena saadun esityksen DemoUser.class-tyyppisenä
-//}	
-//
-//public void deleteUser(String id) {
-//restTemplate.delete("/nakkivene/"+id);	// poistaa resurssin parametrissa määritetystä urlista.
-//}
-
-
-
-
-
-
-
-
-

@@ -21,11 +21,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import Rowmappers.QuestionRowMapper;
 import Rowmappers.UserRowMapper;
+import Rowmappers.YearlyStatusRowMapper;
 import queta.Answer;
 import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
+import queta.YearlyStatus;
 //import org.springframework.dao.DataAccessException;
 
 @Repository
@@ -63,7 +65,6 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	public void addAnswer(Answer answer) {
 		log.info("!******** REST DAO addAnswer 1");
 		jdbcTemplate.update("INSERT INTO user_answers(uid,qid,answer) VALUES (?,?,?)", answer.getUid(), answer.getQid(), answer.getAnswer());
-//		log.info("!******** REST DAO addAnswer 2 uid ja answer1: " + answer.getUid() + answer.getAnswer1());
 		jdbcTemplate.update("UPDATE users SET amntUserAnsw = (SELECT COUNT(*) FROM user_answers WHERE uid = users.uid) WHERE uid = ?",answer.getUid());
 		log.info("!******** REST DAO addAnswer end");
 }
@@ -195,6 +196,41 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		catch(EmptyResultDataAccessException e){
 			return false;
 		}
+	}
+
+	public void updateYearlyStatusPerProvince(int year, int qid, int pid) {
+		double mean = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = ?),0)", Double.class, qid, pid);
+		double medi = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid= ? AND u.pid = ? ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid, pid);
+		double mode = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? AND u.pid = ? GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid, pid);
+		String classMode = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? AND u.pid = ? GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid, pid);
+		int amntAnswVal1 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01' AND u.pid = ?),0)", Integer.class, qid, pid);
+		int amntAnswVal2 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02' AND u.pid = ?),0)", Integer.class, qid, pid);
+		int amntAnswVal3 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03' AND u.pid = ?),0)", Integer.class, qid, pid);
+		int amntAnswVal4 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04' AND u.pid = ?),0)", Integer.class, qid, pid);
+		int amntAnswVal5 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05' AND u.pid = ?),0)", Integer.class, qid, pid);
+		jdbcTemplate.update("INSERT INTO yearly_statuses_per_province(qid, pid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", qid, pid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5 );
+	}		
+
+	public List<YearlyStatus> getYearlyStatusesPerProvince() {
+		return jdbcTemplate.query("SELECT qid, pid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5 FROM yearly_statuses_per_province", YearlyStatusRowMapper.yearlyStatusRowMapper); 
+	}
+
+	public void updateYearlyStatus(int year, int qid) {
+		double mean = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ROUND(AVG(ua.answer),0) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ?),0)", Double.class, qid);
+		double medi = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT AVG(answer) FROM (SELECT ua.answer, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid, (SELECT @rownum:=0) c WHERE ua.answer IS NOT NULL AND ua.answer REGEXP '^-?[0-9]+$' AND ua.qid= ? ORDER BY ua.answer) AS a WHERE a.row_number IN (FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))),0)", Double.class, qid);
+		double mode = (double)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.answer REGEXP '^-?[0-9]+$' AND ua.qid = ? GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", Double.class, qid);
+		String classMode = (String)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT ua.answer FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE (ua.answer='AO01' OR ua.answer='AO02' OR ua.answer='AO03' OR ua.answer='AO04' OR ua.answer='AO05') AND ua.qid = ? GROUP BY ua.answer ORDER BY COUNT(ua.answer) DESC LIMIT 1),0)", String.class, qid);
+		int amntAnswVal1 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO01'),0)", Integer.class, qid);
+		int amntAnswVal2 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO02'),0)", Integer.class, qid);
+		int amntAnswVal3 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO03'),0)", Integer.class, qid);
+		int amntAnswVal4 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO04'),0)", Integer.class, qid);
+		int amntAnswVal5 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND answer='AO05'),0)", Integer.class, qid);
+		jdbcTemplate.update("INSERT INTO yearly_statuses(qid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5) VALUES (?,?,?,?,?,?,?,?,?,?,?)", qid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5 );
+	}
+	
+	public List<YearlyStatus> getYearlyStatuses() {
+		log.info("!******** DAO getYearlyStatuses");
+		return jdbcTemplate.query("SELECT qid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5 FROM yearly_statuses", YearlyStatusRowMapper.yearlyStatusRowMapper); 
 	}
 }
 

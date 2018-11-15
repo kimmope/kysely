@@ -8,6 +8,7 @@
 <#assign lighterer = '#EBEBEB'><#--  -->
 <#assign lightest = '#F7F7F7'>
 <#assign bg = '#6E6E6E'>
+<#assign lineChartBgLines = '#888'>
 <#setting locale="fi_FI"> <#-- Paikallisasetus päivämäärään -->
 <html>
 	<#include "head.ftl">
@@ -71,7 +72,7 @@
 					</#if>
 					</h1>
 				</#if>
-				</div>				
+				</div>			
 			</div>
 			<div class="divider-with-line"></div>
 			<#if oldQuestion.type == 3 || oldQuestion.type == 4>
@@ -83,6 +84,19 @@
 				<div class="divider-with-line"></div>
 				<#include "charts/map.ftl">			
 				<div class="divider-with-line"></div>
+			</#if>
+			<#if oldQuestion.type == 1>
+				<script>
+					var years = [];
+					var data = [];
+					var i = 0;
+					<#list yearlyStatuses as yearlyStatus>
+						years[i] = ${yearlyStatus.year?c};
+						data[i] = ${yearlyStatus.medi?c};
+						i++;
+					</#list>
+				</script>						
+				<#include "charts/line_chart.ftl">				
 			</#if>
 			<div class="center">
 				<h4>Vastausten lukumäärä</h4>

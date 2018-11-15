@@ -271,7 +271,7 @@ a{
 	font-size:1.5em;
     margin: 10 auto;
 	padding: 5px;
-	max-width: 360px;
+	width: 400px;
 }
 
 /* Removes up-and down- arrows from number
@@ -383,9 +383,7 @@ input[type=range]:focus::-ms-fill-upper {
 	background: #09D;
 }
 
-
 /********** 05 Select input **********/
-
 
 .custom-select {
 	margin-top: 10px;  	

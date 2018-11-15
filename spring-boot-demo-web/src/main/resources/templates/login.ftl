@@ -5,8 +5,8 @@
 	<form action="/firstQuestionForm" method="POST" id="loginForm">
 		<div class="textLeft">
 			<h4>Käyttäjätunnus</h4>
-			<input type="text" name="username" class="text-input">
-		</div>
+		</div>	
+		<input type="text" name="username" class="text-input">
 		<div class="textLeft">
 			<h4>Mistä läänistä olet kotoisin</h4>
 			<div class="custom-select">

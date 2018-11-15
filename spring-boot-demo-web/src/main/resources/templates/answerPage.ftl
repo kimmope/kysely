@@ -8,7 +8,7 @@
 <#assign lighterer = '#DEEBF7'><#--  -->
 <#assign lightest = '#EFF3FF'>
 <#assign bg = '#09D'>
-
+<#assign lineChartBgLines = '#2BF'>
 <html>
 	<#include "head.ftl">
 	<body>
@@ -98,7 +98,6 @@
 			<#if oldQuestion.type == 3 || oldQuestion.type == 4>
 				<#if oldQuestion.type == 3>
 					<#include "charts/bar_chart.ftl">
-					<#include "charts/line_chart.ftl">
 				<#elseif oldQuestion.type == 4>				
 					<#include "charts/pie_chart.ftl">
 				</#if>

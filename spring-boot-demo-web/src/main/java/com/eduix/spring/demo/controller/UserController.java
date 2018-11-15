@@ -25,6 +25,7 @@ import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
 import queta.User;
+import queta.YearlyStatus;
 
 @Controller												// marks the class as web controller which is capable of handling the requests
 public class UserController {
@@ -42,7 +43,7 @@ public class UserController {
 	}	
 	
 	@RequestMapping("/login")
-	public String checkUser() {
+	public String login() {
 		return "login";
 	}
 
@@ -113,7 +114,7 @@ public class UserController {
 			return "answerPage";
 		}
 	}
-	
+
 	@PostMapping("/pastAnswers")
 	public String history(Model model, @RequestParam int uid) {
 		List<PastQandA> pastQandAs = userClient.getPastQandAs(uid);
@@ -128,14 +129,16 @@ public class UserController {
 	
 	@PostMapping("/oldAnswer")
 	public String oldAnswer(Model model, @RequestParam int uid, @RequestParam int qid){
-		PastQandA pastQandA = userClient.getPastQandA(uid,qid);	// Toimiiko function overloading userclientissä
+		List<YearlyStatus> yearlyStatuses = userClient.getYearlyStatuses();
+		model.addAttribute("yearlyStatuses",yearlyStatuses);
+		PastQandA pastQandA = userClient.getPastQandA(uid,qid);
 		model.addAttribute("pastQandA",pastQandA);
-		Question oldQuestion = userClient.getQuestion(qid);	// Hae vanha kysymys
+		Question oldQuestion = userClient.getQuestion(qid);
 		model.addAttribute("oldQuestion", oldQuestion);
 		AnswerStats answerStats = userClient.getAnswerStats(qid);
-		model.addAttribute("answerStats",answerStats);		
-		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);	// Tällä ainoastaan haetaan uusi kysymys ja jos sellainen on niin luodaan nappi sinne pääsyyn
-		model.addAttribute("unansweredQuestion", unansweredQuestion);			
+		model.addAttribute("answerStats",answerStats);
+		Question unansweredQuestion = userClient.getNotAskedQuestion(uid);
+		model.addAttribute("unansweredQuestion", unansweredQuestion);
 		return "pastQuestion";
 	}
 }	

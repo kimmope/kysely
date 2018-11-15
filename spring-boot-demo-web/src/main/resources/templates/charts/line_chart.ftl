@@ -1,3 +1,7 @@
+<div class="page-wide">
+	<h4 class="center">Aikaisempien vuosien yhteisvastaukset</h4>
+</div>
+
 <canvas id="line-canvas" width="500" height="380">
 <#-- This section is shown if canvas is not supported -->
 Vastausten lukumäärät:
@@ -11,67 +15,16 @@ Vastausten lukumäärät:
 <div id="legend-line"></div>
 
 <script>
-var data = [];
-<#-- 
-<#if oldQuestion.colHead1??>data[0] = ${answerStats.class1Tot};</#if>
-<#if oldQuestion.colHead2??>data[1] = ${answerStats.class2Tot};</#if>
-<#if oldQuestion.colHead3??>data[2] = ${answerStats.class3Tot};</#if>
-<#if oldQuestion.colHead4??>data[3] = ${answerStats.class4Tot};</#if>
-<#if oldQuestion.colHead5??>data[4] = ${answerStats.class5Tot};</#if>
--->
-
-var labels = [];
-<#if oldQuestion.colHead1??>labels[0] = '${oldQuestion.colHead1}';</#if>
-<#if oldQuestion.colHead2??>labels[1] = '${oldQuestion.colHead2}';</#if>
-<#if oldQuestion.colHead3??>labels[2] = '${oldQuestion.colHead3}';</#if>
-<#if oldQuestion.colHead4??>labels[3] = '${oldQuestion.colHead4}';</#if>
-<#if oldQuestion.colHead5??>labels[4] = '${oldQuestion.colHead5}';</#if>
-
-// TESTIDATAA
-var years = [];
-years[0] = 2013;
-years[1] = 2014;
-years[2] = 2015;
-years[3] = 2016;
-years[4] = 2017;
-
-data[0] = 2031;
-data[1] = 2084;
-data[2] = 2150;
-data[3] = 2082;
-data[4] = 2076;
 
 // COUNTING THE SUM OF DATA
 var dataTotal = 0;
 data.forEach(function(item){dataTotal+=item;});
 
-// ALUSTETAAN TAULUKOT DATA-ARVOJEN KAAVIOON SIJOITTAMISEN LASKENTAA VARTEN
+// INITIALISING TABLES AND VARIABLES
 originalHeightValues = [];
 var heightValues = [];
 var barLowLimit = 250;
 const chartHeight = 200;
-
-<#-- FUNCTION FOR WRAPPING THE LONG LEGENDS -->
-function wrapText(context, text, x, y, maxWidth, lineHeight){
-<#-- IF MULTIPLE WORDS IN LABEL
- 	var words = text.split(' ');   -->
-	var words = text;
-	var line = '';
-	for(var n = 0; n < words.length; n++) {
-		var testLine = line + words[n] + ' ';
-		var metrics = context.measureText(testLine);
-		var testWidth = metrics.width;
-		if (testWidth > maxWidth && n > 0) {
-			context.fillText(line, x, y);
-			line = words[n] + ' ';
-			y += lineHeight;
-		}
-		else{
-			line = testLine;
-		}
-	}
-	context.fillText(line, x, y);
-}
 
 // CANVAS WIDTH AMOUNT OF CLASSES + 50 PIXELS
 var lineChartWidth = (data.length * 100) + 50;
@@ -85,14 +38,14 @@ var lineChartCanvas = document.getElementById("line-canvas"),
 // DRAW CANVAS
 drawLineCanvas(lineChartCanvas, lineChartWidth);
 
-// FIGURES FOR LINE CHART Y-AXLE ACCORDING TO DATA
+// FIGURES FOR LINE CHART Y-AXLE
 var yFigure = [];
 var multiplier = 10;
 var max = Math.max(...data);
 var min = Math.min(...data);
 var difference = max - min;
 
-// SET CHART Y-AXLE LIMITS
+// SET CHART Y-AXLE TOP AND LOW LIMITS ACCORDING TO DATA
 while(true){
 	if(difference < multiplier){
 		max=Math.round(Math.ceil(max/(multiplier/10))*(multiplier/10));
@@ -130,10 +83,10 @@ const lineChartBgLineStartPointLeft = 50;
 const yFigureLeft = 5;
 const lineChartBgLineDistance = 20;
 var lineChartBgLineStartPointY = 50;
-context.font = "11px sans serif";
+context.font = "12px sans serif";
 context.fillStyle="${lightest}";
 context.lineWidth=1;
-context.strokeStyle="#2BF";
+context.strokeStyle="${lineChartBgLines}";
 for(var i = 0; i < amountOfLineChartBgLines; i++){
 	context.beginPath();
 	context.moveTo(lineChartBgLineStartPointLeft, lineChartBgLineStartPointY);
@@ -157,36 +110,36 @@ context.lineWidth=2;
 // Dataviivan väri
 context.strokeStyle="#FFF";
 
-// TURNING ON FANCY STROKE SETTINGS, ALL CAN BE REMOVED
+// TURNING ON FANCY STROKE SETTINGS FOR THE DATA LINE AND -POINTS
 context.lineCap = 'round';
-context.shadowBlur=1;
-context.shadowOffsetX=2;
-context.shadowOffsety=2;
-context.shadowColor="#CCC";
+context.shadowBlur = 1;
+context.shadowOffsetX = 2;
+context.shadowOffsety = 2;
+context.shadowColor = "#CCC";
 
 // DRAWING THE CHART
 for(var i = 1; i <= heightValues.length; i++){
 	point = heightValues[i];
 	context.beginPath();
 	context.moveTo(startPointLeft, prevPoint);
-	context.arc(startPointLeft, prevPoint, 2, 0, 2 * Math.PI, true);
+	context.arc(startPointLeft, prevPoint, 3, 0, 2 * Math.PI, true);
 	context.lineTo(startPointLeft + moveRight, point);
 	context.stroke();
 	prevPoint = point;
 	startPointLeft += moveRight;
- }
+}
  
- // TURNING OFF FANCY STROKE SETTINGS, ALL CAN BE REMOVED
-context.lineCap = 'round';
-context.shadowBlur=0;
-context.shadowOffsetX=0;
-context.shadowOffsety=0;
+ // TURNING OFF FANCY STROKE SETTINGS
+context.lineCap = 'butt';
+context.shadowBlur = 0;
+context.shadowOffsetX = 0;
+context.shadowOffsety = 0;
 
 // LINE CHART X-AXLE LABELS
 var lclc= [];
-var lineChartLabelLeft = 60;
+var lineChartLabelLeft = 65;
 var lineChartLabelRight = 100;
-var lineChartFigureLeft = 85;
+var lineChartFigureLeft = 80;
 // Labelien yläreunan sijainti
 const lineChartLabelTopLimit = 300;
 // Label-tekstien maksimileveys
@@ -201,14 +154,13 @@ for (var i = 0; i < data.length; i++){
 	lclc[i].fillText(data[i], lineChartFigureLeft, heightValues[i]-15);
 	lclc[i].font = "16px sans serif"; 
 	lclc[i].fillText(years[i], lineChartLabelLeft, lineChartLabelTopLimit);
-<#--	IF LONG LABEL TEXTS: wrapText(lclc[i], years[i], lineChartLabelLeft, lineChartLabelTopLimit, lineChartMaxLegendWidth, lineChartLineHeight);-->  
 	lineChartLabelLeft = lineChartLabelLeft + 100;
 	lineChartFigureLeft = lineChartFigureLeft + 100;
 }
-<#---->
+
 function drawLineCanvas(c,w){
 	c.width = w;
 }
 
 </script>
-<div class="divider"></div>
+<div class="divider-with-line"></div>
