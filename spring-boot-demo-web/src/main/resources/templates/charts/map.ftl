@@ -12,14 +12,10 @@
 <script>
 
 <#-- KUNKIN LÄÄNIN ENITEN OSUMIA SAANEET LUOKAT TAULUKKOON -->
-var dataProvinces = [];
-<#if answerStats.classModeP1??>dataProvinces[0] = "${answerStats.classModeP1}";</#if>
-<#if answerStats.classModeP2??>dataProvinces[1] = "${answerStats.classModeP2}";</#if>
-<#if answerStats.classModeP3??>dataProvinces[2] = "${answerStats.classModeP3}";</#if>
-<#if answerStats.classModeP4??>dataProvinces[3] = "${answerStats.classModeP4}";</#if>
-<#if answerStats.classModeP5??>dataProvinces[4] = "${answerStats.classModeP5}";</#if>
-<#-- REMOVE EXTRA CHARACTERS FROM THE BEGINNING OF THE CLASS NAME (E.G. AO02 = 2) -->
-for (var i = 0; i < dataProvinces.length; i++) { 
+var dataProvinces = [<#list statisticses as statistics>"${statistics.classMode}",</#list>];
+
+<#-- REMOVE FIRST (COUNTRY CODE) AND EXTRA CHARACTERS FROM THE BEGINNING OF THE CLASS NAME (E.G. AO02 = 2) -->
+for (var i = 1; i < dataProvinces.length; i++) { 
 	dataProvinces[i] = dataProvinces[i].slice(3);
 }
 
@@ -166,6 +162,7 @@ function getColor(c){
 finProvinces.eachLayer(function(layer){
 	// Set borders and opacity for all layers (provinces)
 	layer.setStyle({stroke : true, weight : 3, color : '#FFF', opacity : 0.2, fillOpacity : 1});
+	
 	if(layer.feature.properties.ID_1 == 979 && dataProvinces[0] != 0){	
 		layer.setStyle({fillColor : getColor(dataProvinces[0])});
 		layer.bindTooltip("Itä-Suomen lääni", {sticky: true});

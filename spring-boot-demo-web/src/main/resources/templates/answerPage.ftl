@@ -43,6 +43,21 @@
 				<div class="divider-with-line"></div>
 			</#if>
 			</div>
+			debug:${statisticses[0].amount}<br>
+			debug pid: ${statisticses[1].id}<br>
+			debug contains: 
+			<script>
+			<#list statisticses as x>
+				<#if x.id == "989">
+					${x.amount}
+				</#if>
+			</#list>
+			var arr=[<#list statisticses as statistics>"${statistics.classMode}",</#list>];
+			for(var i = 1; i < arr.length; i++){
+				console.log(arr[i]);
+			}
+			</script>
+			<br>
 			<div class="page-wide">
 				<h4>Kysymys oli</h4>
 				<h2>${oldQuestion.question}</h2>

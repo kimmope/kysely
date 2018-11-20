@@ -9,6 +9,7 @@ import queta.Answer;
 import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
+import queta.Statistics;
 import queta.User;
 import queta.YearlyStatus;
 
@@ -76,5 +77,12 @@ public class UserClient {
 		YearlyStatus[] yearlyStatuses = restTemplate.getForObject("/yearlyStatuses", YearlyStatus[].class);
 		return Arrays.asList(yearlyStatuses);
 	}	
-	
+
+// TESTING NEW STATISTICS PER QUESTION	
+	public List<Statistics> getStatistics(int qid) {	
+		log.info("!******** WUCli getStatistics");
+		Statistics[] getStatistics = restTemplate.getForObject("/statistics"+ "/" + qid, Statistics[].class);
+		log.info("!******** WUCli getStatistics2");
+		return Arrays.asList(getStatistics);
+	}		
 }

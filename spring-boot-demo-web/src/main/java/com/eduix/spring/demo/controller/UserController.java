@@ -24,6 +24,7 @@ import queta.Answer;
 import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
+import queta.Statistics;
 import queta.User;
 import queta.YearlyStatus;
 
@@ -88,7 +89,9 @@ public class UserController {
 			model.addAttribute("resubmitError",resubmitError);
 			model.addAttribute("answer", answer);
 			AnswerStats answerStats = userClient.getAnswerStats(answer.getQid());
-			model.addAttribute("answerStats",answerStats);			
+			model.addAttribute("answerStats",answerStats);
+			// TESTING NEW STATISTICS PER QUESTION	
+			model.addAttribute("statisticses", userClient.getStatistics(answer.getQid()));			
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
 			log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
@@ -105,6 +108,8 @@ public class UserController {
 			model.addAttribute("answer", answer);
 			AnswerStats answerStats = userClient.getAnswerStats(answer.getQid());
 			model.addAttribute("answerStats",answerStats);
+			// TESTING NEW STATISTICS PER QUESTION	
+			model.addAttribute("statisticses", userClient.getStatistics(answer.getQid()));
 			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);

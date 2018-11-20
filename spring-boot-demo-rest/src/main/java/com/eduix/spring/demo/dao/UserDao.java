@@ -20,12 +20,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import Rowmappers.QuestionRowMapper;
+import Rowmappers.StatisticsRowMapper;
 import Rowmappers.UserRowMapper;
 import Rowmappers.YearlyStatusRowMapper;
 import queta.Answer;
 import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
+import queta.Statistics;
 import queta.User;
 import queta.YearlyStatus;
 //import org.springframework.dao.DataAccessException;
@@ -110,7 +112,6 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	
 // CALCULATING FIGURES FOR ANSWER STATISTICS-CLASS
 	public AnswerStats getAnswerStats(int qid) {
-		log.info("!******** REST DAO AnswerStats Start qid = " + qid);
 		// Kaikkien yhteensä ja jokaisen regionin vastausmäärät erikseen
 		int amountTot = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers WHERE qid = ?),0)",Integer.class,qid);
 		int amountP1 = (int)jdbcTemplate.queryForObject("SELECT IFNULL((SELECT COUNT(*) FROM user_answers ua INNER JOIN users u ON ua.uid = u.uid WHERE ua.qid = ? AND u.pid = 979),0)", Integer.class, qid);
@@ -187,6 +188,37 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 		return AnswerStats;
 	}
 	
+	public List<Statistics> getStatistics(int qid) {
+		log.info("!******** REST DAO getStatistics");
+		return jdbcTemplate.query("(SELECT COUNT(*) AS amount, ROUND(AVG(ua.answer),0) AS mean,\n" + 
+				"ROUND(AVG(ua.answer),0) AS medi,\n" + 
+				"(SELECT answer FROM user_answers WHERE (answer='AO01' OR answer='AO02' OR answer='AO03' OR answer='AO04' OR answer='AO05') AND user_answers.qid = ua.qid GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1) AS classmode,\n" + 
+				"(SELECT answer FROM user_answers WHERE answer REGEXP '^-?[0-9]+$' AND user_answers.qid = ua.qid GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1) AS mode,\n" + 
+				"(SELECT COUNT(*) FROM user_answers WHERE answer='AO01' AND user_answers.qid = ua.qid) AS amntAnswVal1,\n" + 
+				"(SELECT COUNT(*) FROM user_answers WHERE answer='AO02' AND user_answers.qid = ua.qid) AS amntAnswVal2,\n" + 
+				"(SELECT COUNT(*) FROM user_answers WHERE answer='AO03' AND user_answers.qid = ua.qid) AS amntAnswVal3,\n" + 
+				"(SELECT COUNT(*) FROM user_answers WHERE answer='AO04' AND user_answers.qid = ua.qid) AS amntAnswVal4,\n" + 
+				"(SELECT COUNT(*) FROM user_answers WHERE answer='AO05' AND user_answers.qid = ua.qid) AS amntAnswVal5,\n" + 
+				"p.iso AS id\n" + 
+				"FROM user_answers ua, provinces p, users u\n" + 
+				"WHERE ua.uid = u.uid AND u.pid = p.pid AND ua.qid = ?)\n" + 
+				"UNION\n" + 
+				"(SELECT COUNT(*),\n" + 
+				"ROUND(AVG(ua.answer),0),\n" + 
+				"ROUND(AVG(ua.answer),0),\n" + 
+				"(SELECT answer FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE (answer='AO01' OR answer='AO02' OR answer='AO03' OR answer='AO04' OR answer='AO05') AND cu.pid = u.pid AND user_answers.qid = ua.qid GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1),\n" + 
+				"(SELECT answer FROM user_answers JOIN users mu ON user_answers.uid = mu.uid WHERE answer REGEXP '^-?[0-9]+$' AND mu.pid = u.pid AND user_answers.qid = ua.qid GROUP BY answer ORDER BY COUNT(answer) DESC LIMIT 1),\n" + 
+				"(SELECT COUNT(*) FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE answer='AO01' AND user_answers.qid = ua.qid AND cu.pid = u.pid),\n" + 
+				"(SELECT COUNT(*) FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE answer='AO02' AND user_answers.qid = ua.qid AND cu.pid = u.pid),\n" + 
+				"(SELECT COUNT(*) FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE answer='AO03' AND user_answers.qid = ua.qid AND cu.pid = u.pid),\n" + 
+				"(SELECT COUNT(*) FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE answer='AO04' AND user_answers.qid = ua.qid AND cu.pid = u.pid),\n" + 
+				"(SELECT COUNT(*) FROM user_answers JOIN users cu ON user_answers.uid = cu.uid WHERE answer='AO05' AND user_answers.qid = ua.qid AND cu.pid = u.pid),\n" + 
+				"u.pid \n" + 
+				"FROM user_answers ua, users u \n" + 
+				"WHERE ua.uid = u.uid AND ua.qid = ?\n" + 
+				"GROUP BY u.pid)", StatisticsRowMapper.STATISTICS_ROW_MAPPER, qid, qid);		
+	}
+	
 // PREVENTING RESUBMISSION OF THE FORM
 	public boolean checkIfAnswered(int uid, int qid) {
 		try{
@@ -229,7 +261,6 @@ private static final Log log = LogFactory.getLog(UserDao.class); // Change part 
 	}
 	
 	public List<YearlyStatus> getYearlyStatuses() {
-		log.info("!******** DAO getYearlyStatuses");
 		return jdbcTemplate.query("SELECT qid, year, mean, medi, mode, classMode, amntAnswVal1, amntAnswVal2 , amntAnswVal3, amntAnswVal4, amntAnswVal5 FROM yearly_statuses", YearlyStatusRowMapper.yearlyStatusRowMapper); 
 	}
 }

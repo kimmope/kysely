@@ -17,6 +17,7 @@ import queta.Answer;
 import queta.AnswerStats;
 import queta.PastQandA;
 import queta.Question;
+import queta.Statistics;
 import queta.User;
 import queta.YearlyStatus;
 
@@ -117,5 +118,20 @@ public class UserController {
 			return ResponseEntity.notFound().build(); 
 		}
 	}
-
+	
+// TESTING NEW STATISTICS PER QUESTION
+	@GetMapping("/statistics/{qid}")
+	public ResponseEntity<List<Statistics>> getStatistics(@PathVariable("qid") int qid) {
+		log.info("!******** RUC getStatistics");		
+		try {
+			log.info("!******** RUC getStatistics try");
+			return ResponseEntity.ok(dao.getStatistics(qid));
+		}
+		catch (DataAccessException e) {
+			log.info("!******** RUC getStatistics catch");
+			return ResponseEntity.notFound().build(); 
+		}
+	}
+	
+	
 }
