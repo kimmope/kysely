@@ -51,21 +51,17 @@ public class UserController {
 	// FIRST QUESTION FORM-HANDLING HAD TO BE DONE SEPARATELY DUE TO INABILITY OF SENDING FORM-PARAMETER DATA FROM FUNCTION. USER NEEDS TO BE CHECKED/CREATED.
 	@PostMapping("/firstQuestionForm")
 	public String checkUserForm(Model model, User user) {
-		log.info("!******** WUC checkUserForm1 ");
 		User checkedUser = userClient.checkUser(user);	// Tarkistaa onko user olemassa, jos ei ole, luo uuden
-		log.info("!******** WUC checkUserForm2, checkedUser.getUid(): " + checkedUser.getUid());
 		model.addAttribute("uid", checkedUser.getUid());		
 		Question unansweredQuestion = userClient.getNotAskedQuestion(checkedUser.getUid());		// Etsii kysymyksen jota käyttäjältä ei ole ennen kysytty
-		log.info("!******** WUC checkUserForm3, unansweredQuestion.getUid(): " + unansweredQuestion.getQuestion());
 		model.addAttribute("uQ", unansweredQuestion);
 		if(unansweredQuestion.getQid() == 0) {	// Jos ei ole kysymättömiä kysymyksiä, ohjataan vastaussivulle jossa selitetään tilanne
-			log.info("!******** Web user first question if unansweredQuestions");
 			return "answerPage";
 		}
 		else {	// Jos on kysymätön kysymys, esitetään se
 			return "question";
 		}
-	}	
+	}
 
 	@PostMapping("/newQuestion")	// Sama mistä /newQuestion/{uid}-kutsu tulee. Ohjaa allaolevalle
 	public String getNotAskedQuestion(Model model, @RequestParam int uid) {	// Model taikuudesta, pathvariable "uid" loginformista
@@ -76,15 +72,13 @@ public class UserController {
 			return "answerPage";
 		}
 		else {
-			return "question";							// Jos on kysymätön kysymys, esitetään se
+			return "question";					// Jos on kysymätön kysymys, esitetään se
 		}
 	}
 	
 	@PostMapping("/answer")	// Käyttäjän vastaus kantaan
 	public String answerForm(Model model, Answer answer) {
-		log.info("!*** WUCon checkIfAlreadyAnswered 0 uid, answer: " + answer.getUid() +" "+ answer.getAnswer1());
 		if(userClient.checkIfAlreadyAnswered(answer.getUid(), answer.getQid())){ // Prevent form resubmission
-			log.info("!******** WUCon checkIfAlreadyAnswered 1 resubmit error uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			boolean resubmitError = true;
 			model.addAttribute("resubmitError",resubmitError);
 			model.addAttribute("answer", answer);
@@ -93,15 +87,12 @@ public class UserController {
 			// TESTING NEW STATISTICS PER QUESTION	
 			model.addAttribute("statisticses", userClient.getStatistics(answer.getQid()));			
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
-			log.info("!******** WUCon. /answer 2 resubmit error oldQuestion.qid: " + oldQuestion.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
-			log.info("!******** WUCon. /answer 3 resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
 			return "answerPage";
 		}
 		else {
-			log.info("!******** WUCon checkIfAlreadyAnswered 1 no resubmit error");
 			boolean resubmitError = false;
 			model.addAttribute("resubmitError",resubmitError);
 			userClient.addUserAnswer(answer);				// Lähetä käyttäjän vastaus tietokantaan
@@ -110,11 +101,9 @@ public class UserController {
 			model.addAttribute("answerStats",answerStats);
 			// TESTING NEW STATISTICS PER QUESTION	
 			model.addAttribute("statisticses", userClient.getStatistics(answer.getQid()));
-			log.info("!******** WUCon. /answer 2 no resubmit error, uid, qid: " + answer.getUid() +" "+ answer.getQid());
 			Question oldQuestion = userClient.getQuestion(answer.getQid());
 			model.addAttribute("oldQuestion", oldQuestion);
 			Question unansweredQuestion = userClient.getNotAskedQuestion(answer.getUid());	// Tällä ainoastaan tarkistetaan onko enää kysymättömiä kysymyksiä
-			log.info("!******** WUCon. /answer 4 no resubmit error unansweredQuestion.uid,qid: " + unansweredQuestion.getQid());
 			model.addAttribute("unansweredQuestion", unansweredQuestion);		
 			return "answerPage";
 		}

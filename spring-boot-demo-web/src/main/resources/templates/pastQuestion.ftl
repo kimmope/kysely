@@ -49,7 +49,7 @@
 					<h1 class="center">${answerStats.meanAll?c}</h1>
 					<div class="center">(keskiarvo)</div>
 					<br>
-					<h1 class="center">${answerStats.mediAll?c}</h1>
+					<h1 class="center">${(answerStats.mediAll?round)?c}</h1>
 					<div class="center">(mediaani)</div>
 				<#elseif oldQuestion.type == 3 || oldQuestion.type == 4>
 					<h4 class="center"><b>YHTEISVASTAUS</b></h4>

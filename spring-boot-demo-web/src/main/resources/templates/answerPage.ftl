@@ -43,20 +43,6 @@
 				<div class="divider-with-line"></div>
 			</#if>
 			</div>
-			debug:${statisticses[0].amount}<br>
-			debug pid: ${statisticses[1].id}<br>
-			debug contains: 
-			<script>
-			<#list statisticses as x>
-				<#if x.id == "989">
-					${x.amount}
-				</#if>
-			</#list>
-			var arr=[<#list statisticses as statistics>"${statistics.classMode}",</#list>];
-			for(var i = 1; i < arr.length; i++){
-				console.log(arr[i]);
-			}
-			</script>
 			<br>
 			<div class="page-wide">
 				<h4>Kysymys oli</h4>
@@ -81,10 +67,10 @@
 				<#if oldQuestion.type == 1 || oldQuestion.type == 2>
 					<h4 class="center"><b>YHTEISVASTAUS</b></h4>
 					<br>
-					<h1 class="center">${answerStats.meanAll?c}</h1>
+					<h1 class="center">${(answerStats.meanAll?round)?c}</h1>
 					<div class="center">(keskiarvo)</div>
 					<br>
-					<h1 class="center">${answerStats.mediAll?c}</h1>
+					<h1 class="center">${(answerStats.mediAll?round)?c}</h1>
 					<div class="center">(mediaani)</div>
 				<#elseif oldQuestion.type == 3 || oldQuestion.type == 4>
 					<h4 class="center"><b>YHTEISVASTAUS</b></h4>

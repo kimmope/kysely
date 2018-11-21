@@ -11,6 +11,7 @@ Vastausten lukumäärät:
 <div id="legend"></div>
 
 <script>
+
 var data = [];
 <#if oldQuestion.colHead1??>data[0] = ${answerStats.class1Tot};</#if>
 <#if oldQuestion.colHead2??>data[1] = ${answerStats.class2Tot};</#if>

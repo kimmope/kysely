@@ -11,21 +11,21 @@
 
 <script>
 
-<#-- KUNKIN LÄÄNIN ENITEN OSUMIA SAANEET LUOKAT TAULUKKOON -->
-var dataProvinces = [<#list statisticses as statistics>"${statistics.classMode}",</#list>];
+<#-- FREEMARKER LIST TO JAVASCRIPT HASHMAP OBJECT -->
+var oDataProvinces = {<#list statisticses as stats>"${stats.id}" : "${stats.classMode}",</#list>};
 
-<#-- REMOVE FIRST (COUNTRY CODE) AND EXTRA CHARACTERS FROM THE BEGINNING OF THE CLASS NAME (E.G. AO02 = 2) -->
-for (var i = 1; i < dataProvinces.length; i++) { 
-	dataProvinces[i] = dataProvinces[i].slice(3);
-}
+<#-- REMOVE EXTRA CHARACTERS FROM THE BEGINNING OF THE CLASS NAME (E.G. AO02 = 2) -->
+for (var data in oDataProvinces){
+	oDataProvinces[data] = oDataProvinces[data].slice(3);
+}		
 
-<#-- KUNKIN LÄÄNIN VASTAUSTEN YHTEISLUKUMÄÄRÄT TAULUKKOON -->
-var amntProvinces = [];
-<#if answerStats.amountP1??>amntProvinces[0] = ${answerStats.amountP1};</#if>
-<#if answerStats.amountP2??>amntProvinces[1] = ${answerStats.amountP2};</#if>
-<#if answerStats.amountP3??>amntProvinces[2] = ${answerStats.amountP3};</#if>
-<#if answerStats.amountP4??>amntProvinces[3] = ${answerStats.amountP4};</#if>
-<#if answerStats.amountP5??>amntProvinces[4] = ${answerStats.amountP5};</#if>
+<#-- FTL ANSWER LISTS TO JAVASCRIPT HASHMAP OBJECTS -->
+var oAnswerTotal = {<#list statisticses as stats>"${stats.id}" : "${stats.amount}",</#list>};
+var oAnswer1 = {<#list statisticses as stats>"${stats.id}" : "${stats.amntAnswVal1}",</#list>};
+var oAnswer2 = {<#list statisticses as stats>"${stats.id}" : "${stats.amntAnswVal2}",</#list>};
+var oAnswer3 = {<#list statisticses as stats>"${stats.id}" : "${stats.amntAnswVal3}",</#list>};
+var oAnswer4 = {<#list statisticses as stats>"${stats.id}" : "${stats.amntAnswVal4}",</#list>};
+var oAnswer5 = {<#list statisticses as stats>"${stats.id}" : "${stats.amntAnswVal5}",</#list>};
 
 <#-- LUOKKIEN NIMET TAULUKKOON -->
 var classes = [];
@@ -37,55 +37,18 @@ var classes = [];
 
 <#-- Return correct amounts of answers per province to info-window -->
 function answerAmount(provinceId,x){
-	if(provinceId == 979){
-		if(x == 0)return amntProvinces[0];
-		if(x == 1){return ${answerStats.class1P1};}
-		if(x == 2){return ${answerStats.class2P1};}
-		if(x == 3){return ${answerStats.class3P1};}
-		if(x == 4){return ${answerStats.class4P1};}
-		if(x == 5){return ${answerStats.class5P1};}
+	for (var pid in oAnswerTotal){
+		if(provinceId == pid){
+			return oAnswerTotal[pid];
+		}
 	}
-	else if(provinceId == 980){
-		if(x == 0)return amntProvinces[1];
-		if(x == 1){return ${answerStats.class1P2};}
-		if(x == 2){return ${answerStats.class2P2};}
-		if(x == 3){return ${answerStats.class3P2};}
-		if(x == 4){return ${answerStats.class4P2};}
-		if(x == 5){return ${answerStats.class5P2};}
-	}
-	else if(provinceId == 981){
-		if(x == 0)return amntProvinces[2];
-		if(x == 1){return ${answerStats.class1P3};}
-		if(x == 2){return ${answerStats.class2P3};}
-		if(x == 3){return ${answerStats.class3P3};}
-		if(x == 4){return ${answerStats.class4P3};}
-		if(x == 5){return ${answerStats.class5P3};}
-	}
-	else if(provinceId == 982){
-		if(x == 0)return amntProvinces[3];
-		if(x == 1){return ${answerStats.class1P4};}
-		if(x == 2){return ${answerStats.class2P4};}
-		if(x == 3){return ${answerStats.class3P4};}
-		if(x == 4){return ${answerStats.class4P4};}
-		if(x == 5){return ${answerStats.class5P4};}		
-	}
-	else if(provinceId == 983){
-		if(x == 0)return amntProvinces[4];
-		if(x == 1){return ${answerStats.class1P5};}
-		if(x == 2){return ${answerStats.class2P5};}
-		if(x == 3){return ${answerStats.class3P5};}
-		if(x == 4){return ${answerStats.class4P5};}
-		if(x == 5){return ${answerStats.class5P5};}		
-	}		
 }
 
 <#-- Load geoJSON -->
 var finProvinces = L.geoJSON(profinland);
 
-
 <#-- Create basemap -->
 var map = L.map('map').setView([65.5, 30], null, { zoomControl:false });
-
 
 <#-- Set up basemap -->
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -95,14 +58,12 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1Ijoia2ltbW9rIiwiYSI6ImNqbmQ1N3VmMTA0NTczcG80bDQyMjY5aTgifQ.WKyJF6CXGleSTqE9gzuv3w'
 }).addTo(map);
 
-
 <#-- Remove Leaflet-label -->
 document.getElementsByClassName( 'leaflet-control-attribution' )[0].style.display = 'none';
 <#-- Remove zoom controls -->
 map.zoomControl.remove();
 <#-- Disable dragging -->
 map.dragging.disable();
-
 
 <#-- Select color according to the normalized value (1-5 - 1-2) and amount of classes -->
 <#-- http://mathforum.org/library/drmath/view/60433.html -->
@@ -157,40 +118,21 @@ function getColor(c){
 	}
 }
 
-<#-- Loop polygons (features/layers/provinces) in multipolygon (featureset) for coloring -->
-<#-- NOTE : ID-order of layers makes the order of provinces in database -->
+<#-- Loop polygons (features/layers/provinces) in multipolygon (featureset) for coloring provinces -->
 finProvinces.eachLayer(function(layer){
-	// Set borders and opacity for all layers (provinces)
-	layer.setStyle({stroke : true, weight : 3, color : '#FFF', opacity : 0.2, fillOpacity : 1});
-	
-	if(layer.feature.properties.ID_1 == 979 && dataProvinces[0] != 0){	
-		layer.setStyle({fillColor : getColor(dataProvinces[0])});
-		layer.bindTooltip("Itä-Suomen lääni", {sticky: true});
-    }
-    else if(layer.feature.properties.ID_1 == 980 && dataProvinces[1] != 0){	
-		layer.setStyle({fillColor : getColor(dataProvinces[1])});
-		layer.bindTooltip("Lapin lääni, vastauksia: " + classes, {sticky: true});
-    }
-    else if(layer.feature.properties.ID_1 == 981 && dataProvinces[2] != 0){	
-		layer.setStyle({fillColor : getColor(dataProvinces[2])});
-		layer.bindTooltip("Oulun lääni", {sticky: true});
-    }
-    else if(layer.feature.properties.ID_1 == 982 && dataProvinces[3] != 0){	
-		layer.setStyle({fillColor : getColor(dataProvinces[3])});
-		layer.bindTooltip("Etelä-Suomen lääni", {sticky: true});
-    }
-    else if(layer.feature.properties.ID_1 == 983 && dataProvinces[4] != 0){	
-		layer.setStyle({fillColor : getColor(dataProvinces[4])});
-		layer.bindTooltip("Länsi-Suomen lääni", {sticky: true});
-    }
-    else{
-    	layer.setStyle({fillColor : '${bg}'})
-    	layer.bindTooltip(layer.feature.properties.VARNAME_1+"Ei vastauksia", {sticky: true});
-    }
+	<#-- Set default borders and opacity for all layer -->
+	layer.setStyle({stroke : true, weight : 3, color : '#FFF', opacity : 0.2, fillColor : '${bg}', fillOpacity : 1});
+	<#--  -- Loop province data hashmap object -->
+	for (var data in oDataProvinces){
+		if(layer.feature.properties.ID_1 == data && oDataProvinces[data] != 0){
+			layer.setStyle({fillColor : getColor(oDataProvinces[data])});
+	    }
+	}
 });
 
 <#-- Add provinces with colored data -->
 finProvinces.addTo(map);
+
 
 <#-- Add info-window to the map (top right corner) -->
 var info = L.control();
@@ -199,18 +141,18 @@ info.onAdd = function(map){
 	this.update();
 	return this._div;
 };
+
 <#-- Add content to info-window -->
 info.update = function(props){
 	this._div.innerHTML = props ? '<span class="info-h"><b>' + props.VARNAME_1 + '</b></span><br />\
-		<span class="info-h">Vastauksia: ' + answerAmount(props.ID_1,0) + '</span><br />\
-		<#if oldQuestion.colHead1??><span class="info-t">${oldQuestion.colHead1} : ' + answerAmount(props.ID_1,1) + '</span><br /></#if>\
-		<#if oldQuestion.colHead2??><span class="info-t">${oldQuestion.colHead2} : ' + answerAmount(props.ID_1,2) + '</span><br /></#if>\
-		<#if oldQuestion.colHead3??><span class="info-t">${oldQuestion.colHead3} : ' + answerAmount(props.ID_1,3) + '</span><br /></#if>\
-		<#if oldQuestion.colHead4??><span class="info-t">${oldQuestion.colHead4} : ' + answerAmount(props.ID_1,4) + '</span><br /></#if>\
-		<#if oldQuestion.colHead5??><span class="info-t">${oldQuestion.colHead5} : ' + answerAmount(props.ID_1,5) + '</span><br /></#if>\
+		<span class="info-h">Vastauksia: ' + oAnswerTotal[props.ID_1] + '</span><br />\
+		<#if oldQuestion.colHead1??><span class="info-t">${oldQuestion.colHead1} : ' + oAnswer1[props.ID_1] + '</span><br /></#if>\
+		<#if oldQuestion.colHead2??><span class="info-t">${oldQuestion.colHead2} : ' + oAnswer2[props.ID_1] + '</span><br /></#if>\
+		<#if oldQuestion.colHead3??><span class="info-t">${oldQuestion.colHead3} : ' + oAnswer3[props.ID_1] + '</span><br /></#if>\
+		<#if oldQuestion.colHead4??><span class="info-t">${oldQuestion.colHead4} : ' + oAnswer4[props.ID_1] + '</span><br /></#if>\
+		<#if oldQuestion.colHead5??><span class="info-t">${oldQuestion.colHead5} : ' + oAnswer5[props.ID_1] + '</span><br /></#if>\
 		' : '<span class="info-h">Vie hiiri läänin päälle</span>';
 };
-
 info.addTo(map);
 
 <#-- Add onmouseover highlight region feature -->
@@ -259,7 +201,7 @@ geojson = L.geoJson(profinland, {
 var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'legend-map');
-<#-- loop through density intervals and generate a label with a colored square for each interval -->
+	<#-- loop through density intervals and generate a label with a colored square for each interval -->
     for (var i = 0; i < classes.length; i++) {
         div.innerHTML += '<div class="legend-item">\
         <i style="background:' + getColor(i+1) + '"></i>\
@@ -270,4 +212,3 @@ legend.onAdd = function (map) {
 legend.addTo(map);
 
 </script>
-
